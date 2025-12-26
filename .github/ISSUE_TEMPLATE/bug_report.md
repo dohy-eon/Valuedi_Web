@@ -1,0 +1,47 @@
+name: 🐛 버그 리포트
+description: 버그를 발견했을 때 사용하는 간단한 템플릿입니다.
+title: "[BUG] "
+labels: ["bug"]
+assignees: []
+
+body:
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 버그 설명
+      description: 어떤 버그가 발생했는지 간단히 설명해주세요.
+      placeholder: 버그에 대해 설명해주세요...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: 재현 방법
+      description: 버그를 재현하는 단계를 작성해주세요.
+      placeholder: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: 브라우저
+      description: 어떤 브라우저에서 발생했나요?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 스크린샷 (선택사항)
+      description: 가능하다면 스크린샷을 첨부해주세요.
+      placeholder: 스크린샷을 드래그 앤 드롭하거나 붙여넣기 해주세요...

@@ -1,0 +1,34 @@
+name: ✨ 기능 제안
+description: 새로운 기능을 제안할 때 사용하는 템플릿입니다.
+title: "[FEAT] "
+labels: ["feat"]
+assignees: []
+
+body:
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: 기능 설명
+      description: 어떤 기능을 추가하고 싶은지 설명해주세요.
+      placeholder: 새로운 기능에 대해 설명해주세요...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      description: 이 기능의 우선순위는 어떻게 생각하시나요?
+      options:
+        - 낮음
+        - 보통
+        - 높음
+    validations:
+      required: true
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 참고 이미지 (선택사항)
+      description: 참고할 만한 이미지나 목업이 있다면 첨부해주세요.
+      placeholder: 이미지를 드래그 앤 드롭하거나 붙여넣기 해주세요...
