@@ -1,0 +1,363 @@
+/* 폰트 정의 - Pretendard */
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/Pretendard-Thin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/Pretendard-ExtraLight.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/Pretendard-Light.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/Pretendard-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/Pretendard-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/Pretendard-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/Pretendard-ExtraBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url('../assets/fonts/Pretendard-Black.woff2') format('woff2');
+}
+
+/* 디자인 토큰 - CSS 변수 */
+
+:root {
+  /* Colors - Neutrals */
+  --color-neutral-0: #ffffff;
+  --color-neutral-10: #f2f2f2;
+  --color-neutral-20: #e7e7e7;
+  --color-neutral-30: #e0e0e0;
+  --color-neutral-40: #cccccc;
+  --color-neutral-50: #999999;
+  --color-neutral-60: #787878;
+  --color-neutral-70: #666666;
+  --color-neutral-80: #333333;
+  --color-neutral-90: #171714;
+  --color-neutral-100: #000000;
+
+  /* Colors - Base */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-bg: #ffffff;
+
+  /* Colors - Primary */
+  --color-pri-normal: #fee500;
+  --color-pri-strong: #9e8f00;
+  --color-pri-heavy: #665c00;
+  --color-pri-light: #fff170;
+
+  /* Colors - Atomic Common */
+  --color-atomic-common-0: #000000;
+  --color-atomic-common-100: #ffffff;
+
+  /* Colors - Atomic Red */
+  --color-atomic-red-10: #3b0101;
+  --color-atomic-red-20: #730303;
+  --color-atomic-red-30: #b00c0c;
+  --color-atomic-red-40: #e52222;
+  --color-atomic-red-50: #ff4242;
+  --color-atomic-red-60: #ff6363;
+  --color-atomic-red-70: #ff8c8c;
+  --color-atomic-red-80: #ffb5b5;
+  --color-atomic-red-90: #fed5d5;
+  --color-atomic-red-95: #feecec;
+  --color-atomic-red-99: #fffafa;
+  --color-atomic-red-0: #000000;
+  --color-atomic-red-100: #ffffff;
+
+  /* Colors - Atomic Red Orange */
+  --color-atomic-red-orange-10: #290f00;
+  --color-atomic-red-orange-20: #592100;
+  --color-atomic-red-orange-30: #913500;
+  --color-atomic-red-orange-40: #c94a00;
+  --color-atomic-red-orange-48: #f55a00;
+  --color-atomic-red-orange-50: #ff5e00;
+  --color-atomic-red-orange-60: #ff7b2e;
+  --color-atomic-red-orange-70: #ff9b61;
+  --color-atomic-red-orange-80: #ffbd96;
+  --color-atomic-red-orange-90: #fed9c4;
+  --color-atomic-red-orange-95: #feeee5;
+  --color-atomic-red-orange-99: #fffaf7;
+  --color-atomic-red-orange-0: #000000;
+  --color-atomic-red-orange-100: #ffffff;
+
+  /* Colors - Atomic Orange */
+  --color-atomic-orange-10: #361e00;
+  --color-atomic-orange-20: #663a00;
+  --color-atomic-orange-30: #9c5800;
+  --color-atomic-orange-39: #d17600;
+  --color-atomic-orange-40: #d47800;
+  --color-atomic-orange-50: #ff9200;
+  --color-atomic-orange-60: #ffa938;
+  --color-atomic-orange-70: #ffc06e;
+  --color-atomic-orange-80: #ffd49c;
+  --color-atomic-orange-90: #fee6c6;
+  --color-atomic-orange-95: #fef4e6;
+  --color-atomic-orange-99: #fffcf7;
+  --color-atomic-orange-0: #000000;
+  --color-atomic-orange-100: #ffffff;
+
+  /* Colors - Atomic Lime */
+  --color-atomic-lime-10: #112900;
+  --color-atomic-lime-20: #225200;
+  --color-atomic-lime-30: #347d00;
+  --color-atomic-lime-37: #429e00;
+  --color-atomic-lime-40: #48ad00;
+  --color-atomic-lime-50: #58cf04;
+  --color-atomic-lime-60: #6be016;
+  --color-atomic-lime-70: #88f03e;
+  --color-atomic-lime-80: #aef779;
+  --color-atomic-lime-90: #ccfca9;
+  --color-atomic-lime-95: #e6ffd4;
+  --color-atomic-lime-99: #f8fff2;
+  --color-atomic-lime-0: #000000;
+  --color-atomic-lime-100: #ffffff;
+
+  /* Colors - Atomic Green */
+  --color-atomic-green-10: #00240c;
+  --color-atomic-green-20: #004517;
+  --color-atomic-green-30: #006e25;
+  --color-atomic-green-40: #009632;
+  --color-atomic-green-50: #00bf40;
+  --color-atomic-green-60: #1ed45a;
+  --color-atomic-green-70: #49e57d;
+  --color-atomic-green-80: #7df5a5;
+  --color-atomic-green-90: #acfcc7;
+  --color-atomic-green-95: #d9ffe6;
+  --color-atomic-green-99: #f2fff6;
+  --color-atomic-green-0: #000000;
+  --color-atomic-green-100: #ffffff;
+
+  /* Colors - Atomic Cyan */
+  --color-atomic-cyan-10: #00252b;
+  --color-atomic-cyan-20: #004854;
+  --color-atomic-cyan-30: #006f82;
+  --color-atomic-cyan-40: #0098b2;
+  --color-atomic-cyan-50: #00bdde;
+  --color-atomic-cyan-60: #28d0ed;
+  --color-atomic-cyan-70: #57dff7;
+  --color-atomic-cyan-80: #8aedff;
+  --color-atomic-cyan-90: #b5f4ff;
+  --color-atomic-cyan-95: #defaff;
+  --color-atomic-cyan-99: #f7feff;
+  --color-atomic-cyan-0: #000000;
+  --color-atomic-cyan-100: #ffffff;
+
+  /* Colors - Atomic Light Blue */
+  --color-atomic-light-blue-10: #002130;
+  --color-atomic-light-blue-20: #004261;
+  --color-atomic-light-blue-30: #006796;
+  --color-atomic-light-blue-40: #008dcf;
+  --color-atomic-light-blue-50: #00aeff;
+  --color-atomic-light-blue-60: #3dc2ff;
+  --color-atomic-light-blue-70: #70d2ff;
+  --color-atomic-light-blue-80: #a1e1ff;
+  --color-atomic-light-blue-90: #c4ecfe;
+  --color-atomic-light-blue-95: #e5f6fe;
+  --color-atomic-light-blue-99: #f7fdff;
+  --color-atomic-light-blue-0: #000000;
+  --color-atomic-light-blue-100: #ffffff;
+
+  /* Colors - Atomic Blue */
+  --color-atomic-blue-10: #001536;
+  --color-atomic-blue-20: #002966;
+  --color-atomic-blue-30: #003e9c;
+  --color-atomic-blue-40: #0054d1;
+  --color-atomic-blue-45: #005eeb;
+  --color-atomic-blue-50: #0066ff;
+  --color-atomic-blue-55: #1a75ff;
+  --color-atomic-blue-60: #3385ff;
+  --color-atomic-blue-65: #4f95ff;
+  --color-atomic-blue-70: #69a5ff;
+  --color-atomic-blue-80: #9ec5ff;
+  --color-atomic-blue-90: #c9defe;
+  --color-atomic-blue-95: #eaf2fe;
+  --color-atomic-blue-99: #f7fbff;
+  --color-atomic-blue-0: #000000;
+  --color-atomic-blue-100: #ffffff;
+
+  /* Colors - Atomic Violet */
+  --color-atomic-violet-10: #11024d;
+  --color-atomic-violet-20: #23098f;
+  --color-atomic-violet-30: #3a16c9;
+  --color-atomic-violet-40: #4f29e5;
+  --color-atomic-violet-45: #5b37ed;
+  --color-atomic-violet-50: #6541f2;
+  --color-atomic-violet-60: #7d5ef7;
+  --color-atomic-violet-70: #9e86fc;
+  --color-atomic-violet-80: #c0b0ff;
+  --color-atomic-violet-90: #dbd3fe;
+  --color-atomic-violet-95: #f0ecfe;
+  --color-atomic-violet-99: #fbfaff;
+  --color-atomic-violet-0: #000000;
+  --color-atomic-violet-100: #ffffff;
+
+  /* Colors - Atomic Purple */
+  --color-atomic-purple-10: #290247;
+  --color-atomic-purple-20: #580a7d;
+  --color-atomic-purple-30: #861cb8;
+  --color-atomic-purple-40: #ad36e3;
+  --color-atomic-purple-50: #cb59ff;
+  --color-atomic-purple-60: #d478ff;
+  --color-atomic-purple-70: #de96ff;
+  --color-atomic-purple-80: #e9baff;
+  --color-atomic-purple-90: #f2d6ff;
+  --color-atomic-purple-95: #f9edff;
+  --color-atomic-purple-99: #fefbff;
+  --color-atomic-purple-0: #000000;
+  --color-atomic-purple-100: #ffffff;
+
+  /* Colors - Atomic Pink */
+  --color-atomic-pink-10: #3d0133;
+  --color-atomic-pink-20: #730560;
+  --color-atomic-pink-30: #a81690;
+  --color-atomic-pink-40: #d331b8;
+  --color-atomic-pink-46: #e846cd;
+  --color-atomic-pink-50: #f553da;
+  --color-atomic-pink-60: #fa73e3;
+  --color-atomic-pink-70: #ff94ed;
+  --color-atomic-pink-80: #ffb8f3;
+  --color-atomic-pink-90: #fed3f7;
+  --color-atomic-pink-95: #feecfb;
+  --color-atomic-pink-99: #fffafe;
+  --color-atomic-pink-0: #000000;
+  --color-atomic-pink-100: #ffffff;
+
+  /* Colors - Atomic Yellow */
+  --color-atomic-yellow-10: #383300;
+  --color-atomic-yellow-20: #665c00;
+  --color-atomic-yellow-30: #9e8f00;
+  --color-atomic-yellow-40: #d1bd00;
+  --color-atomic-yellow-50: #fee500;
+  --color-atomic-yellow-60: #ffeb38;
+  --color-atomic-yellow-70: #fff170;
+  --color-atomic-yellow-80: #fff59e;
+  --color-atomic-yellow-90: #fff9c7;
+  --color-atomic-yellow-95: #fffce5;
+
+  /* Colors - Text */
+  --color-text-title: #171714;
+  --color-text-body: #666666;
+  --color-text-sub-body: #999999;
+  --color-text-disabled: #e0e0e0;
+
+  /* Typography - Font Families */
+  --font-family-pretendard: 'Pretendard', sans-serif;
+  --font-family-preahvihear: 'Preahvihear', sans-serif;
+
+  /* Typography - Font Sizes */
+  --font-size-0: 11px;
+  --font-size-1: 12px;
+  --font-size-2: 13px;
+  --font-size-3: 14px;
+  --font-size-4: 16px;
+  --font-size-5: 18px;
+  --font-size-6: 20px;
+  --font-size-7: 22px;
+  --font-size-8: 24px;
+  --font-size-9: 28px;
+  --font-size-10: 36px;
+
+  /* Typography - Line Heights */
+  --line-height-0: 50px;
+  --line-height-1: 50px;
+  --line-height-2: 50px;
+  --line-height-3: 40px;
+  --line-height-4: 40px;
+  --line-height-5: 40px;
+  --line-height-6: 32px;
+  --line-height-7: 32px;
+  --line-height-8: 32px;
+  --line-height-9: 30px;
+  --line-height-10: 30px;
+  --line-height-11: 30px;
+  --line-height-12: 28px;
+  --line-height-13: 28px;
+  --line-height-14: 28px;
+  --line-height-15: 26px;
+  --line-height-16: 26px;
+  --line-height-17: 26px;
+  --line-height-18: 24px;
+  --line-height-19: 24px;
+  --line-height-20: 24px;
+  --line-height-21: 26px;
+  --line-height-22: 26px;
+  --line-height-23: 26px;
+  --line-height-24: 22px;
+  --line-height-25: 22px;
+  --line-height-26: 22px;
+  --line-height-27: 20px;
+  --line-height-28: 20px;
+  --line-height-29: 20px;
+  --line-height-30: 16px;
+  --line-height-31: 16px;
+  --line-height-32: 16px;
+  --line-height-33: 16px;
+  --line-height-34: 16px;
+  --line-height-35: 16px;
+
+  /* Typography - Font Weights */
+  --font-weight-bold: 700;
+  --font-weight-medium: 500;
+  --font-weight-regular: 400;
+
+  /* Typography - Letter Spacing */
+  --letter-spacing-0: 0%;
+  --letter-spacing-1: -2%;
+
+  /* Typography - Paragraph Spacing */
+  --paragraph-spacing-0: 0px;
+}
+
