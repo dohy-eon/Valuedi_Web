@@ -13,6 +13,7 @@
 ### 1. 색상 사용
 
 #### Tailwind 클래스 사용 (권장)
+
 ```tsx
 <div className="bg-primary text-text-title">
   Primary 색상 배경
@@ -28,10 +29,9 @@
 ```
 
 #### CSS 변수 직접 사용
+
 ```tsx
-<div style={{ backgroundColor: 'var(--color-pri-normal)' }}>
-  Primary 색상
-</div>
+<div style={{ backgroundColor: 'var(--color-pri-normal)' }}>Primary 색상</div>
 ```
 
 ### 2. 타이포그래피 사용
@@ -97,6 +97,7 @@ import { Typography } from '@/components';
 ### 4. 폰트 크기
 
 #### 의미있는 이름 (권장)
+
 ```tsx
 <div className="text-title-1">36px</div>
 <div className="text-title-2">28px</div>
@@ -113,6 +114,7 @@ import { Typography } from '@/components';
 ```
 
 #### 숫자 기반 (기존 호환성)
+
 ```tsx
 <div className="text-0">11px</div>
 <div className="text-1">12px</div>
@@ -130,22 +132,27 @@ import { Typography } from '@/components';
 ## 색상 팔레트
 
 ### Neutral
+
 - `neutral-0` ~ `neutral-100`: 그레이 스케일
 
 ### Primary
+
 - `primary` 또는 `primary-normal`: #fee500
 - `primary-strong`: #9e8f00
 - `primary-heavy`: #665c00
 - `primary-light`: #fff170
 
 ### Text Colors
+
 - `text-title`: #171714
 - `text-body`: #666666
 - `text-sub-body`: #999999
 - `text-disabled`: #e0e0e0
 
 ### Atomic Colors
+
 다양한 색상 팔레트가 제공됩니다:
+
 - `atomic-red-*`
 - `atomic-orange-*`
 - `atomic-lime-*`
@@ -163,22 +170,26 @@ import { Typography } from '@/components';
 ## 타이포그래피 Variants
 
 ### Title
+
 - `title-1`: 36px
 - `title-2`: 28px
 - `title-3`: 24px
 
 ### Headline
+
 - `headline-1`: 22px
 - `headline-2`: 20px
 - `headline-3`: 18px
 
 ### Body
+
 - `body-1`: 16px
 - `body-1-reading`: 16px (reading line-height)
 - `body-2`: 14px
 - `body-3`: 13px
 
 ### Caption
+
 - `caption-1`: 12px
 - `caption-2`: 11px
 
@@ -194,6 +205,7 @@ import { Typography } from '@/components';
 ## 예시
 
 ### Typography 컴포넌트 사용
+
 ```tsx
 import { Typography } from '@/components';
 
@@ -203,15 +215,15 @@ export const ExampleComponent = () => {
       <Typography variant="title-1" weight="bold" color="title">
         메인 제목
       </Typography>
-      
+
       <Typography variant="headline-1" weight="medium" color="title">
         서브 제목
       </Typography>
-      
+
       <Typography variant="body-1" weight="regular" color="body">
         본문 텍스트입니다. 이 스타일은 16px 크기의 Regular 폰트를 사용합니다.
       </Typography>
-      
+
       <button className="bg-primary text-neutral-90 px-4 py-2 rounded">
         <Typography variant="body-2" weight="medium">
           버튼
@@ -223,22 +235,19 @@ export const ExampleComponent = () => {
 ```
 
 ### Tailwind 유틸리티 클래스 사용
+
 ```tsx
 export const ExampleComponent = () => {
   return (
     <div className="bg-bg p-8">
-      <h1 className="text-title-1 font-pretendard font-bold text-text-title mb-4">
-        메인 제목
-      </h1>
-      
-      <h2 className="text-headline-1 font-pretendard font-medium text-text-title mb-2">
-        서브 제목
-      </h2>
-      
+      <h1 className="text-title-1 font-pretendard font-bold text-text-title mb-4">메인 제목</h1>
+
+      <h2 className="text-headline-1 font-pretendard font-medium text-text-title mb-2">서브 제목</h2>
+
       <p className="text-body-1 font-pretendard font-regular text-text-body mb-4">
         본문 텍스트입니다. 이 스타일은 16px 크기의 Regular 폰트를 사용합니다.
       </p>
-      
+
       <button className="bg-primary text-neutral-90 px-4 py-2 rounded">
         <span className="text-body-2 font-pretendard font-medium">버튼</span>
       </button>
@@ -260,14 +269,14 @@ const color: ColorToken = 'pri-normal';
 ## 마이그레이션 가이드
 
 ### 이전 방식 (제거됨)
+
 ```tsx
 // ❌ 더 이상 사용하지 않음
-<h1 className="text-title-36-bold text-text-title">
-  제목
-</h1>
+<h1 className="text-title-36-bold text-text-title">제목</h1>
 ```
 
 ### 새로운 방식 (권장)
+
 ```tsx
 // ✅ Typography 컴포넌트 사용
 <Typography variant="title-1" weight="bold" color="title">

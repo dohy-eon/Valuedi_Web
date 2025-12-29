@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 /**
  * 클래스명을 병합하는 유틸리티 함수
  * clsx와 tailwind-merge를 결합하여 Tailwind 클래스 충돌을 자동으로 해결합니다.
- * 
+ *
  * @example
  * ```tsx
  * cn('text-red-500', 'text-blue-500') // 'text-blue-500'
@@ -14,4 +14,3 @@ import { twMerge } from 'tailwind-merge';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-

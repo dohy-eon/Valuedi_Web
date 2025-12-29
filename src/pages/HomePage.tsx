@@ -5,22 +5,12 @@ export const HomePage = () => {
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-8">
       <div className="max-w-4xl w-full space-y-8">
         {/* 메인 타이틀 */}
-        <Typography
-          variant="title-1"
-          weight="bold"
-          color="title"
-          className="text-center"
-        >
+        <Typography variant="title-1" weight="bold" color="title" className="text-center">
           Valuedi
         </Typography>
 
         {/* 서브 타이틀 */}
-        <Typography
-          variant="headline-1"
-          weight="medium"
-          color="title"
-          className="text-center"
-        >
+        <Typography variant="headline-1" weight="medium" color="title" className="text-center">
           디자인 시스템이 적용된 메인페이지
         </Typography>
 
@@ -29,10 +19,10 @@ export const HomePage = () => {
           <Typography variant="body-1" weight="regular" color="body">
             이 페이지는 디자인 시스템의 타이포그래피와 색상을 사용하고 있습니다.
           </Typography>
-          
+
           <Typography variant="body-1" weight="regular" color="body">
-            Typography 컴포넌트를 통해 일관된 스타일을 유지하며, Tailwind 유틸리티 클래스를
-            조합하여 유연하게 레이아웃을 구성할 수 있습니다.
+            Typography 컴포넌트를 통해 일관된 스타일을 유지하며, Tailwind 유틸리티 클래스를 조합하여 유연하게 레이아웃을
+            구성할 수 있습니다.
           </Typography>
         </div>
 
@@ -94,4 +84,3 @@ export const HomePage = () => {
     </div>
   );
 };
-

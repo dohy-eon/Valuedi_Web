@@ -13,4 +13,3 @@ auth/
 │   └── ...
 └── index.ts           # Public exports
 ```
-

@@ -55,15 +55,15 @@ export interface TypographyProps {
 
 /**
  * Typography 컴포넌트
- * 
+ *
  * 디자인 시스템의 타이포그래피를 타입 안전하게 사용할 수 있게 해주는 컴포넌트입니다.
- * 
+ *
  * @example
  * ```tsx
  * <Typography variant="title-1" weight="bold" color="title">
  *   메인 제목
  * </Typography>
- * 
+ *
  * <Typography variant="body-1" weight="regular" color="body">
  *   본문 텍스트
  * </Typography>
@@ -192,7 +192,7 @@ export const Typography: React.FC<TypographyProps> = ({
   const classes = cn(colorClass, className);
 
   return (
-    <Component className={classes} style={inlineStyles} {...(props as any)}>
+    <Component className={classes} style={inlineStyles} {...(props as React.HTMLAttributes<HTMLElement>)}>
       {children}
     </Component>
   );
