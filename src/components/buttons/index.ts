@@ -1,9 +1,6 @@
 export { default as BaseButton } from './BaseButton';
 export type { BaseButtonProps, ButtonSize, ButtonVariant } from './BaseButton';
 
-export { default as KakaoContinueButton } from './KakaoContinueButton';
-export type { KakaoContinueButtonProps } from './KakaoContinueButton';
-
 export { default as SocialLoginButtons } from './SocialLoginButtons';
 export type { SocialLoginButtonsProps } from './SocialLoginButtons';
 

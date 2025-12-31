@@ -3,7 +3,6 @@ import { useState } from 'react';
 import {
   AuthRequestButton,
   AuthVerifyButton,
-  KakaoContinueButton,
   LoginButton,
   MenuToggleButton,
   SocialLoginButtons,
@@ -42,14 +41,6 @@ export const HomePage = () => {
         ---------------------------------------------------------------- */}
         <section className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex flex-col items-center gap-6">
           <h2 className="text-lg font-bold text-gray-800 w-full border-b pb-4 mb-2">Main Actions</h2>
-
-          {/* 카카오 */}
-          <div className="w-full flex flex-col gap-3">
-            <KakaoContinueButton />
-            <KakaoContinueButton variant="white" />
-          </div>
-
-          <div className="w-full border-t border-gray-100"></div>
 
           {/* 로그인 */}
           <div className="w-full flex flex-col gap-3">
