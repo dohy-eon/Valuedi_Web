@@ -24,7 +24,8 @@ const CategoryButton: React.FC<CategoryButtonProps> = ({ className, text = 'ì „ì
     >
       <Typography
         style={isSelected ? 'text-caption-1-12-semi-bold' : 'text-caption-1-12-regular'}
-        className={cn('text-[12px] leading-[16px]', isSelected ? 'text-neutral-90' : 'text-neutral-70')}
+        color={isSelected ? 'neutral-90' : 'neutral-70'}
+        className="text-[12px] leading-[16px]"
         fontFamily="pretendard"
       >
         {text}

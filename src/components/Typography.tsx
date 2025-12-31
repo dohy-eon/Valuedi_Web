@@ -1,5 +1,4 @@
 import React from 'react';
-import { cn } from '@/utils/cn';
 import type { ColorToken, TypographyStyle } from '@/styles/design-system';
 
 export type TypographyVariant =
@@ -245,13 +244,15 @@ export const Typography: React.FC<TypographyProps> = ({
   const colorClass = getColorClass(color);
 
   // 최종 클래스 조합
-  const classes = cn(
+  const classes = [
     fontSizeClass,
     fontWeightClass,
     fontFamilyClass,
     colorClass,
-    className
-  );
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <Component className={classes} {...(props as React.HTMLAttributes<HTMLElement>)}>
@@ -276,58 +277,65 @@ function getDefaultTag(variant: TypographyVariant): 'h1' | 'h2' | 'h3' | 'h4' | 
 /**
  * TypographyStyle 타입을 파싱하여 variant와 weight를 추출
  * 
- * @note 현재 Typography 컴포넌트는 variant와 weight를 분리해서 사용하는 구조입니다.
- * TypographyStyle을 직접 사용하려면 컴포넌트 구조를 변경해야 합니다.
- * 이 함수는 향후 확장을 위해 제공되며, 현재는 사용되지 않습니다.
+ * Figma 디자인 토큰 형식(예: 'text-body-1-16-semi-bold')을 파싱하여
+ * Typography 컴포넌트가 사용할 수 있는 variant와 weight로 변환합니다.
+ * 
+ * @param style - TypographyStyle 타입의 디자인 토큰 문자열
+ * @returns variant와 weight를 포함한 객체
  * 
  * @example
  * ```tsx
+ * const { variant, weight } = parseTypographyStyle('text-body-1-16-semi-bold');
+ * // { variant: 'body-1', weight: 'semi-bold' }
+ * 
  * const { variant, weight } = parseTypographyStyle('text-title-36-bold');
  * // { variant: 'title-1', weight: 'bold' }
  * ```
  */
 export function parseTypographyStyle(style: TypographyStyle): { variant: TypographyVariant; weight: TypographyWeight } {
-  // 'text-title-36-bold' -> ['text', 'title', '36', 'bold']
-  const parts = style.replace('text-', '').split('-');
+  // 'text-body-1-16-semi-bold' -> 'body-1-16-semi-bold'
+  const pureStyle = style.replace('text-', '');
   
-  // variant 추출
-  let variant: TypographyVariant;
-  const variantPart = parts[0]; // 'title', 'headline', 'body', 'caption'
-  const sizePart = parts[1]; // '36', '28', '24', etc.
-  const readingPart = parts[2]; // 'reading' (optional)
+  // 1. Variant 추출: 더 구체적인 패턴부터 확인 (순서 중요)
+  let variant: TypographyVariant = 'body-1'; // 기본값
   
-  if (variantPart === 'title') {
-    if (sizePart === '36') variant = 'title-1';
-    else if (sizePart === '28') variant = 'title-2';
-    else if (sizePart === '24') variant = 'title-3';
-    else variant = 'title-1'; // fallback
-  } else if (variantPart === 'headline') {
-    if (sizePart === '22') variant = 'headline-1';
-    else if (sizePart === '20') variant = 'headline-2';
-    else if (sizePart === '18') variant = 'headline-3';
-    else variant = 'headline-1'; // fallback
-  } else if (variantPart === 'body') {
-    if (sizePart === '16') {
-      variant = readingPart === 'reading' ? 'body-1-reading' : 'body-1';
-    } else if (sizePart === '14') variant = 'body-2';
-    else if (sizePart === '13') variant = 'body-3';
-    else variant = 'body-1'; // fallback
-  } else if (variantPart === 'caption') {
-    if (sizePart === '12') variant = 'caption-1';
-    else if (sizePart === '11') variant = 'caption-2';
-    else variant = 'caption-1'; // fallback
-  } else {
-    variant = 'body-1'; // fallback
+  if (pureStyle.includes('title-1') || pureStyle.includes('36')) {
+    variant = 'title-1';
+  } else if (pureStyle.includes('title-2') || pureStyle.includes('28')) {
+    variant = 'title-2';
+  } else if (pureStyle.includes('title-3') || pureStyle.includes('24')) {
+    variant = 'title-3';
+  } else if (pureStyle.includes('headline-1') || pureStyle.includes('22')) {
+    variant = 'headline-1';
+  } else if (pureStyle.includes('headline-2') || pureStyle.includes('20')) {
+    variant = 'headline-2';
+  } else if (pureStyle.includes('headline-3') || pureStyle.includes('18')) {
+    variant = 'headline-3';
+  } else if (pureStyle.includes('body-1-reading')) {
+    // body-1-reading은 body-1보다 먼저 체크해야 함
+    variant = 'body-1-reading';
+  } else if (pureStyle.includes('body-1')) {
+    variant = 'body-1';
+  } else if (pureStyle.includes('body-2')) {
+    variant = 'body-2';
+  } else if (pureStyle.includes('body-3')) {
+    variant = 'body-3';
+  } else if (pureStyle.includes('caption-1')) {
+    variant = 'caption-1';
+  } else if (pureStyle.includes('caption-2')) {
+    variant = 'caption-2';
   }
   
-  // weight 추출
-  const weightIndex = readingPart === 'reading' ? 3 : 2;
-  const weightPart = parts[weightIndex] || 'regular';
-  const weight: TypographyWeight = 
-    weightPart === 'bold' ? 'bold' :
-    weightPart === 'medium' ? 'medium' :
-    weightPart === 'semi-bold' ? 'semi-bold' :
-    'regular';
+  // 2. Weight 추출: endsWith와 includes를 조합하여 더 정확하게
+  let weight: TypographyWeight = 'regular'; // 기본값
+  
+  if (pureStyle.includes('semi-bold')) {
+    weight = 'semi-bold';
+  } else if (pureStyle.endsWith('-bold') || pureStyle.endsWith('bold')) {
+    weight = 'bold';
+  } else if (pureStyle.endsWith('-medium') || pureStyle.endsWith('medium')) {
+    weight = 'medium';
+  }
   
   return { variant, weight };
 }
