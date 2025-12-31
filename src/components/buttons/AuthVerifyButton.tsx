@@ -13,7 +13,7 @@ const AuthVerifyButton: React.FC<AuthVerifyButtonProps> = ({ className, disabled
       disabled={disabled}
       className={cn(
         'flex items-center justify-center',
-        'w-[97px]',
+        'w-[80px]',
         'h-[48px]',
         'px-[24px] py-[10px]',
         'rounded-[8px]',

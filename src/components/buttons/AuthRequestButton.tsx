@@ -13,7 +13,7 @@ const AuthRequestButton: React.FC<AuthRequestButtonProps> = ({ className, disabl
       disabled={disabled}
       className={cn(
         'flex items-center justify-center',
-        'w-[117px]',
+        'w-[100px]',
         'h-[48px]',
         'px-[24px]',
         'py-[10px]',
