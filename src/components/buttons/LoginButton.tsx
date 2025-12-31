@@ -1,36 +1,39 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '../Typography';
+import { BaseButton, BaseButtonProps } from './BaseButton';
 
-export interface LoginButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  className?: string;
+export interface LoginButtonProps extends Omit<BaseButtonProps, 'size' | 'variant' | 'fullWidth'> {
+  /**
+   * 버튼 텍스트
+   * @default '로그인'
+   */
   text?: string;
 }
 
-const LoginButton: React.FC<LoginButtonProps> = ({ className, disabled, text = '로그인', ...props }) => {
+/**
+ * LoginButton 컴포넌트
+ *
+ * 로그인 페이지에서 사용하는 고정 너비의 Primary 버튼입니다.
+ * BaseButton을 확장하여 특정 스타일(Primary Color, Fixed Width)만 적용합니다.
+ *
+ * @example
+ * ```tsx
+ * <LoginButton text="로그인" onClick={handleLogin} />
+ * <LoginButton text="로그인" disabled loading />
+ * ```
+ */
+const LoginButton: React.FC<LoginButtonProps> = ({ text = '로그인', className, ...props }) => {
   return (
-    <button
-      type="button"
-      disabled={disabled}
-      className={cn(
-        'flex items-center justify-center',
-        'w-[320px] h-[48px]',
-        'rounded-[8px]',
-        disabled ? 'bg-primary-light cursor-not-allowed' : 'bg-primary-normal active:bg-atomic-yellow-40',
-        className
-      )}
+    <BaseButton
+      size="medium"
+      variant="primary"
+      text={text}
+      className={cn('w-[320px]', className)}
       {...props}
-    >
-      <Typography
-        variant="body-1"
-        weight="semi-bold"
-        className={cn('text-center', disabled ? 'text-neutral-50' : 'text-neutral-90')}
-        fontFamily="pretendard"
-      >
-        {text}
-      </Typography>
-    </button>
+    />
   );
 };
+
+LoginButton.displayName = 'LoginButton';
 
 export default LoginButton;
