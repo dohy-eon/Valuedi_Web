@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
 import { Typography } from '../Typography';
+import type { TypographyStyle } from '@/styles/design-system';
 
 export type ButtonSize = 'small' | 'medium' | 'large' | 'custom';
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
@@ -35,15 +36,10 @@ export interface BaseButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLBut
    */
   children?: React.ReactNode;
   /**
-   * Typography variant
-   * @default 'body-1'
+   * Typography style (Figma 디자인 토큰)
+   * @default 'text-body-1-16-semi-bold'
    */
-  typographyVariant?: 'title-1' | 'title-2' | 'title-3' | 'headline-1' | 'headline-2' | 'headline-3' | 'body-1' | 'body-2' | 'caption-1' | 'caption-2';
-  /**
-   * Typography weight
-   * @default 'semi-bold'
-   */
-  typographyWeight?: 'bold' | 'medium' | 'regular' | 'semi-bold';
+  typographyStyle?: TypographyStyle;
 }
 
 /**
@@ -68,8 +64,7 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
   disabled,
   text,
   children,
-  typographyVariant = 'body-1',
-  typographyWeight = 'semi-bold',
+  typographyStyle = 'text-body-1-16-semi-bold',
   className,
   ...props
 }) => {
@@ -103,38 +98,38 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
     },
   };
 
-  // 텍스트 색상 매핑
-  const textColorStyles: Record<ButtonVariant, { default: string; disabled: string }> = {
+  // 텍스트 색상 매핑 (ColorToken으로 변환)
+  const textColorTokens: Record<ButtonVariant, { default: string; disabled: string }> = {
     primary: {
-      default: 'text-neutral-90',
-      disabled: 'text-neutral-50',
+      default: 'neutral-90',
+      disabled: 'neutral-50',
     },
     secondary: {
-      default: 'text-neutral-90',
-      disabled: 'text-neutral-60',
+      default: 'neutral-90',
+      disabled: 'neutral-60',
     },
     outline: {
-      default: 'text-neutral-90',
-      disabled: 'text-neutral-60',
+      default: 'neutral-90',
+      disabled: 'neutral-60',
     },
     ghost: {
-      default: 'text-neutral-90',
-      disabled: 'text-neutral-50',
+      default: 'neutral-90',
+      disabled: 'neutral-50',
     },
   };
 
   const sizeClass = sizeStyles[size];
   const variantClass = isDisabled ? variantStyles[variant].disabled : variantStyles[variant].default;
   const activeClass = !isDisabled && variantStyles[variant].active ? variantStyles[variant].active : '';
-  const textColorClass = isDisabled ? textColorStyles[variant].disabled : textColorStyles[variant].default;
+  const textColorToken = isDisabled ? textColorTokens[variant].disabled : textColorTokens[variant].default;
 
   // children이 있으면 children을 렌더링, 없으면 text를 Typography로 렌더링
   const buttonContent = children || (
     <Typography
-      variant={typographyVariant}
-      weight={typographyWeight}
-      className={cn('text-center', textColorClass)}
+      style={typographyStyle}
+      className="text-center"
       fontFamily="pretendard"
+      color={textColorToken as any}
     >
       {text}
     </Typography>

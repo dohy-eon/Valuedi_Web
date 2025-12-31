@@ -247,6 +247,15 @@ export default {
           'sub-body': 'var(--color-text-sub-body)',
           disabled: 'var(--color-text-disabled)',
         },
+        // Status Colors
+        status: {
+          error: 'var(--color-status-error)',
+          abled: 'var(--color-status-abled)',
+        },
+        // Line Colors
+        line: {
+          900: 'var(--color-line-900)',
+        },
       },
       fontFamily: {
         pretendard: ['var(--font-family-pretendard)', 'sans-serif'],

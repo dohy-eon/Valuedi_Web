@@ -50,8 +50,7 @@ const AuthInput = ({
     <div className={cn('flex flex-col text-left', className)}>
       {label && (
         <Typography 
-          variant="body-2" 
-          weight="semi-bold" 
+          style="text-body-2-14-semi-bold"
           className="text-[#666666] mb-2"
         >
           {label}
@@ -82,11 +81,11 @@ const AuthInput = ({
       {(error || success) && (
         <div className="mt-1.5 ml-1">
           {error ? (
-            <Typography variant="caption-2" weight="medium" className="text-[#FF4242]">
+            <Typography style="text-caption-2-11-medium" className="text-[#FF4242]">
               {error}
             </Typography>
           ) : (
-            <Typography variant="caption-2" weight="medium" className="text-[#00BF40]">
+            <Typography style="text-caption-2-11-medium" className="text-[#00BF40]">
               {success}
             </Typography>
           )}

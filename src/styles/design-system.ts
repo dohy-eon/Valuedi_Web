@@ -24,7 +24,10 @@ export type ColorToken =
   | 'text-title'
   | 'text-body'
   | 'text-sub-body'
-  | 'text-disabled';
+  | 'text-disabled'
+  | 'status-error'
+  | 'status-abled'
+  | 'line-900';
 
 export type FontFamily = 'pretendard' | 'preahvihear';
 

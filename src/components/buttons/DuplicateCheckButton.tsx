@@ -31,8 +31,7 @@ const DuplicateCheckButton: React.FC<DuplicateCheckButtonProps> = ({
       {...props}
     >
       <Typography
-        variant="body-2"
-        weight="semi-bold"
+        style="text-body-2-14-semi-bold"
         fontFamily="pretendard"
         className={cn('text-center', 'whitespace-nowrap', disabled ? 'text-neutral-60' : 'text-neutral-90')}
       >

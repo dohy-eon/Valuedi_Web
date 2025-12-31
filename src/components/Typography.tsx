@@ -22,12 +22,22 @@ export type TypographyFontFamily = 'pretendard' | 'preahvihear';
 
 export interface TypographyProps {
   /**
-   * 타이포그래피 변형
+   * Figma 디자인 토큰 기반 코드 작성
+   * @example
+   * ```tsx
+   * <Typography style="text-title-36-bold">제목</Typography>
+   * ```
    */
-  variant: TypographyVariant;
+  style?: TypographyStyle;
+  /**
+   * 타이포그래피 변형
+   * style prop이 제공되지 않은 경우에만 사용됩니다.
+   */
+  variant?: TypographyVariant;
   /**
    * 폰트 두께
    * @default 'regular'
+   * style prop이 제공되지 않은 경우에만 사용됩니다.
    */
   weight?: TypographyWeight;
   /**
@@ -63,6 +73,12 @@ export interface TypographyProps {
  *
  * @example
  * ```tsx
+ * // Figma 토큰을 직접 사용 (권장 - 가독성 향상)
+ * <Typography style="text-title-36-bold" color="title">
+ *   메인 제목
+ * </Typography>
+ *
+ * // 기존 방식 (하위 호환성)
  * <Typography variant="title-1" weight="bold" color="title">
  *   메인 제목
  * </Typography>
@@ -132,6 +148,11 @@ const colorTokenToClass: Record<ColorToken, string> = {
   'text-body': 'text-text-body',
   'text-sub-body': 'text-text-sub-body',
   'text-disabled': 'text-text-disabled',
+  // Status colors
+  'status-error': 'text-status-error',
+  'status-abled': 'text-status-abled',
+  // Line colors
+  'line-900': 'text-line-900',
 };
 
 /**
@@ -187,8 +208,9 @@ const getColorClass = (color?: ColorToken | 'title' | 'body' | 'sub-body' | 'dis
 };
 
 export const Typography: React.FC<TypographyProps> = ({
-  variant,
-  weight = 'regular',
+  style,
+  variant: propVariant,
+  weight: propWeight = 'regular',
   fontFamily = 'pretendard',
   as,
   color,
@@ -196,6 +218,20 @@ export const Typography: React.FC<TypographyProps> = ({
   className,
   ...props
 }) => {
+  // style prop이 제공되면 parseTypographyStyle을 사용하여 variant와 weight 추출
+  // 그렇지 않으면 기존 prop 사용
+  const { variant, weight } = style
+    ? parseTypographyStyle(style)
+    : {
+        variant: propVariant,
+        weight: propWeight,
+      };
+
+  // variant가 없으면 에러 (타입 안전성을 위해 런타임 체크)
+  if (!variant) {
+    throw new Error('Typography 컴포넌트는 style 또는 variant prop이 필요합니다.');
+  }
+
   // variant에 따른 기본 태그 결정
   const defaultTag = getDefaultTag(variant);
   const Component = (as || defaultTag) as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'div';

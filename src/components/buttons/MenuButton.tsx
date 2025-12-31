@@ -25,8 +25,7 @@ const MenuButton: React.FC<MenuButtonProps> = ({ className, isSelected = false, 
       {...props}
     >
       <Typography
-        variant="body-1"
-        weight={isSelected ? 'semi-bold' : 'regular'}
+        style={isSelected ? 'text-body-1-16-semi-bold' : 'text-body-1-16-regular'}
         className={cn('text-center', isSelected ? 'text-neutral-90' : 'text-neutral-70')}
         fontFamily="pretendard"
       >

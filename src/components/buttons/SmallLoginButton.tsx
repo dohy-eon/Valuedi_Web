@@ -22,7 +22,7 @@ const SmallLoginButton: React.FC<SmallLoginButtonProps> = ({ className, text = '
       )}
       {...props}
     >
-      <Typography variant="body-2" weight="semi-bold" className="text-neutral-90 text-center" fontFamily="pretendard">
+      <Typography style="text-body-2-14-semi-bold" className="text-neutral-90 text-center" fontFamily="pretendard">
         {text}
       </Typography>
     </button>

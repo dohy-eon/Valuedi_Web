@@ -25,8 +25,7 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
           <img src={KakaoIconUrl} width="18" height="18" alt="icon" />
         </span>
         <Typography
-          variant="body-1"
-          weight="semi-bold"
+          style="text-body-1-16-semi-bold"
           className={cn('text-center', 'text-neutral-90')}
           fontFamily="pretendard"
         >
@@ -40,8 +39,7 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
         onClick={onEmailClick}
       >
         <Typography
-          variant="body-1"
-          weight="semi-bold"
+          style="text-body-1-16-semi-bold"
           className={cn('text-center', 'text-neutral-90')}
           fontFamily="pretendard"
         >
