@@ -102,6 +102,49 @@ const weightToFontWeightClass: Record<TypographyWeight, string> = {
 };
 
 /**
+ * ColorToken을 Tailwind text color 클래스로 매핑하는 객체
+ * design-system.ts의 ColorToken과 1:1 매핑
+ */
+const colorTokenToClass: Record<ColorToken, string> = {
+  // Neutral colors
+  'neutral-0': 'text-neutral-0',
+  'neutral-10': 'text-neutral-10',
+  'neutral-20': 'text-neutral-20',
+  'neutral-30': 'text-neutral-30',
+  'neutral-40': 'text-neutral-40',
+  'neutral-50': 'text-neutral-50',
+  'neutral-60': 'text-neutral-60',
+  'neutral-70': 'text-neutral-70',
+  'neutral-80': 'text-neutral-80',
+  'neutral-90': 'text-neutral-90',
+  'neutral-100': 'text-neutral-100',
+  // Base colors
+  'white': 'text-white',
+  'black': 'text-black',
+  'bg': 'text-bg',
+  // Primary colors
+  'pri-normal': 'text-primary-normal',
+  'pri-strong': 'text-primary-strong',
+  'pri-heavy': 'text-primary-heavy',
+  'pri-light': 'text-primary-light',
+  // Text colors
+  'text-title': 'text-text-title',
+  'text-body': 'text-text-body',
+  'text-sub-body': 'text-text-sub-body',
+  'text-disabled': 'text-text-disabled',
+};
+
+/**
+ * 기존 호환성을 위한 별칭 매핑 (title -> text-text-title)
+ */
+const colorAliasToClass: Record<'title' | 'body' | 'sub-body' | 'disabled', string> = {
+  'title': 'text-text-title',
+  'body': 'text-text-body',
+  'sub-body': 'text-text-sub-body',
+  'disabled': 'text-text-disabled',
+};
+
+/**
  * color prop을 Tailwind text color 클래스로 변환
  * ColorToken 타입을 우선 처리하며, 기존 호환성을 위해 string도 지원합니다.
  * 
@@ -116,25 +159,21 @@ const getColorClass = (color?: ColorToken | 'title' | 'body' | 'sub-body' | 'dis
     return color;
   }
 
-  // ColorToken 타입 처리 - 텍스트 색상
-  if (color === 'title' || color === 'body' || color === 'sub-body' || color === 'disabled') {
-    return `text-text-${color}`;
+  // ColorToken 직접 매핑 (O(1) 조회)
+  if (color in colorTokenToClass) {
+    return colorTokenToClass[color as ColorToken];
   }
 
-  // neutral 색상 처리 (neutral-0 ~ neutral-100)
-  if (color.startsWith('neutral-')) {
-    return `text-${color}`;
+  // 기존 호환성을 위한 별칭 처리 (title, body, sub-body, disabled)
+  if (color in colorAliasToClass) {
+    return colorAliasToClass[color as 'title' | 'body' | 'sub-body' | 'disabled'];
   }
 
   // primary 색상 처리 (pri-normal -> text-primary-normal)
+  // ColorToken에 포함되어 있지만, 동적 처리도 지원
   if (color.startsWith('pri-')) {
     const primaryVariant = color.replace('pri-', '');
     return `text-primary-${primaryVariant}`;
-  }
-
-  // base colors 처리 (white, black, bg)
-  if (color === 'white' || color === 'black' || color === 'bg') {
-    return `text-${color}`;
   }
 
   // atomic 색상 처리 (예: atomic-red-50 -> text-atomic-red-50)
