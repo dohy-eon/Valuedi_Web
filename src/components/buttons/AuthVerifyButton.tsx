@@ -19,7 +19,7 @@ const AuthVerifyButton: React.FC<AuthVerifyButtonProps> = ({ className, disabled
         'rounded-[8px]',
         disabled
           ? 'bg-neutral-20 cursor-not-allowed border border-neutral-40'
-          : 'border border-neutral-90 cursor-pointer',
+          : 'bg-neutral-0 border border-neutral-90 cursor-pointer',
         className
       )}
       {...props}

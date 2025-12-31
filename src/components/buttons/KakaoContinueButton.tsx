@@ -6,17 +6,23 @@ import nullIconUrl from '@/assets/icons/Null.svg';
 export interface KakaoContinueButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   variant?: 'primary' | 'white';
+  text?: string;
 }
 
-const KakaoContinueButton: React.FC<KakaoContinueButtonProps> = ({ className, variant = 'primary', ...props }) => {
+const KakaoContinueButton: React.FC<KakaoContinueButtonProps> = ({
+  className,
+  variant = 'primary',
+  text = '카카오 계정으로 계속하기',
+  ...props
+}) => {
   return (
     <button
       type="button"
       className={cn(
         'flex items-center justify-center',
-        'w-[360px] h-[48px]',
+        'w-[343px] h-[48px]',
         'rounded-[8px]',
-        variant === 'primary' ? 'bg-primary-normal' : 'bg-white border border-neutral-20',
+        variant === 'primary' ? 'bg-primary-normal' : 'bg-neutral-0 border border-neutral-20',
         className
       )}
       {...props}
@@ -31,7 +37,7 @@ const KakaoContinueButton: React.FC<KakaoContinueButtonProps> = ({ className, va
         className={cn('text-center', 'text-neutral-90')}
         fontFamily="pretendard"
       >
-        카카오 계정으로 계속하기
+        {text}
       </Typography>
     </button>
   );

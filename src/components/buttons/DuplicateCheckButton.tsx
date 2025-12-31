@@ -4,22 +4,28 @@ import { Typography } from '../Typography';
 
 export interface DuplicateCheckButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
+  text?: string;
 }
 
-const DuplicateCheckButton: React.FC<DuplicateCheckButtonProps> = ({ className, disabled, ...props }) => {
+const DuplicateCheckButton: React.FC<DuplicateCheckButtonProps> = ({
+  className,
+  disabled,
+  text = '중복 확인',
+  ...props
+}) => {
   return (
     <button
       type="button"
       disabled={disabled}
       className={cn(
         'flex items-center justify-center',
-        'w-[97px]',
+        'w-[80px]',
         'h-[48px]',
         'px-[24px] py-[10px]',
         'rounded-[8px]',
         disabled
           ? 'bg-neutral-20 cursor-not-allowed border border-neutral-40'
-          : 'border border-neutral-90 cursor-pointer',
+          : 'bg-neutral-0 border border-neutral-90 cursor-pointer',
         className
       )}
       {...props}
@@ -30,7 +36,7 @@ const DuplicateCheckButton: React.FC<DuplicateCheckButtonProps> = ({ className, 
         fontFamily="pretendard"
         className={cn('text-center', 'whitespace-nowrap', disabled ? 'text-neutral-60' : 'text-neutral-90')}
       >
-        중복 확인
+        {text}
       </Typography>
     </button>
   );
