@@ -1,8 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
 
-// ✅ 4가지 아이콘을 모두 불러옵니다.
-// (List.svg는 진한색, ListOff.svg는 회색이라고 가정합니다)
 import ListIcon from '@/assets/icons/List.svg?react';
 import ListOffIcon from '@/assets/icons/ListOff.svg?react';
 import CalendarIcon from '@/assets/icons/Calendar.svg?react';
