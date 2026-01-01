@@ -35,14 +35,14 @@ const AuthInput = ({
 
   // 보더 컬러 로직
   const getBorderClass = () => {
-    if (error) return 'border-[#FF4242]';
-    if (isFocused) return 'border-[#171714]';
-    return 'border-[#CCCCCC]';
+    if (error) return 'border-status-error';
+    if (isFocused) return 'border-text-title';
+    return 'border-neutral-40';
   };
 
   // 배경색 로직
   const getBgClass = () => {
-    if (isGrayBg && !isFocused) return 'bg-[#E7E7E7]';
+    if (isGrayBg && !isFocused) return 'bg-neutral-20';
     return 'bg-white';
   };
 
@@ -51,7 +51,7 @@ const AuthInput = ({
       {label && (
         <Typography 
           style="text-body-2-14-semi-bold"
-          className="text-[#666666] mb-2"
+          className="text-text-body mb-2"
         >
           {label}
         </Typography>
@@ -69,9 +69,9 @@ const AuthInput = ({
           style={{ width: width || (rightElement ? '232px' : '320px') }}
           className={cn(
             'h-[48px] px-[12px] border rounded-[8px] outline-none transition-all text-[14px] font-pretendard',
-            'placeholder:text-[#666666]',
+            'placeholder:text-text-body',
             getBgClass(),
-            isFocused || value.length > 0 ? 'text-[#171714] placeholder:text-[#171714]' : 'text-[#171714]',
+            isFocused || value.length > 0 ? 'text-text-title placeholder:text-text-title' : 'text-text-title',
             getBorderClass()
           )}
         />
@@ -81,11 +81,11 @@ const AuthInput = ({
       {(error || success) && (
         <div className="mt-1.5 ml-1">
           {error ? (
-            <Typography style="text-caption-2-11-medium" className="text-[#FF4242]">
+            <Typography style="text-caption-2-11-medium" className="text-status-error">
               {error}
             </Typography>
           ) : (
-            <Typography style="text-caption-2-11-medium" className="text-[#00BF40]">
+            <Typography style="text-caption-2-11-medium" className="text-status-abled">
               {success}
             </Typography>
           )}
