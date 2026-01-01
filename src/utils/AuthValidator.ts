@@ -8,11 +8,12 @@ export const validatePassword = (password: string): boolean => {
 };
 
 /**
- * 이메일 유효성 검사
+ * 아이디 정책: 3자 이상 16자 이하, 영어 또는 숫자로 구성
+ * (toLowerCase로 변환되므로 소문자와 숫자만 체크)
  */
-export const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+export const validateId = (id: string): boolean => {
+  const idRegex = /^[a-z0-9]{3,16}$/;
+  return idRegex.test(id);
 };
 
 /**

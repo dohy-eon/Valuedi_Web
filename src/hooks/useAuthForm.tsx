@@ -1,5 +1,5 @@
 import { useState, ChangeEvent } from 'react';
-import { validatePassword, validateEmail, validateName, validatePhone } from '@/utils/AuthValidator';
+import { validatePassword, validateName, validatePhone, validateId } from '@/utils/AuthValidator';
 
 export const useAuthForm = () => {
   // --- 상태 관리 ---
@@ -39,7 +39,7 @@ export const useAuthForm = () => {
   const handleIdChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setId(value);
-    setIdError(value.length > 0 && !validateEmail(value) ? '올바른 아이디를 입력해주세요.' : '');
+    setIdError(value.length > 0 && !validateId(value) ? '올바른 아이디를 입력해주세요.' : '');
   };
 
   const handlePwChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +50,7 @@ export const useAuthForm = () => {
 
   const handleDuplicateCheck = () => {
     setIsTyping(false);
-    if (!validateEmail(idCheck)) {
+    if (!validateId(idCheck)) {
       setIdCheckError('사용할 수 없는 아이디 형식입니다.');
       setIdCheckSuccess('');
       return;
