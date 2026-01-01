@@ -1,20 +1,27 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import { validatePassword, validateName, validatePhone, validateId } from '@/utils/AuthValidator';
 
 export const useAuthForm = () => {
-  // --- 상태 관리 ---
+  // --- 1. 상태 관리 ---
+  
+  // 아이디 관련
   const [id, setId] = useState('');
   const [idError, setIdError] = useState('');
+  const [idCheckError, setIdCheckError] = useState('');
+  const [idCheckSuccess, setIdCheckSuccess] = useState('');
+
+  // 비밀번호 관련 (숫자 2 제거 및 통합)
   const [pw, setPw] = useState('');
   const [pwError, setPwError] = useState('');
+  const [confirmPw, setConfirmPw] = useState('');
+  const [confirmPwError, setConfirmPwError] = useState('');
+  const [confirmPwSuccess, setConfirmPwSuccess] = useState('');
+
+  // 이름 관련
   const [userName, setUserName] = useState('');
   const [nameError, setNameError] = useState('');
 
-  const [idCheck, setIdCheck] = useState('');
-  const [idCheckError, setIdCheckError] = useState('');
-  const [idCheckSuccess, setIdCheckSuccess] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-
+  // 전화번호 및 인증 관련
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [verifyCode, setVerifyCode] = useState('');
@@ -23,54 +30,92 @@ export const useAuthForm = () => {
   const [isRequested, setIsRequested] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
 
-  const [pw2, setPw2] = useState('');
-  const [pw2Error, setPw2Error] = useState('');
-  const [confirmPw2, setConfirmPw2] = useState('');
-  const [confirmPw2Error, setConfirmPw2Error] = useState('');
-  const [confirmPw2Success, setConfirmPw2Success] = useState('');
+  // 기타 상태
+  const [isTyping, setIsTyping] = useState(false);
 
-  // --- 핸들러 ---
+  // --- 2. 통합 비밀번호 검증 로직 (useEffect) ---
+  // pw와 confirmPw의 상태를 실시간으로 감시하여 메시지를 업데이트합니다.
+  useEffect(() => {
+    const isPwInvalid = pw.length > 0 && !validatePassword(pw);
+    setPwError(isPwInvalid ? '영문 대소문자, 숫자, 특수문자 포함 8~16자로 입력해주세요.' : '');
+
+    if (confirmPw.length > 0) {
+      if (pw !== confirmPw) {
+        setConfirmPwError('비밀번호가 일치하지 않습니다.');
+        setConfirmPwSuccess('');
+      } else if (!isPwInvalid) {
+        setConfirmPwError('');
+        setConfirmPwSuccess('사용 가능한 비밀번호입니다.');
+      } else {
+        setConfirmPwError('');
+        setConfirmPwSuccess('');
+      }
+    } else {
+      setConfirmPwError('');
+      setConfirmPwSuccess('');
+    }
+  }, [pw, confirmPw]);
+
+  // --- 3. 핸들러 함수 ---
+
+  // 이름 핸들러
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setUserName(value);
     setNameError(value.length > 0 && !validateName(value) ? '올바르지 않은 이름 형식입니다.' : '');
   };
 
+  // 아이디 핸들러
   const handleIdChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setId(value);
+    setIsTyping(true);
     setIdError(value.length > 0 && !validateId(value) ? '올바른 아이디를 입력해주세요.' : '');
+    setIdCheckSuccess('');
+    setIdCheckError('');
   };
 
-  const handlePwChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPw(value);
-    setPwError(value.length > 0 && !validatePassword(value) ? '영문 대소문자, 숫자, 특수문자 포함 8~16자로 입력해주세요.' : '');
-  };
-
+  // 아이디 중복 확인
   const handleDuplicateCheck = () => {
     setIsTyping(false);
-    if (!validateId(idCheck)) {
+    if (!validateId(id)) {
       setIdCheckError('사용할 수 없는 아이디 형식입니다.');
       setIdCheckSuccess('');
       return;
     }
-    if (idCheck === 'test@naver.com') {
+    // 테스트용 목업 로직
+    if (id === 'user') {
       setIdCheckError('이미 사용 중인 아이디입니다.');
       setIdCheckSuccess('');
     } else {
-      setIdCheckError('');
-      setIdCheckSuccess('사용 가능한 아이디입니다.');
+    setIdCheckError('');
+    setIdCheckSuccess('');  
+    setIdCheckSuccess('사용 가능한 아이디입니다.');
     }
   };
 
+  // 비밀번호 핸들러
+  const handlePwChange = (e: ChangeEvent<HTMLInputElement>) => setPw(e.target.value);
+  const handleConfirmPwChange = (e: ChangeEvent<HTMLInputElement>) => setConfirmPw(e.target.value);
+
+  // 전화번호 핸들러
   const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPhone(value);
     setPhoneError(value.length > 0 && !validatePhone(value) ? '올바르지 않은 전화번호 형식입니다.' : '');
   };
 
+  // 인증번호 핸들러
+  const handleVerifyCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setVerifyCode(value);
+    setVerifyError('');
+    setVerifySuccess('');
+  };
+
+  // 인증번호 확인 핸들러
   const handleVerifyButtonClick = () => {
+    // 테스트용 목업 번호 '123456'
     if (verifyCode === '123456') {
       setIsVerified(true);
       setVerifyError('');
@@ -78,48 +123,30 @@ export const useAuthForm = () => {
     } else {
       setIsVerified(false);
       setVerifyError('올바르지 않은 인증번호입니다.');
+      setVerifySuccess('');
     }
   };
 
-  const handlePw2Change = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPw2(value);
-    const isInvalid = value.length > 0 && !validatePassword(value);
-    setPw2Error(isInvalid ? '영문 대소문자, 숫자, 특수문자 포함 8~16자로 입력해주세요.' : '');
-    if (confirmPw2.length > 0) {
-      if (value !== confirmPw2) {
-        setConfirmPw2Error('비밀번호가 일치하지 않습니다.');
-        setConfirmPw2Success('');
-      } else if (!isInvalid) {
-        setConfirmPw2Error('');
-        setConfirmPw2Success('사용 가능한 비밀번호입니다.');
-      }
-    }
-  };
-
-  const handleConfirmPw2Change = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setConfirmPw2(value);
-    if (value.length > 0) {
-      if (pw2 !== value) {
-        setConfirmPw2Error('비밀번호가 일치하지 않습니다.');
-        setConfirmPw2Success('');
-      } else if (!pw2Error) {
-        setConfirmPw2Error('');
-        setConfirmPw2Success('사용 가능한 비밀번호입니다.');
-      }
-    } else {
-      setConfirmPw2Error('');
-      setConfirmPw2Success('');
-    }
-  };
-
+  // --- 4. 값 반환 ---
   return {
-    id, idError, pw, pwError, userName, nameError,
-    idCheck, idCheckError, idCheckSuccess, isTyping, setIsTyping, setIdCheck,
-    phone, phoneError, verifyCode, setVerifyCode, verifyError, verifySuccess, isRequested, setIsRequested, isVerified,
-    pw2, pw2Error, confirmPw2, confirmPw2Error, confirmPw2Success,
-    handleNameChange, handleIdChange, handlePwChange, handleDuplicateCheck,
-    handlePhoneChange, handleVerifyButtonClick, handlePw2Change, handleConfirmPw2Change
+    // 상태값들
+    id, idError, idCheckError, idCheckSuccess,
+    pw, pwError, confirmPw, confirmPwError, confirmPwSuccess,
+    userName, nameError,
+    phone, phoneError, verifyCode, verifyError, verifySuccess, isRequested, isVerified,
+    isTyping, 
+
+    // 상태 변경 함수들
+    setVerifyCode, setIsRequested,
+
+    // 핸들러 함수들
+    handleNameChange,
+    handleIdChange,
+    handleDuplicateCheck,
+    handlePwChange,
+    handleConfirmPwChange,
+    handlePhoneChange,
+    handleVerifyButtonClick,
+    handleVerifyCodeChange
   };
 };

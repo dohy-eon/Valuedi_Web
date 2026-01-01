@@ -56,7 +56,7 @@ export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementCha
         onClick={handleAllCheck}
       >
         <CheckBoxButton isChecked={isAllChecked} />
-        <Typography variant="body-2" weight="bold" className="text-neutral-100">
+        <Typography variant="body-2" weight="bold" className={isAllChecked ? "text-neutral-100" : "text-neutral-60"}>
           전체 동의
         </Typography>
       </div>

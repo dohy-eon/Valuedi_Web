@@ -1,6 +1,6 @@
 import { Typography } from '@/components/Typography';
 import SocialLoginContainer from '@/components/login/SocialLoginContainer';
-import BaseLoginContainer from '@/components/login/BaseLoingContainer';
+import BaseLoginContainer from '@/components/login/BaseLoginContainer';
 import SignUpContainer from '@/components/login/SignUpContainer';
 
 export const HomePage = () => {

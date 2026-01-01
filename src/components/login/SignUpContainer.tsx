@@ -25,8 +25,8 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
   auth.id && !auth.idError &&
   auth.userName && !auth.nameError &&
   auth.isVerified &&
-  auth.pw2 && !auth.pw2Error &&
-  auth.confirmPw2Success &&
+  auth.pw && !auth.pwError &&
+  auth.confirmPwSuccess &&
   isTermsValid
 );
 
@@ -54,12 +54,13 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
           value={auth.id}
           onChange={auth.handleIdChange}
           placeholder="아이디를 입력해주세요."
-          error={auth.idError}
+          success={auth.idCheckSuccess}
+          error={auth.idError || auth.idCheckError}
           rightElement={
             <DuplicateCheckButton 
-              disabled={auth.id.length === 0} 
-              onClick={() => console.log('중복확인')} 
-            />
+                  disabled={auth.id.length === 0} 
+                  onClick={auth.handleDuplicateCheck}
+                />
           }
         />
 
@@ -93,9 +94,10 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
               <AuthInput
                 name="auth_code"
                 value={auth.verifyCode}
-                width="232px" 
+                width="withButton" 
                 isGrayBg={!auth.isRequested || auth.isVerified}
-                onChange={(e) => auth.setVerifyCode(e.target.value)}
+                onChange={auth.handleVerifyCodeChange}
+                readOnly={auth.isVerified}
                 placeholder="인증번호를 입력해주세요"
                 error={auth.verifyError}
                 success={auth.verifySuccess}
@@ -113,31 +115,31 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
           <AuthInput
             label="비밀번호"
             type="password"
-            value={auth.pw2}
-            onChange={auth.handlePw2Change}
+            value={auth.pw}
+            onChange={auth.handlePwChange}
             placeholder="비밀번호를 입력해주세요."
-            error={auth.pw2Error}
+            error={auth.pwError}
             isDouble={true}
           />
           <AuthInput
             type="password"
-            value={auth.confirmPw2}
-            onChange={auth.handleConfirmPw2Change}
+            value={auth.confirmPw}
+            onChange={auth.handleConfirmPwChange}
             placeholder="비밀번호를 다시 한 번 입력해주세요."
-            error={auth.confirmPw2Error}
-            success={auth.confirmPw2Success}
+            error={auth.confirmPwError}
+            success={auth.confirmPwSuccess}
           />
         </div>
       </div>
 
-      {/* 4. 약관 동의 섹션: 320px 꽉 채움 및 구분선 적용 */}
+      {/* 4. 약관 동의 섹션 */}
       <div className="w-full">
         <TermsAgreement 
           onRequirementChange={(isValid) => setIsTermsValid(isValid)} 
         />
       </div>
 
-      {/* 5. 회원가입 버튼 영역: mt-8(32px) 간격 및 320px 너비 */}
+      {/* 5. 회원가입 버튼 영역 */}
       <div className="w-full mt-8">
         <LoginButton
           text="회원가입하기"

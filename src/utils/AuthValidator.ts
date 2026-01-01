@@ -32,12 +32,11 @@ export const validateName = (name: string): boolean => {
 
 /**
  * 전화번호 형식 검사: 
- * 1. 숫자만 포함되어야 함 (ddfkja 같은 문자 차단)
- * 2. 한국 휴대폰 번호 기준 10자~11자
+ * 1. 0: 전화번호는 0으로 시작
+ * 2. 한국 휴대폰 번호 기준 8자~10자
  */
 export const validatePhone = (phone: string): boolean => {
-  // 숫자만 10자에서 11자 사이인지 확인하는 정규식
-  const phoneRegex = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
+  const phoneRegex = /^0\d{8,10}$/;
   
   return phoneRegex.test(phone);
 };

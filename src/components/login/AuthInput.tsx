@@ -16,6 +16,7 @@ interface AuthInputProps {
   width?: 'full' | 'withButton' | string; 
   isGrayBg?: boolean;
   isDouble?: boolean; 
+  readOnly?: boolean; // 💡 추가됨
 }
 
 const AuthInput = ({
@@ -32,6 +33,7 @@ const AuthInput = ({
   width,
   isGrayBg,
   isDouble,
+  readOnly,
 }: AuthInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -42,7 +44,8 @@ const AuthInput = ({
   };
 
   const getBgClass = () => {
-    if (isGrayBg && !isFocused) return 'bg-neutral-20';
+    // 💡 readOnly이거나 isGrayBg일 때 회색 배경 적용
+    if ((isGrayBg || readOnly) && !isFocused) return 'bg-neutral-20';
     return 'bg-white';
   };
 
@@ -54,13 +57,7 @@ const AuthInput = ({
   })();
 
   return (
-    <div 
-      className={cn(
-        'flex flex-col text-left justify-start transition-all w-full', 
-        className
-      )}
-    >
-      {/* 1. 라벨 영역 */}
+    <div className={cn('flex flex-col text-left justify-start transition-all w-full', className)}>
       {label && (
         <div className="h-[28px] flex items-start">
           <Typography variant="body-2" weight="semi-bold" className="text-text-body">
@@ -69,7 +66,6 @@ const AuthInput = ({
         </div>
       )}
 
-      {/* 2. 입력창 영역 (48px) */}
       <div className="flex items-center gap-2 h-[48px]">
         <input
           name={name}
@@ -77,34 +73,28 @@ const AuthInput = ({
           value={value}
           placeholder={placeholder}
           onChange={onChange}
-          onFocus={() => setIsFocused(true)}
+          onFocus={() => !readOnly && setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          readOnly={isGrayBg && !isFocused}
+          readOnly={readOnly}
           style={{ width: resolvedWidth }}
           className={cn(
             'h-full px-[12px] border rounded-[8px] outline-none transition-all text-[14px] font-pretendard',
             'placeholder:text-text-body',
             getBgClass(),
-            isFocused || value.length > 0 ? 'text-text-title' : 'text-text-title',
-            getBorderClass()
+            getBorderClass(),
+            readOnly && "cursor-not-allowed opacity-70"
           )}
         />
         {rightElement && <div className="flex-shrink-0">{rightElement}</div>}
       </div>
 
-      {/* 3. 메시지 및 간격 영역 */}
       {(error || success) ? (
         <div className="my-1.5 ml-2 flex items-start">
-          <Typography 
-            variant="caption-2" 
-            weight="medium" 
-            className={error ? "text-status-error" : "text-status-abled"}
-          >
+          <Typography variant="caption-2" weight="medium" className={error ? "text-status-error" : "text-status-abled"}>
             {error || success}
           </Typography>
         </div>
       ) : (
-        /* 메시지가 없을 때 */
         <div className={cn(isDouble ? "h-[8px]" : "h-[24px]")} />
       )}
     </div>

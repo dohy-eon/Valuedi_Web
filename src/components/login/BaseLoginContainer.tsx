@@ -11,14 +11,9 @@ interface BaseLoginContainerProps {
 }
 
 const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLogin }) => {
-  const { 
-    id, idError, 
-    pw, pwError, 
-    handleIdChange, 
-    handlePwChange 
-  } = useAuthForm();
+  const auth = useAuthForm();
 
-  const isFormValid = id.length > 0 && pw.length > 0 && !idError && !pwError;
+  const isFormValid = auth.id.length > 0 && auth.pw.length > 0 && !auth.idError && !auth.pwError;
 
   return (
     <div 
@@ -27,7 +22,7 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
         className
       )}
     >
-    {/* 2. 상단 텍스트 영역 */}
+    {/* 1. 상단 텍스트 영역 */}
         <div className="text-center space-y-4 my-4">
             <div className="space-y-1">
                 <Typography variant="headline-2" weight="bold" className="text-neutral-100">
@@ -47,20 +42,20 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
         <AuthInput
           label="아이디"
           name="id"
-          value={id}
-          onChange={handleIdChange}
+          value={auth.id}
+          onChange={auth.handleIdChange}
           placeholder="아이디를 입력해주세요."
-          error={idError}
+          error={auth.idError}
           width="full"
         />
         <AuthInput
           label="비밀번호"
           name="pw"
           type="password"
-          value={pw}
-          onChange={handlePwChange}
+          value={auth.pw}
+          onChange={auth.handlePwChange}
           placeholder="비밀번호를 입력해주세요."
-          error={pwError}
+          error={auth.pwError}
           width="full"
         />
       </div>
@@ -76,7 +71,7 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
               : 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40'
           )}
           disabled={!isFormValid}
-          onClick={() => onLogin?.(id.toLowerCase(), pw)}
+          onClick={() => onLogin?.(auth.id.toLowerCase(), auth.pw)}
         />
       </div>
 
