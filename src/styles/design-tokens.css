@@ -93,10 +93,10 @@
   --color-bg: #ffffff;
 
   /* Colors - Primary */
-  --color-pri-normal: #fee500;
-  --color-pri-strong: #9e8f00;
-  --color-pri-heavy: #665c00;
-  --color-pri-light: #fff170;
+  --color-pri-normal: #FFE500;
+  --color-pri-strong: #9E8F00;
+  --color-pri-heavy: #665C00;
+  --color-pri-light: #FFF170;
 
   /* Colors - Atomic Common */
   --color-atomic-common-0: #000000;
@@ -291,7 +291,14 @@
   --color-text-title: #171714;
   --color-text-body: #666666;
   --color-text-sub-body: #999999;
-  --color-text-disabled: #e0e0e0;
+  --color-text-disabled: #E0E0E0;
+
+  /* Colors - Status */
+  --color-status-error: #FF4242;
+  --color-status-abled: #00BF40;
+
+  /* Colors - Line */
+  --color-line-900: #151A38;
 
   /* Typography - Font Families */
   --font-family-pretendard: 'Pretendard', sans-serif;
@@ -350,6 +357,7 @@
 
   /* Typography - Font Weights */
   --font-weight-bold: 700;
+  --font-weight-semi-bold: 600;
   --font-weight-medium: 500;
   --font-weight-regular: 400;
 

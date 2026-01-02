@@ -18,6 +18,11 @@ export default {
     'text-body-3',
     'text-caption-1',
     'text-caption-2',
+    // Font weights
+    'font-bold',
+    'font-semi-bold',
+    'font-medium',
+    'font-regular',
   ],
   theme: {
     extend: {
@@ -247,6 +252,15 @@ export default {
           'sub-body': 'var(--color-text-sub-body)',
           disabled: 'var(--color-text-disabled)',
         },
+        // Status Colors
+        status: {
+          error: 'var(--color-status-error)',
+          abled: 'var(--color-status-abled)',
+        },
+        // Line Colors
+        line: {
+          900: 'var(--color-line-900)',
+        },
       },
       fontFamily: {
         pretendard: ['var(--font-family-pretendard)', 'sans-serif'],
@@ -281,10 +295,9 @@ export default {
       },
       fontWeight: {
         bold: 'var(--font-weight-bold)',
+        'semi-bold': 'var(--font-weight-semi-bold)',
         medium: 'var(--font-weight-medium)',
         regular: 'var(--font-weight-regular)',
-        // Note: semi-bold는 디자인 시스템에서 preahvihear의 regular weight를 사용
-        'semi-bold': 'var(--font-weight-regular)',
       },
       letterSpacing: {
         0: 'var(--letter-spacing-0)',

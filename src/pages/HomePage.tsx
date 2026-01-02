@@ -1,86 +1,57 @@
-import { Typography } from '@/components';
+import { Typography } from '@/components/Typography';
+import SocialLoginContainer from '@/components/login/SocialLoginContainer';
+import BaseLoginContainer from '@/components/login/BaseLoginContainer';
+import SignUpContainer from '@/components/login/SignUpContainer';
 
 export const HomePage = () => {
+  const handleLogin = () => {
+    console.log('로그인 시도');
+  };
+
+  const handleAction = (action: string, data?: any) => {
+  console.log(`${action} action triggered`, data || '');
+};
+
+
   return (
-    <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-8">
-      <div className="max-w-4xl w-full space-y-8">
-        {/* 메인 타이틀 */}
-        <Typography variant="title-1" weight="bold" color="title" className="text-center">
-          Valuedi
+    <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-10 font-pretendard">
+      
+      {/* 테스트 페이지 타이틀 */}
+      <div className="mb-12 text-center">
+        <Typography variant="headline-1" weight="bold" className="text-neutral-100">
+          로그인 묶음 컴포넌트
         </Typography>
+      </div>
 
-        {/* 서브 타이틀 */}
-        <Typography variant="headline-1" weight="medium" color="title" className="text-center">
-          디자인 시스템이 적용된 메인페이지
+      <div className="flex flex-row items-start justify-center gap-12 flex-wrap">
+        
+        {/* 1. 소셜 로그인 버전 (SocialLoginContainer) */}
+        <div className="flex flex-col items-center gap-4">
+        <Typography variant="body-2" className="text-neutral-60 mt-2">
+          소셜로그인
         </Typography>
-
-        {/* 본문 */}
-        <div className="space-y-4">
-          <Typography variant="body-1" weight="regular" color="body">
-            이 페이지는 디자인 시스템의 타이포그래피와 색상을 사용하고 있습니다.
-          </Typography>
-
-          <Typography variant="body-1" weight="regular" color="body">
-            Typography 컴포넌트를 통해 일관된 스타일을 유지하며, Tailwind 유틸리티 클래스를 조합하여 유연하게 레이아웃을
-            구성할 수 있습니다.
-          </Typography>
+          <SocialLoginContainer />
         </div>
 
-        {/* 예시 섹션 */}
-        <div className="mt-12 space-y-6">
-          <Typography variant="title-3" weight="bold" color="title">
-            타이포그래피 예시
+        {/* 2. 아이디/비밀번호 로그인 버전 (BaseLoginContainer) */}
+        <div className="flex flex-col items-center gap-4">
+          <Typography variant="body-2" className="text-neutral-60 mt-2">
+          아이디/비밀번호 로그인
           </Typography>
-
-          <div className="space-y-3">
-            <Typography variant="title-2" weight="bold" color="title">
-              Title 2 (28px, Bold)
-            </Typography>
-            <Typography variant="headline-2" weight="medium" color="title">
-              Headline 2 (20px, Medium)
-            </Typography>
-            <Typography variant="body-1" weight="regular" color="body">
-              Body 1 (16px, Regular) - 본문 텍스트에 사용됩니다.
-            </Typography>
-            <Typography variant="body-2" weight="regular" color="body">
-              Body 2 (14px, Regular) - 작은 본문 텍스트에 사용됩니다.
-            </Typography>
-            <Typography variant="caption-1" weight="medium" color="sub-body">
-              Caption 1 (12px, Medium) - 캡션이나 부가 정보에 사용됩니다.
-            </Typography>
-          </div>
+          <BaseLoginContainer onLogin={handleLogin} />
         </div>
 
-        {/* 색상 예시 */}
-        <div className="mt-12 space-y-6">
-          <Typography variant="title-3" weight="bold" color="title">
-            색상 예시
+        {/* 3. 회원가입 (SignUpContainer) */}
+        <div className="flex flex-col items-center gap-4">
+          <Typography variant="body-2" className="text-neutral-60 mt-2">
+          회원가입
           </Typography>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-primary p-4 rounded-lg">
-              <Typography variant="body-2" weight="medium" className="text-neutral-90">
-                Primary
-              </Typography>
-            </div>
-            <div className="bg-primary-strong p-4 rounded-lg">
-              <Typography variant="body-2" weight="medium" className="text-white">
-                Primary Strong
-              </Typography>
-            </div>
-            <div className="bg-primary-light p-4 rounded-lg">
-              <Typography variant="body-2" weight="medium" className="text-neutral-90">
-                Primary Light
-              </Typography>
-            </div>
-            <div className="bg-atomic-blue-50 p-4 rounded-lg">
-              <Typography variant="body-2" weight="medium" className="text-atomic-blue-90">
-                Atomic Blue
-              </Typography>
-            </div>
-          </div>
+          <SignUpContainer onSignUp={(data) => handleAction('Sign Up', data)} />
         </div>
+
       </div>
     </div>
   );
 };
+
+export default HomePage;
