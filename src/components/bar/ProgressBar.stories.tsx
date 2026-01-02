@@ -17,6 +17,10 @@ const meta = {
         step: 1,
       },
     },
+    'aria-label': {
+      control: 'text',
+      description: '접근성을 위한 라벨. 스크린 리더가 읽을 텍스트입니다.',
+    },
   },
 } satisfies Meta<typeof ProgressBar>;
 

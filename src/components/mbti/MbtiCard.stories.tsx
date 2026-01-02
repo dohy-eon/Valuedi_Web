@@ -10,9 +10,10 @@ const PlaceholderIcon = ({ className }: { className?: string }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
+    aria-hidden="true"
   >
-    <circle cx="60" cy="60" r="50" stroke="#949494" strokeWidth="2" fill="none" />
-    <text x="60" y="65" fontSize="20" fill="#949494" textAnchor="middle">
+    <circle cx="60" cy="60" r="50" stroke="#666666" strokeWidth="2" fill="none" />
+    <text x="60" y="65" fontSize="20" fill="#666666" textAnchor="middle">
       MBTI
     </text>
   </svg>
@@ -77,6 +78,12 @@ export const ESTJ: Story = {
 };
 
 export const AllTypes: Story = {
+  args: {
+    mbtiType: 'ENFP',
+    subTitle: '재기발랄한 활동가',
+    description: '열정적이고 창의적인 활동가입니다.',
+    icon: PlaceholderIcon,
+  },
   render: () => (
     <div className="flex flex-col gap-8">
       <MbtiCard

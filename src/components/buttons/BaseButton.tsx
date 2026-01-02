@@ -102,7 +102,7 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
   const textColorTokens: Record<ButtonVariant, { default: string; disabled: string }> = {
     primary: {
       default: 'neutral-90',
-      disabled: 'neutral-50',
+      disabled: 'neutral-60', // Changed from neutral-50 for WCAG AA compliance
     },
     secondary: {
       default: 'neutral-90',
@@ -114,7 +114,7 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
     },
     ghost: {
       default: 'neutral-90',
-      disabled: 'neutral-50',
+      disabled: 'neutral-60', // Changed from neutral-50 for WCAG AA compliance
     },
   };
 

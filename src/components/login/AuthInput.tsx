@@ -56,18 +56,21 @@ const AuthInput = ({
     return rightElement ? '232px' : '320px';
   })();
 
+  const inputId = `auth-input-${name}`;
+
   return (
     <div className={cn('flex flex-col text-left justify-start transition-all w-full', className)}>
       {label && (
-        <div className="h-[28px] flex items-start">
-          <Typography variant="body-2" weight="semi-bold" className="text-text-body">
+        <label htmlFor={inputId} className="h-[28px] flex items-start">
+          <Typography variant="body-2" weight="semi-bold" className="text-text-body" as="span">
             {label}
           </Typography>
-        </div>
+        </label>
       )}
 
       <div className="flex items-center gap-2 h-[48px]">
         <input
+          id={inputId}
           name={name}
           type={type}
           value={value}
@@ -76,6 +79,7 @@ const AuthInput = ({
           onFocus={() => !readOnly && setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           readOnly={readOnly}
+          aria-label={label || placeholder || name}
           style={{ width: resolvedWidth }}
           className={cn(
             'h-full px-[12px] border rounded-[8px] outline-none transition-all text-[14px] font-pretendard',
