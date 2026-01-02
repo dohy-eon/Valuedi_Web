@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '@/components/Typography';
+import { Typography } from '@/components';
 import LoginButton from '@/components/buttons/LoginButton';
 import KakaoIcon from '@/assets/icons/kakao.svg?react';
 

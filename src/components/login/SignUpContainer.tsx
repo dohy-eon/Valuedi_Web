@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '@/components/Typography';
+import { Typography } from '@/components';
 import AuthInput from '@/components/login/AuthInput';
 import { TermsAgreement } from '@/components/login/TermsAgreement';
 import { useAuthForm } from '@/hooks/useAuthForm';

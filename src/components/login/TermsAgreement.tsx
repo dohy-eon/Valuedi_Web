@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '@/components/Typography';
+import { Typography } from '@/components';
 import CheckBoxButton from '@/components/buttons/CheckBoxButton';
 import { MoreViewButton } from '@/components/buttons/MoreViewButton';
 

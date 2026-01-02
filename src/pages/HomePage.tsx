@@ -1,4 +1,4 @@
-import { Typography } from '@/components/Typography';
+import { Typography } from '@/components';
 import SocialLoginContainer from '@/components/login/SocialLoginContainer';
 import BaseLoginContainer from '@/components/login/BaseLoginContainer';
 import SignUpContainer from '@/components/login/SignUpContainer';
