@@ -13,9 +13,9 @@ interface AuthInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   rightElement?: ReactNode;
   className?: string;
-  width?: 'full' | 'withButton' | string; 
+  width?: 'full' | 'withButton' | string;
   isGrayBg?: boolean;
-  isDouble?: boolean; 
+  isDouble?: boolean;
   readOnly?: boolean; // 💡 추가됨
 }
 
@@ -23,7 +23,7 @@ const AuthInput = ({
   label,
   placeholder,
   type = 'text',
-  value = "",
+  value = '',
   name,
   error,
   success,
@@ -86,20 +86,20 @@ const AuthInput = ({
             'placeholder:text-text-body',
             getBgClass(),
             getBorderClass(),
-            readOnly && "cursor-not-allowed opacity-70"
+            readOnly && 'cursor-not-allowed opacity-70'
           )}
         />
         {rightElement && <div className="flex-shrink-0">{rightElement}</div>}
       </div>
 
-      {(error || success) ? (
+      {error || success ? (
         <div className="my-1.5 ml-2 flex items-start">
-          <Typography variant="caption-2" weight="medium" className={error ? "text-status-error" : "text-status-abled"}>
+          <Typography variant="caption-2" weight="medium" className={error ? 'text-status-error' : 'text-status-abled'}>
             {error || success}
           </Typography>
         </div>
       ) : (
-        <div className={cn(isDouble ? "h-[8px]" : "h-[24px]")} />
+        <div className={cn(isDouble ? 'h-[8px]' : 'h-[24px]')} />
       )}
     </div>
   );

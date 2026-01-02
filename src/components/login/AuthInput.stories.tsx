@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import React, { useState } from 'react';
 import AuthInput from './AuthInput';
 import BaseButton from '../buttons/BaseButton';
 
@@ -29,15 +29,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Interactive wrapper component for controlled input
-const InteractiveWrapper = (args: any) => {
+const InteractiveWrapper = (args: React.ComponentProps<typeof AuthInput>) => {
   const [value, setValue] = useState(args.value || '');
-  return (
-    <AuthInput
-      {...args}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
-  );
+  return <AuthInput {...args} value={value} onChange={(e) => setValue(e.target.value)} />;
 };
 
 export const Default: Story = {
@@ -121,12 +115,7 @@ export const WithButton: Story = {
         onChange={(e) => setValue(e.target.value)}
         width="withButton"
         rightElement={
-          <BaseButton
-            size="medium"
-            variant="primary"
-            text="인증"
-            onClick={() => alert('인증 버튼 클릭')}
-          />
+          <BaseButton size="medium" variant="primary" text="인증" onClick={() => alert('인증 버튼 클릭')} />
         }
       />
     );
@@ -165,4 +154,3 @@ export const DoubleSpacing: Story = {
     isDouble: true,
   },
 };
-

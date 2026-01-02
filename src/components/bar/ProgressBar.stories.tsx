@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import ProgressBar from './ProgressBar';
 
 const meta = {
@@ -100,4 +100,3 @@ export const ProgressStates: Story = {
     </div>
   ),
 };
-

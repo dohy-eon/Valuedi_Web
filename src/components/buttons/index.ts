@@ -19,8 +19,8 @@ export type { AuthRequestButtonProps } from './AuthRequestButton';
 export { default as AuthVerifyButton } from './AuthVerifyButton';
 export type { AuthVerifyButtonProps } from './AuthVerifyButton';
 
-export {default as SmallLoginButton} from './SmallLoginButton';
-export type {SmallLoginButtonProps} from './SmallLoginButton';
+export { default as SmallLoginButton } from './SmallLoginButton';
+export type { SmallLoginButtonProps } from './SmallLoginButton';
 
 export { default as MenuButton } from './MenuButton';
 export type { MenuButtonProps } from './MenuButton';

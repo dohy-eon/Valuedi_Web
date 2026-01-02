@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import BaseButton from './BaseButton';
 
 const meta = {
@@ -78,4 +78,3 @@ export const FullWidth: Story = {
     </div>
   ),
 };
-

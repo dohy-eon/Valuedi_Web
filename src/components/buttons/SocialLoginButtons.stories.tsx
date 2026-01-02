@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import SocialLoginButtons from './SocialLoginButtons';
 
 const meta = {
@@ -39,4 +39,3 @@ export const Interactive: Story = {
     onEmailClick: () => alert('이메일 로그인 클릭'),
   },
 };
-

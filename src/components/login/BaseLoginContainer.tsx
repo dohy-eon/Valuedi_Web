@@ -16,26 +16,21 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
   const isFormValid = auth.id.length > 0 && auth.pw.length > 0 && !auth.idError && !auth.pwError;
 
   return (
-    <div 
-      className={cn(
-        'flex flex-col items-center bg-white ',
-        className
-      )}
-    >
-    {/* 1. 상단 텍스트 영역 */}
-        <div className="text-center space-y-4 my-4">
-            <div className="space-y-1">
-                <Typography variant="headline-2" weight="bold" className="text-neutral-100">
-                  로그인하고
-                </Typography>
-                <Typography variant="headline-2" weight="bold" className="text-neutral-100">
-                  금융 목표를 이뤄보세요.
-                </Typography>
-            </div>
-              <Typography variant="body-2" className="text-neutral-60">
-                당신을 위한 금융 서비스, 밸류디
-              </Typography>
+    <div className={cn('flex flex-col items-center bg-white ', className)}>
+      {/* 1. 상단 텍스트 영역 */}
+      <div className="text-center space-y-4 my-4">
+        <div className="space-y-1">
+          <Typography variant="headline-2" weight="bold" className="text-neutral-100">
+            로그인하고
+          </Typography>
+          <Typography variant="headline-2" weight="bold" className="text-neutral-100">
+            금융 목표를 이뤄보세요.
+          </Typography>
         </div>
+        <Typography variant="body-2" className="text-neutral-60">
+          당신을 위한 금융 서비스, 밸류디
+        </Typography>
+      </div>
 
       {/* 2. 입력 폼 영역 */}
       <div className="flex flex-col gap-3 w-full items-center mt-8">
@@ -66,9 +61,7 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
           text="로그인"
           className={cn(
             'border-none rounded-[8px]',
-            !isFormValid 
-              ? 'bg-atomic-yellow-70 cursor-not-allowed'
-              : 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40'
+            !isFormValid ? 'bg-atomic-yellow-70 cursor-not-allowed' : 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40'
           )}
           disabled={!isFormValid}
           onClick={() => onLogin?.(auth.id.toLowerCase(), auth.pw)}
@@ -76,7 +69,7 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
       </div>
 
       {/* 4. 하단 유틸리티 링크 */}
-      <div className="flex items-center justify-between w-full mt-2">        
+      <div className="flex items-center justify-between w-full mt-2">
         <div className="flex items-center gap-2">
           <button type="button" className="hover:underline text-neutral-60">
             <Typography variant="caption-1">아이디 찾기</Typography>

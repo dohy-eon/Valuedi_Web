@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Typography } from './Typography';
 
 const meta = {
@@ -150,4 +150,3 @@ export const Colors: Story = {
     </div>
   ),
 };
-

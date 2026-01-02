@@ -11,11 +11,11 @@ export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   'aria-label'?: string;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ 
-  percentage, 
+const ProgressBar: React.FC<ProgressBarProps> = ({
+  percentage,
   className,
   'aria-label': ariaLabel = '진행률',
-  ...props 
+  ...props
 }) => {
   const validPercentage = Math.min(100, Math.max(0, percentage));
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import MbtiCard from './MbtiCard';
 
 // 임시 SVG 아이콘 컴포넌트 (실제 아이콘이 없을 경우를 대비)
@@ -107,4 +107,3 @@ export const AllTypes: Story = {
     </div>
   ),
 };
-

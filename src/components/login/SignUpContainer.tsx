@@ -11,7 +11,7 @@ import { LoginButton } from '../buttons';
 
 interface SignUpContainerProps {
   className?: string;
-  onSignUp?: (formData: any) => void;
+  onSignUp?: (formData: ReturnType<typeof useAuthForm>) => void;
 }
 
 const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
@@ -21,21 +21,20 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
   const [isTermsValid, setIsTermsValid] = useState(false);
 
   // 모든 필수 항목이 채워졌는지 확인 (버튼 활성화 로직)
-    const isFormValid = !!(
-  auth.id && !auth.idError &&
-  auth.userName && !auth.nameError &&
-  auth.isVerified &&
-  auth.pw && !auth.pwError &&
-  auth.confirmPwSuccess &&
-  isTermsValid
-);
+  const isFormValid = !!(
+    auth.id &&
+    !auth.idError &&
+    auth.userName &&
+    !auth.nameError &&
+    auth.isVerified &&
+    auth.pw &&
+    !auth.pwError &&
+    auth.confirmPwSuccess &&
+    isTermsValid
+  );
 
   return (
-    <div 
-      className={cn(
-        'flex flex-col items-center bg-white justify-center',
-      )}
-    >
+    <div className={cn('flex flex-col items-center bg-white justify-center')}>
       {/* 2. 상단 헤더 영역 */}
       <div className="text-center space-y-4 my-4">
         <Typography variant="headline-1" weight="bold" className="text-neutral-100">
@@ -56,12 +55,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
           placeholder="아이디를 입력해주세요."
           success={auth.idCheckSuccess}
           error={auth.idError || auth.idCheckError}
-          rightElement={
-            <DuplicateCheckButton 
-                  disabled={auth.id.length === 0} 
-                  onClick={auth.handleDuplicateCheck}
-                />
-          }
+          rightElement={<DuplicateCheckButton disabled={auth.id.length === 0} onClick={auth.handleDuplicateCheck} />}
         />
 
         {/* 이름 */}
@@ -75,40 +69,40 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
 
         {/* 전화번호 인증 섹션 */}
         <div className="flex flex-col w-full">
-              <AuthInput
-                label="전화번호"
-                value={auth.phone}
-                width="212px"
-                onChange={auth.handlePhoneChange}
-                placeholder="-없이 전화번호를 입력해주세요"
-                isDouble={true}
-                error={auth.phoneError}
-                rightElement={
-                  <AuthRequestButton 
-                    disabled={auth.phone.length < 10 || !!auth.phoneError || auth.isVerified} 
-                    isSent={auth.isRequested} 
-                    onClick={() => auth.setIsRequested(true)} 
-                  />
-                }
+          <AuthInput
+            label="전화번호"
+            value={auth.phone}
+            width="212px"
+            onChange={auth.handlePhoneChange}
+            placeholder="-없이 전화번호를 입력해주세요"
+            isDouble={true}
+            error={auth.phoneError}
+            rightElement={
+              <AuthRequestButton
+                disabled={auth.phone.length < 10 || !!auth.phoneError || auth.isVerified}
+                isSent={auth.isRequested}
+                onClick={() => auth.setIsRequested(true)}
               />
-              <AuthInput
-                name="auth_code"
-                value={auth.verifyCode}
-                width="withButton" 
-                isGrayBg={!auth.isRequested || auth.isVerified}
-                onChange={auth.handleVerifyCodeChange}
-                readOnly={auth.isVerified}
-                placeholder="인증번호를 입력해주세요"
-                error={auth.verifyError}
-                success={auth.verifySuccess}
-                rightElement={
-                  <AuthVerifyButton 
-                    disabled={!auth.isRequested || auth.verifyCode.length === 0 || auth.isVerified} 
-                    onClick={auth.handleVerifyButtonClick} 
-                  />
-                }
+            }
+          />
+          <AuthInput
+            name="auth_code"
+            value={auth.verifyCode}
+            width="withButton"
+            isGrayBg={!auth.isRequested || auth.isVerified}
+            onChange={auth.handleVerifyCodeChange}
+            readOnly={auth.isVerified}
+            placeholder="인증번호를 입력해주세요"
+            error={auth.verifyError}
+            success={auth.verifySuccess}
+            rightElement={
+              <AuthVerifyButton
+                disabled={!auth.isRequested || auth.verifyCode.length === 0 || auth.isVerified}
+                onClick={auth.handleVerifyButtonClick}
               />
-            </div>
+            }
+          />
+        </div>
 
         {/* 비밀번호 설정 */}
         <div className="flex flex-col w-full">
@@ -134,9 +128,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
 
       {/* 4. 약관 동의 섹션 */}
       <div className="w-full">
-        <TermsAgreement 
-          onRequirementChange={(isValid) => setIsTermsValid(isValid)} 
-        />
+        <TermsAgreement onRequirementChange={(isValid) => setIsTermsValid(isValid)} />
       </div>
 
       {/* 5. 회원가입 버튼 영역 */}
@@ -146,8 +138,8 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
           className={cn(
             'border-none rounded-[8px]',
             /* 💡 모든 필드 입력 + 필수 약관 동의 시 활성화 */
-            !isFormValid 
-              ? 'bg-atomic-yellow-70 cursor-not-allowed text-neutral-40' 
+            !isFormValid
+              ? 'bg-atomic-yellow-70 cursor-not-allowed text-neutral-40'
               : 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40 text-neutral-100'
           )}
           disabled={!isFormValid}
