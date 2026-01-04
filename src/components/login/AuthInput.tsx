@@ -13,7 +13,7 @@ interface AuthInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   rightElement?: ReactNode;
   className?: string;
-  width?: 'full' | 'withButton' | string; 
+  width?: 'full' | 'withButton' | string;
   isGrayBg?: boolean;
   isDouble?: boolean; // 💡 비밀번호 확인 칸처럼 다음 인풋과 밀착시켜야 할 때 사용
   readOnly?: boolean;
@@ -22,8 +22,22 @@ interface AuthInputProps {
 }
 
 const AuthInput = ({
-  label, placeholder, type = 'text', value = '', name, error, success,
-  onChange, rightElement, className, width, isGrayBg, isDouble, readOnly, timer, onFocus
+  label,
+  placeholder,
+  type = 'text',
+  value = '',
+  name,
+  error,
+  success,
+  onChange,
+  rightElement,
+  className,
+  width,
+  isGrayBg,
+  isDouble,
+  readOnly,
+  timer,
+  onFocus,
 }: AuthInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -38,7 +52,8 @@ const AuthInput = ({
     return 'bg-white';
   };
 
-  const resolvedWidth = width === 'full' ? '320px' : width === 'withButton' ? '232px' : width || (rightElement ? '232px' : '320px');
+  const resolvedWidth =
+    width === 'full' ? '320px' : width === 'withButton' ? '232px' : width || (rightElement ? '232px' : '320px');
   const inputId = `auth-input-${name}`;
 
   return (
@@ -65,7 +80,7 @@ const AuthInput = ({
             placeholder={placeholder}
             onChange={onChange}
             // 💡 피드백 반영: name이 'userEmail'일 때만 브라우저 이메일 자동완성 허용
-            autoComplete={name === 'userEmail' ? 'email' : 'off'} 
+            autoComplete={name === 'userEmail' ? 'email' : 'off'}
             onFocus={() => {
               if (!readOnly) {
                 setIsFocused(true);
@@ -76,23 +91,26 @@ const AuthInput = ({
             readOnly={readOnly}
             className={cn(
               'h-full w-full px-[12px] border rounded-[8px] outline-none transition-all text-[14px] font-pretendard bg-white',
-              getBgClass(), getBorderClass(),
+              getBgClass(),
+              getBorderClass(),
               readOnly && 'cursor-not-allowed opacity-70',
               timer && 'pr-[52px]'
             )}
           />
-          
+
           {/* 타이머 표시: 포커스 시점이나 값이 있을 때 색상 강조 */}
           {timer && !success && (
-            <span className={cn(
-              "absolute right-[12px] top-1/2 -translate-y-1/2 z-50 text-[14px] font-medium pointer-events-none",
-              isFocused || value.length > 0 ? "text-neutral-100" : "text-neutral-40"
-            )}>
+            <span
+              className={cn(
+                'absolute right-[12px] top-1/2 -translate-y-1/2 z-50 text-[14px] font-medium pointer-events-none',
+                isFocused || value.length > 0 ? 'text-neutral-100' : 'text-neutral-40'
+              )}
+            >
               {timer}
             </span>
           )}
         </div>
-        
+
         {rightElement && <div className="flex-shrink-0 h-full flex items-center">{rightElement}</div>}
       </div>
 
@@ -101,17 +119,19 @@ const AuthInput = ({
         {/* 에러나 성공 메시지가 있을 때만 공간 차지 (mt-1.5 + h-18) */}
         {error || success ? (
           <div className="mt-1.5 ml-2 h-[18px]">
-            <Typography variant="caption-2" weight="medium" className={error ? 'text-status-error' : 'text-status-abled'}>
+            <Typography
+              variant="caption-2"
+              weight="medium"
+              className={error ? 'text-status-error' : 'text-status-abled'}
+            >
               {error || success}
             </Typography>
           </div>
         ) : null}
 
         {/* 💡 핵심: 메시지가 없을 때 isDouble 여부에 따라 다음 인풋과의 간격(Margin) 결정 */}
-        {!error && !success && (
-          <div className={cn(isDouble ? 'h-[8px]' : 'h-[44px]')} />
-        )}
-        
+        {!error && !success && <div className={cn(isDouble ? 'h-[8px]' : 'h-[44px]')} />}
+
         {/* 메시지가 있더라도 이중 확인 칸이라면 좁은 간격 유지 */}
         {(error || success) && <div className={cn(isDouble ? 'h-[8px]' : 'h-[20px]')} />}
       </div>

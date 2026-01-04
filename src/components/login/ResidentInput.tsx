@@ -8,7 +8,7 @@ interface ResidentInputProps {
   onResidentChange?: (front: string, back: string) => void;
 }
 
-const ResidentInput = ({ label = "주민등록번호", error, onResidentChange }: ResidentInputProps) => {
+const ResidentInput = ({ label = '주민등록번호', error, onResidentChange }: ResidentInputProps) => {
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
   const [isFocused, setIsFocused] = useState(false);
@@ -38,21 +38,25 @@ const ResidentInput = ({ label = "주민등록번호", error, onResidentChange }
   return (
     <div className="flex flex-col text-left justify-start w-[320px] h-[120px]">
       <div className="h-[28px] flex items-start">
-        <Typography variant="body-2" weight="semi-bold" className="text-text-body">{label}</Typography>
+        <Typography variant="body-2" weight="semi-bold" className="text-text-body">
+          {label}
+        </Typography>
       </div>
 
-      <div 
+      <div
         className={cn(
-          "relative flex items-center h-[48px] px-[12px] border rounded-[8px] transition-all bg-white cursor-text",
-          error ? "border-status-error" : isFocused ? "border-text-title" : "border-neutral-40"
+          'relative flex items-center h-[48px] px-[12px] border rounded-[8px] transition-all bg-white cursor-text',
+          error ? 'border-status-error' : isFocused ? 'border-text-title' : 'border-neutral-40'
         )}
         onClick={() => !isEditing && document.getElementById('resident-front')?.focus()}
       >
         {!isEditing && (
-          <span className="absolute left-[12px] text-[14px] text-neutral-40 font-pretendard pointer-events-none">주민등록번호 앞 7자리</span>
+          <span className="absolute left-[12px] text-[14px] text-neutral-40 font-pretendard pointer-events-none">
+            주민등록번호 앞 7자리
+          </span>
         )}
 
-        <div className={cn("flex items-center w-full", !isEditing && "opacity-0")}>
+        <div className={cn('flex items-center w-full', !isEditing && 'opacity-0')}>
           <input
             id="resident-front"
             type="text"
@@ -79,7 +83,9 @@ const ResidentInput = ({ label = "주민등록번호", error, onResidentChange }
       <div className="flex flex-col flex-1">
         {error && (
           <div className="mt-1.5 ml-2 h-[18px] flex items-start">
-            <Typography variant="caption-2" weight="medium" className="text-status-error">{error}</Typography>
+            <Typography variant="caption-2" weight="medium" className="text-status-error">
+              {error}
+            </Typography>
           </div>
         )}
       </div>

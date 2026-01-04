@@ -22,10 +22,10 @@ export const validateId = (id: string): boolean => {
 export const validateName = (name: string): boolean => {
   // 1. 영문(대소문자) 또는 가-힣(완성형 한글)으로만 2~20자 구성되었는지 확인
   const nameRegex = /^[a-zA-Z가-힣]{2,20}$/;
-  
+
   // 2. 단독 자음(ㄱ-ㅎ)이나 단독 모음(ㅏ-ㅣ)이 포함되어 있는지 별도로 체크
   const hasSingleJamo = /[ㄱ-ㅎㅏ-ㅣ]/.test(name);
-  
+
   // 전체 형식이 맞으면서 + 단독 자모음이 없어야 true
   return nameRegex.test(name) && !hasSingleJamo;
 };
@@ -36,7 +36,7 @@ export const validateName = (name: string): boolean => {
 // utils/AuthValidator.ts
 
 export const validateResident = (front: string, back: string): boolean => {
-  // 사용자가 입력한 front(6자)와 back(1자)을 합치고, 
+  // 사용자가 입력한 front(6자)와 back(1자)을 합치고,
   // 정규식 통과를 위해 나머지 뒷자리 6개를 '0'으로 채웁니다.
   const fullResidentNumber = `${front}-${back}000000`;
   const regUnique = /^\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])[-]*[1-4]\d{6}$/;

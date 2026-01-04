@@ -134,9 +134,9 @@ const colorTokenToClass: Record<ColorToken, string> = {
   'neutral-90': 'text-neutral-90',
   'neutral-100': 'text-neutral-100',
   // Base colors
-  'white': 'text-white',
-  'black': 'text-black',
-  'bg': 'text-bg',
+  white: 'text-white',
+  black: 'text-black',
+  bg: 'text-bg',
   // Primary colors
   'pri-normal': 'text-primary-normal',
   'pri-strong': 'text-primary-strong',
@@ -158,16 +158,16 @@ const colorTokenToClass: Record<ColorToken, string> = {
  * 기존 호환성을 위한 별칭 매핑 (title -> text-text-title)
  */
 const colorAliasToClass: Record<'title' | 'body' | 'sub-body' | 'disabled', string> = {
-  'title': 'text-text-title',
-  'body': 'text-text-body',
+  title: 'text-text-title',
+  body: 'text-text-body',
   'sub-body': 'text-text-sub-body',
-  'disabled': 'text-text-disabled',
+  disabled: 'text-text-disabled',
 };
 
 /**
  * color prop을 Tailwind text color 클래스로 변환
  * ColorToken 타입을 우선 처리하며, 기존 호환성을 위해 string도 지원합니다.
- * 
+ *
  * @param color - ColorToken 또는 색상 문자열
  * @returns Tailwind text color 클래스명
  */
@@ -244,15 +244,7 @@ export const Typography: React.FC<TypographyProps> = ({
   const colorClass = getColorClass(color);
 
   // 최종 클래스 조합
-  const classes = [
-    fontSizeClass,
-    fontWeightClass,
-    fontFamilyClass,
-    colorClass,
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = [fontSizeClass, fontWeightClass, fontFamilyClass, colorClass, className].filter(Boolean).join(' ');
 
   return (
     <Component className={classes} {...(props as React.HTMLAttributes<HTMLElement>)}>
@@ -276,18 +268,18 @@ function getDefaultTag(variant: TypographyVariant): 'h1' | 'h2' | 'h3' | 'h4' | 
 
 /**
  * TypographyStyle 타입을 파싱하여 variant와 weight를 추출
- * 
+ *
  * Figma 디자인 토큰 형식(예: 'text-body-1-16-semi-bold')을 파싱하여
  * Typography 컴포넌트가 사용할 수 있는 variant와 weight로 변환합니다.
- * 
+ *
  * @param style - TypographyStyle 타입의 디자인 토큰 문자열
  * @returns variant와 weight를 포함한 객체
- * 
+ *
  * @example
  * ```tsx
  * const { variant, weight } = parseTypographyStyle('text-body-1-16-semi-bold');
  * // { variant: 'body-1', weight: 'semi-bold' }
- * 
+ *
  * const { variant, weight } = parseTypographyStyle('text-title-36-bold');
  * // { variant: 'title-1', weight: 'bold' }
  * ```
@@ -295,10 +287,10 @@ function getDefaultTag(variant: TypographyVariant): 'h1' | 'h2' | 'h3' | 'h4' | 
 export function parseTypographyStyle(style: TypographyStyle): { variant: TypographyVariant; weight: TypographyWeight } {
   // 'text-body-1-16-semi-bold' -> 'body-1-16-semi-bold'
   const pureStyle = style.replace('text-', '');
-  
+
   // 1. Variant 추출: 더 구체적인 패턴부터 확인 (순서 중요)
   let variant: TypographyVariant = 'body-1'; // 기본값
-  
+
   if (pureStyle.includes('title-1') || pureStyle.includes('36')) {
     variant = 'title-1';
   } else if (pureStyle.includes('title-2') || pureStyle.includes('28')) {
@@ -325,10 +317,10 @@ export function parseTypographyStyle(style: TypographyStyle): { variant: Typogra
   } else if (pureStyle.includes('caption-2')) {
     variant = 'caption-2';
   }
-  
+
   // 2. Weight 추출: endsWith와 includes를 조합하여 더 정확하게
   let weight: TypographyWeight = 'regular'; // 기본값
-  
+
   if (pureStyle.includes('semi-bold')) {
     weight = 'semi-bold';
   } else if (pureStyle.endsWith('-bold') || pureStyle.endsWith('bold')) {
@@ -336,6 +328,6 @@ export function parseTypographyStyle(style: TypographyStyle): { variant: Typogra
   } else if (pureStyle.endsWith('-medium') || pureStyle.endsWith('medium')) {
     weight = 'medium';
   }
-  
+
   return { variant, weight };
 }

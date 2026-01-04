@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components';
-import AuthInput from '@/components/login/AuthInput'; 
+import AuthInput from '@/components/login/AuthInput';
 import { TermsAgreement } from '@/components/login/TermsAgreement';
-import { useAuthForm } from '@/hooks/useAuthForm'; 
+import { useAuthForm } from '@/hooks/useAuthForm';
 import DuplicateCheckButton from '@/components/buttons/DuplicateCheckButton';
-import AuthRequestButton from '@/components/buttons/AuthRequestButton'; 
+import AuthRequestButton from '@/components/buttons/AuthRequestButton';
 import { LoginButton } from '../buttons';
 import ResidentInput from './ResidentInput';
 
+interface SignUpData {
+  id: string;
+  userName: string;
+  resident: string;
+  password: string;
+  email: string;
+}
+
 interface SignUpContainerProps {
   className?: string;
-  onSignUp?: (formData: any) => void;
+  onSignUp?: (formData: SignUpData) => void;
 }
 
 const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
@@ -21,19 +29,21 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
 
   // 1단계 유효성 검사 (아이디, 이름, 주민번호, 비밀번호)
   const isStep1Valid = !!(
-    auth.id && !auth.idError && auth.idCheckSuccess &&
-    auth.userName && !auth.nameError &&
-    auth.residentFront.length === 6 && auth.residentBack.length === 1 && !auth.residentError &&
-    auth.pw && !auth.pwError &&
+    auth.id &&
+    !auth.idError &&
+    auth.idCheckSuccess &&
+    auth.userName &&
+    !auth.nameError &&
+    auth.residentFront.length === 6 &&
+    auth.residentBack.length === 1 &&
+    !auth.residentError &&
+    auth.pw &&
+    !auth.pwError &&
     auth.confirmPwSuccess
   );
 
   // 2단계 유효성 검사 (이메일, 인증번호, 약관동의)
-  const isStep2Valid = !!(
-    auth.email && !auth.emailError &&
-    auth.isVerified &&
-    isTermsValid
-  );
+  const isStep2Valid = !!(auth.email && !auth.emailError && auth.isVerified && isTermsValid);
 
   // 💡 추가된 부분: 서버에 제출할 데이터 정리
   const handleSignUpSubmit = () => {
@@ -71,7 +81,9 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
               placeholder="아이디를 입력해주세요."
               success={auth.idCheckSuccess}
               error={auth.idError || auth.idCheckError}
-              rightElement={<DuplicateCheckButton disabled={auth.id.length === 0} onClick={auth.handleDuplicateCheck} />}
+              rightElement={
+                <DuplicateCheckButton disabled={auth.id.length === 0} onClick={auth.handleDuplicateCheck} />
+              }
             />
             <AuthInput
               name="userName"
@@ -81,9 +93,9 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
               placeholder="이름을 입력해주세요."
               error={auth.nameError}
             />
-            <ResidentInput 
+            <ResidentInput
               label="주민등록번호"
-              error={auth.residentError} 
+              error={auth.residentError}
               onResidentChange={(front, back) => auth.handleResidentChange(front, back)}
             />
             <div className="flex flex-col w-full">
@@ -120,7 +132,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
               onChange={auth.handleEmailChange}
               placeholder="이메일을 입력해주세요."
               error={auth.emailError}
-              width='full'
+              width="full"
             />
             <AuthInput
               name="verifyCode"
@@ -132,14 +144,11 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
               success={auth.verifySuccess}
               error={auth.verifyError}
               readOnly={auth.isVerified}
-              timer={auth.isRequested ? auth.formatTime() : "03:00"}
-              onFocus={() => { if (!auth.isRequested) auth.startVerification(); }}
-              rightElement={
-                <AuthRequestButton 
-                 disabled={!auth.canResend} 
-                 onClick={auth.startVerification}
-                />
-              }
+              timer={auth.isRequested ? auth.formatTime() : '03:00'}
+              onFocus={() => {
+                if (!auth.isRequested) auth.startVerification();
+              }}
+              rightElement={<AuthRequestButton disabled={!auth.canResend} onClick={auth.startVerification} />}
             />
             <div className="w-full mt-4">
               <TermsAgreement onRequirementChange={(isValid) => setIsTermsValid(isValid)} />

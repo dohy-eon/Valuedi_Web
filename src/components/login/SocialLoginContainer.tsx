@@ -9,11 +9,7 @@ interface SocialLoginContainerProps {
   onEmailClick?: () => void;
 }
 
-const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ 
-  className,
-  onKakaoClick,
-  onEmailClick 
-}) => {
+const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className, onKakaoClick, onEmailClick }) => {
   return (
     <div className={cn('flex flex-col items-center justify-center bg-white', className)}>
       {/* 1. 상단 텍스트 영역 */}
@@ -32,16 +28,14 @@ const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({
       </div>
       {/* 2. 버튼 그룹 영역 (컴포넌트 호출) */}
       <div className="mt-8">
-        <SocialLoginButtons 
+        <SocialLoginButtons
           onKakaoClick={onKakaoClick}
           onEmailClick={onEmailClick}
           text="통합로그인으로 계속하기" // 💡 원하는 텍스트로 커스텀
-
         />
       </div>
     </div>
   );
 };
-
 
 export default SocialLoginContainer;

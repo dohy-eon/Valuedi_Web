@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 export const useTimer = (initialTime: number = 180) => {
   const [timeLeft, setTimeLeft] = useState(initialTime);
   const [isActive, setIsActive] = useState(false);
-  
+
   // 💡 NodeJS.Timeout 대신 number 타입을 사용하거나 Ref로 관리합니다.
   const timerRef = useRef<number | null>(null);
 

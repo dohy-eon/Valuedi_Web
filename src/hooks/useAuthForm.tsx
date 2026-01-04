@@ -26,13 +26,7 @@ export const useAuthForm = () => {
   const [isVerified, setIsVerified] = useState(false);
 
   // 💡 타이머 관련 로직 분리: useTimer 훅 사용
-  const { 
-    timeLeft, 
-    isActive: isTimerActive, 
-    startTimer, 
-    stopTimer, 
-    formatTime 
-  } = useTimer(180);
+  const { timeLeft, isActive: isTimerActive, startTimer, stopTimer, formatTime } = useTimer(180);
 
   const [isTyping, setIsTyping] = useState(false);
 
@@ -167,13 +161,31 @@ export const useAuthForm = () => {
   // --- 4. 반환값 ---
 
   return {
-    id, idError, idCheckError, idCheckSuccess,
-    pw, pwError, confirmPw, confirmPwError, confirmPwSuccess,
-    userName, nameError,
-    verifyCode, verifyError, verifySuccess, isRequested, isVerified,
-    isTyping, timeLeft, isTimerActive, isVerifyCodeFull,
-    handleNameChange, handleIdChange, handleDuplicateCheck,
-    handlePwChange, handleConfirmPwChange,
+    id,
+    idError,
+    idCheckError,
+    idCheckSuccess,
+    pw,
+    pwError,
+    confirmPw,
+    confirmPwError,
+    confirmPwSuccess,
+    userName,
+    nameError,
+    verifyCode,
+    verifyError,
+    verifySuccess,
+    isRequested,
+    isVerified,
+    isTyping,
+    timeLeft,
+    isTimerActive,
+    isVerifyCodeFull,
+    handleNameChange,
+    handleIdChange,
+    handleDuplicateCheck,
+    handlePwChange,
+    handleConfirmPwChange,
     handleVerifyCodeChange,
     startVerification,
     formatTime: () => formatTime(timeLeft), // 💡 UI에서 바로 호출 가능하도록 전달
@@ -181,7 +193,7 @@ export const useAuthForm = () => {
     residentError,
     handleResidentChange,
     residentFront,
-    residentBack, 
+    residentBack,
     email,
     emailError,
     handleEmailChange,

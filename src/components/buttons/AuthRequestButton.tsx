@@ -6,11 +6,7 @@ export interface AuthRequestButtonProps extends React.ButtonHTMLAttributes<HTMLB
   className?: string;
 }
 
-const AuthRequestButton: React.FC<AuthRequestButtonProps> = ({ 
-  className, 
-  disabled, 
-  ...props 
-}) => {
+const AuthRequestButton: React.FC<AuthRequestButtonProps> = ({ className, disabled, ...props }) => {
   return (
     <button
       type="button"

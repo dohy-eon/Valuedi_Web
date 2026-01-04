@@ -21,9 +21,9 @@ export const HomePage = () => {
 
   return (
     // 배경색과 중앙 정렬 설정
-      <div className="w-full">
-        <SignUpContainer onSignUp={handleSignUpSubmit} />
-      </div>
+    <div className="w-full">
+      <SignUpContainer onSignUp={handleSignUpSubmit} />
+    </div>
   );
 };
 
