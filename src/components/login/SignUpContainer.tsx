@@ -35,6 +35,18 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
     isTermsValid
   );
 
+  // 💡 추가된 부분: 서버에 제출할 데이터 정리
+  const handleSignUpSubmit = () => {
+    const signUpData = {
+      id: auth.id,
+      userName: auth.userName,
+      resident: `${auth.residentFront}-${auth.residentBack}`,
+      password: auth.pw,
+      email: auth.email,
+    };
+    onSignUp?.(signUpData);
+  };
+
   return (
     <div className={cn('flex flex-col items-center bg-white justify-center w-full max-w-[400px] mx-auto')}>
       {/* 상단 헤더 영역 */}
@@ -111,7 +123,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
               width='full'
             />
             <AuthInput
-              name="auth_code"
+              name="verifyCode"
               label="인증번호"
               value={auth.verifyCode}
               onChange={auth.handleVerifyCodeChange}
@@ -120,7 +132,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
               success={auth.verifySuccess}
               error={auth.verifyError}
               readOnly={auth.isVerified}
-              timer={auth.isRequested ? auth.formatTime(auth.timeLeft) : "03:00"} 
+              timer={auth.isRequested ? auth.formatTime() : "03:00"}
               onFocus={() => { if (!auth.isRequested) auth.startVerification(); }}
               rightElement={
                 <AuthRequestButton 
@@ -156,7 +168,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
               !isStep2Valid ? 'bg-neutral-20 text-neutral-40' : 'bg-atomic-yellow-50 text-neutral-100'
             )}
             disabled={!isStep2Valid}
-            onClick={() => onSignUp?.(auth)} // 💡 최종 제출
+            onClick={handleSignUpSubmit} // 💡 최종 제출
           />
         )}
       </div>

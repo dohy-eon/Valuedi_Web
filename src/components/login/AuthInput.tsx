@@ -64,6 +64,8 @@ const AuthInput = ({
             value={value}
             placeholder={placeholder}
             onChange={onChange}
+            // 💡 피드백 반영: name이 'userEmail'일 때만 브라우저 이메일 자동완성 허용
+            autoComplete={name === 'userEmail' ? 'email' : 'off'} 
             onFocus={() => {
               if (!readOnly) {
                 setIsFocused(true);

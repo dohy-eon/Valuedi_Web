@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, KeyboardEvent } from 'react'; // 💡 KeyboardEvent 추가
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components';
 
@@ -13,7 +13,6 @@ const ResidentInput = ({ label = "주민등록번호", error, onResidentChange }
   const [back, setBack] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
-  // 💡 입력 중이거나 포커스된 상태인지 확인
   const isEditing = isFocused || front.length > 0 || back.length > 0;
 
   const handleFrontChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,12 +28,17 @@ const ResidentInput = ({ label = "주민등록번호", error, onResidentChange }
     onResidentChange?.(front, val);
   };
 
+  // 💡 백스페이스 시 앞자리로 포커스 이동
+  const handleBackKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && back.length === 0) {
+      document.getElementById('resident-front')?.focus();
+    }
+  };
+
   return (
     <div className="flex flex-col text-left justify-start w-[320px] h-[120px]">
       <div className="h-[28px] flex items-start">
-        <Typography variant="body-2" weight="semi-bold" className="text-text-body">
-          {label}
-        </Typography>
+        <Typography variant="body-2" weight="semi-bold" className="text-text-body">{label}</Typography>
       </div>
 
       <div 
@@ -44,14 +48,10 @@ const ResidentInput = ({ label = "주민등록번호", error, onResidentChange }
         )}
         onClick={() => !isEditing && document.getElementById('resident-front')?.focus()}
       >
-        {/* 💡 1. 기본 상태: 통으로 플레이스홀더만 보여줌 */}
         {!isEditing && (
-          <span className="absolute left-[12px] text-[14px] text-neutral-40 font-pretendard pointer-events-none">
-            주민등록번호 앞 7자리
-          </span>
+          <span className="absolute left-[12px] text-[14px] text-neutral-40 font-pretendard pointer-events-none">주민등록번호 앞 7자리</span>
         )}
 
-        {/* 💡 2. 클릭 시/입력 시: 앞자리 - 뒷자리 형식 등장 */}
         <div className={cn("flex items-center w-full", !isEditing && "opacity-0")}>
           <input
             id="resident-front"
@@ -62,14 +62,13 @@ const ResidentInput = ({ label = "주민등록번호", error, onResidentChange }
             onBlur={() => setIsFocused(false)}
             className="w-[80px] outline-none text-[14px] font-pretendard bg-transparent"
           />
-          
           <span className="mx-1 text-neutral-40">-</span>
-
           <input
             id="resident-back"
             type="text"
             value={back}
             onChange={handleBackChange}
+            onKeyDown={handleBackKeyDown} // 💡 이벤트 연결
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             className="w-[20px] outline-none text-[14px] font-pretendard bg-transparent"
@@ -78,14 +77,10 @@ const ResidentInput = ({ label = "주민등록번호", error, onResidentChange }
       </div>
 
       <div className="flex flex-col flex-1">
-        {error ? (
+        {error && (
           <div className="mt-1.5 ml-2 h-[18px] flex items-start">
-            <Typography variant="caption-2" weight="medium" className="text-status-error">
-              {error}
-            </Typography>
+            <Typography variant="caption-2" weight="medium" className="text-status-error">{error}</Typography>
           </div>
-        ) : (
-          <div className="h-[44px]" />
         )}
       </div>
     </div>
