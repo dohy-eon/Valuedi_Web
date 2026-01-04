@@ -32,4 +32,5 @@ export { default as CategoryButton } from './CategoryButton';
 export type { CategoryButtonProps } from './CategoryButton';
 
 export { MoreViewButton } from './MoreViewButton';
+
 export type { MoreViewButtonProps } from './MoreViewButton';

@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, ReactNode } from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '../Typography';
+import { Typography } from '@/components/Typography';
 
 interface AuthInputProps {
   label?: string;

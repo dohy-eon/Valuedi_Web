@@ -21,7 +21,7 @@ export const HomePage = () => {
 
   return (
     // 배경색과 중앙 정렬 설정
-      <div className="w-full bg-white shadow-xl rounded-[24px] p-6 md:p-10">
+      <div className="w-full">
         <SignUpContainer onSignUp={handleSignUpSubmit} />
       </div>
   );

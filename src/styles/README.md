@@ -146,8 +146,8 @@ import { Typography } from '@/components';
 
 - `text-title`: #171714
 - `text-body`: #666666
-- `text-sub-body`: #999999
-- `text-disabled`: #e0e0e0
+- `text-sub-body`: #707070 (WCAG AA compliant, changed from #999999 for 4.5:1 contrast ratio)
+- `text-disabled`: #707070 (WCAG AA compliant, changed from #e0e0e0 for 4.5:1 contrast ratio. Same as text-sub-body for accessibility)
 
 ### Atomic Colors
 

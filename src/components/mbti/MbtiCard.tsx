@@ -15,7 +15,7 @@ const MbtiCard: React.FC<MbtiCardProps> = ({ mbtiType, subTitle, description, cl
     <div className={cn('w-[320px]', 'flex flex-col gap-[48px]', 'bg-neutral-0', className)}>
       <div className={cn('w-full flex flex-col gap-[12px]')}>
         <div className={cn('flex flex-col gap-[4px]')}>
-          <Typography style="text-caption-1-12-regular" fontFamily="pretendard" className={cn('text-neutral-50')}>
+          <Typography style="text-caption-1-12-regular" fontFamily="pretendard" className={cn('text-neutral-70')}>
             회원님의 결과는?
           </Typography>
           <Typography style="text-headline-3-18-semi-bold" fontFamily="pretendard" className={cn('text-neutral-90')}>

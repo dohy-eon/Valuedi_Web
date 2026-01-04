@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '../Typography';
+import { Typography } from '@/components/Typography';
 import KakaoIconUrl from '@/assets/icons/Kakao.svg';
 
 export interface SocialLoginButtonsProps {
