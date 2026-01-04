@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '../Typography';
-import type { TypographyStyle } from '@/styles/design-system';
+import { Typography } from '../typography';
+import type { TypographyStyle, ColorToken } from '@/styles/design-system';
 
 export type ButtonSize = 'small' | 'medium' | 'large' | 'custom';
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
@@ -102,7 +102,7 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
   const textColorTokens: Record<ButtonVariant, { default: string; disabled: string }> = {
     primary: {
       default: 'neutral-90',
-      disabled: 'neutral-50',
+      disabled: 'neutral-60', // Changed from neutral-50 for WCAG AA compliance
     },
     secondary: {
       default: 'neutral-90',
@@ -114,7 +114,7 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
     },
     ghost: {
       default: 'neutral-90',
-      disabled: 'neutral-50',
+      disabled: 'neutral-60', // Changed from neutral-50 for WCAG AA compliance
     },
   };
 
@@ -125,12 +125,7 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
 
   // children이 있으면 children을 렌더링, 없으면 text를 Typography로 렌더링
   const buttonContent = children || (
-    <Typography
-      style={typographyStyle}
-      className="text-center"
-      fontFamily="pretendard"
-      color={textColorToken as any}
-    >
+    <Typography style={typographyStyle} className="text-center" fontFamily="pretendard" color={textColorToken as ColorToken}>
       {text}
     </Typography>
   );
@@ -165,4 +160,3 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
 BaseButton.displayName = 'BaseButton';
 
 export default BaseButton;
-

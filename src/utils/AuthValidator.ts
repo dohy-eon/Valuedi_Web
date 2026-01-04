@@ -22,21 +22,21 @@ export const validateId = (id: string): boolean => {
 export const validateName = (name: string): boolean => {
   // 1. 영문(대소문자) 또는 가-힣(완성형 한글)으로만 2~20자 구성되었는지 확인
   const nameRegex = /^[a-zA-Z가-힣]{2,20}$/;
-  
+
   // 2. 단독 자음(ㄱ-ㅎ)이나 단독 모음(ㅏ-ㅣ)이 포함되어 있는지 별도로 체크
   const hasSingleJamo = /[ㄱ-ㅎㅏ-ㅣ]/.test(name);
-  
+
   // 전체 형식이 맞으면서 + 단독 자모음이 없어야 true
   return nameRegex.test(name) && !hasSingleJamo;
 };
 
 /**
- * 전화번호 형식 검사: 
+ * 전화번호 형식 검사:
  * 1. 0: 전화번호는 0으로 시작
  * 2. 한국 휴대폰 번호 기준 8자~10자
  */
 export const validatePhone = (phone: string): boolean => {
   const phoneRegex = /^0\d{8,10}$/;
-  
+
   return phoneRegex.test(phone);
 };

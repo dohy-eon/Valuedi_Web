@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '@/components/Typography';
+import { Typography } from '@/components';
 import LoginButton from '@/components/buttons/LoginButton';
 import KakaoIcon from '@/assets/icons/kakao.svg?react';
 
@@ -10,12 +10,7 @@ interface SocialLoginContainerProps {
 
 const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className }) => {
   return (
-    <div 
-      className={cn(
-        'flex flex-col items-center justify-center bg-white',
-        className
-      )}
-    >
+    <div className={cn('flex flex-col items-center justify-center bg-white', className)}>
       {/* 2. 상단 텍스트 영역 */}
       <div className="text-center space-y-4 my-4">
         <div className="space-y-1">
@@ -33,13 +28,9 @@ const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className }
 
       {/* 3. 버튼 그룹 영역 (LoginButton 활용) */}
       <div className="flex flex-col gap-3 w-full items-center mt-8">
-        
         {/* 💡 카카오 계정 로그인 버튼 */}
         <LoginButton
-          className={cn(
-            'border-none rounded-[8px]',
-            'bg-atomic-yellow-50 hover:bg-atomic-yellow-40 transition-colors'
-          )}
+          className={cn('border-none rounded-[8px]', 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40 transition-colors')}
           onClick={() => console.log('카카오 로그인')}
         >
           <div className="flex items-center justify-center gap-2">
@@ -53,10 +44,7 @@ const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className }
         {/* 💡 통합 로그인 버튼 */}
         <LoginButton
           text="통합로그인으로 계속하기"
-          className={cn(
-            'bg-white border border-neutral-90 rounded-[8px]',
-            'hover:bg-neutral-30 transition-colors'
-          )}
+          className={cn('bg-white border border-neutral-90 rounded-[8px]', 'hover:bg-neutral-30 transition-colors')}
           onClick={() => console.log('통합 로그인')}
         />
       </div>

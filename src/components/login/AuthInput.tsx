@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, ReactNode } from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '../Typography';
+import { Typography } from '../typography';
 
 interface AuthInputProps {
   label?: string;
@@ -13,9 +13,9 @@ interface AuthInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   rightElement?: ReactNode;
   className?: string;
-  width?: 'full' | 'withButton' | string; 
+  width?: 'full' | 'withButton' | string;
   isGrayBg?: boolean;
-  isDouble?: boolean; 
+  isDouble?: boolean;
   readOnly?: boolean; // 💡 추가됨
 }
 
@@ -23,7 +23,7 @@ const AuthInput = ({
   label,
   placeholder,
   type = 'text',
-  value = "",
+  value = '',
   name,
   error,
   success,
@@ -56,18 +56,21 @@ const AuthInput = ({
     return rightElement ? '232px' : '320px';
   })();
 
+  const inputId = `auth-input-${name}`;
+
   return (
     <div className={cn('flex flex-col text-left justify-start transition-all w-full', className)}>
       {label && (
-        <div className="h-[28px] flex items-start">
-          <Typography variant="body-2" weight="semi-bold" className="text-text-body">
+        <label htmlFor={inputId} className="h-[28px] flex items-start">
+          <Typography variant="body-2" weight="semi-bold" className="text-text-body" as="span">
             {label}
           </Typography>
-        </div>
+        </label>
       )}
 
       <div className="flex items-center gap-2 h-[48px]">
         <input
+          id={inputId}
           name={name}
           type={type}
           value={value}
@@ -76,26 +79,27 @@ const AuthInput = ({
           onFocus={() => !readOnly && setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           readOnly={readOnly}
+          aria-label={label || placeholder || name}
           style={{ width: resolvedWidth }}
           className={cn(
             'h-full px-[12px] border rounded-[8px] outline-none transition-all text-[14px] font-pretendard',
             'placeholder:text-text-body',
             getBgClass(),
             getBorderClass(),
-            readOnly && "cursor-not-allowed opacity-70"
+            readOnly && 'cursor-not-allowed opacity-70'
           )}
         />
         {rightElement && <div className="flex-shrink-0">{rightElement}</div>}
       </div>
 
-      {(error || success) ? (
+      {error || success ? (
         <div className="my-1.5 ml-2 flex items-start">
-          <Typography variant="caption-2" weight="medium" className={error ? "text-status-error" : "text-status-abled"}>
+          <Typography variant="caption-2" weight="medium" className={error ? 'text-status-error' : 'text-status-abled'}>
             {error || success}
           </Typography>
         </div>
       ) : (
-        <div className={cn(isDouble ? "h-[8px]" : "h-[24px]")} />
+        <div className={cn(isDouble ? 'h-[8px]' : 'h-[24px]')} />
       )}
     </div>
   );

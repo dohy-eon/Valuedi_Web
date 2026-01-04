@@ -23,15 +23,7 @@ export interface LoginButtonProps extends Omit<BaseButtonProps, 'size' | 'varian
  * ```
  */
 const LoginButton: React.FC<LoginButtonProps> = ({ text = '로그인', className, ...props }) => {
-  return (
-    <BaseButton
-      size="medium"
-      variant="primary"
-      text={text}
-      className={cn('w-[320px]', className)}
-      {...props}
-    />
-  );
+  return <BaseButton size="medium" variant="primary" text={text} className={cn('w-[320px]', className)} {...props} />;
 };
 
 LoginButton.displayName = 'LoginButton';

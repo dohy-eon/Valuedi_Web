@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '@/components/Typography';
+import { Typography } from '@/components';
 import CheckBoxButton from '@/components/buttons/CheckBoxButton';
 import { MoreViewButton } from '@/components/buttons/MoreViewButton';
 
@@ -26,7 +26,7 @@ export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementCha
 
   // 1. 전체 동의 로직
   const isAllChecked = Object.values(terms).every(Boolean);
-  
+
   const handleAllCheck = () => {
     const newValue = !isAllChecked;
     const newTerms = { ...terms };
@@ -41,9 +41,9 @@ export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementCha
 
   // 💡 3. 필수 항목 체크 여부 감시 및 보고
   useEffect(() => {
-    const requiredIds = TERMS_LIST.filter(item => item.required).map(item => item.id);
-    const isRequiredFilled = requiredIds.every(id => terms[id]);
-    
+    const requiredIds = TERMS_LIST.filter((item) => item.required).map((item) => item.id);
+    const isRequiredFilled = requiredIds.every((id) => terms[id]);
+
     // 필수 항목이 다 채워졌는지 부모(SignUpContainer)에 알림
     onRequirementChange?.(isRequiredFilled);
   }, [terms, onRequirementChange]);
@@ -51,12 +51,9 @@ export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementCha
   return (
     <div className="w-full flex flex-col">
       {/* 전체 동의 영역 */}
-      <div 
-        className="flex items-center gap-3 cursor-pointer mb-4"
-        onClick={handleAllCheck}
-      >
+      <div className="flex items-center gap-3 cursor-pointer mb-4" onClick={handleAllCheck}>
         <CheckBoxButton isChecked={isAllChecked} />
-        <Typography variant="body-2" weight="bold" className={isAllChecked ? "text-neutral-100" : "text-neutral-60"}>
+        <Typography variant="body-2" weight="bold" className={isAllChecked ? 'text-neutral-100' : 'text-neutral-60'}>
           전체 동의
         </Typography>
       </div>
@@ -64,26 +61,23 @@ export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementCha
       <div className="w-full h-[1px] bg-neutral-10 mb-4" />
 
       {/* 개별 항목 리스트 (상세보기 우측 정렬 반영) */}
-      <div className="flex flex-col gap-[8px]"> 
+      <div className="flex flex-col gap-[8px]">
         {TERMS_LIST.map((item) => (
-          <div 
+          <div
             key={item.id}
             className="flex items-center justify-between cursor-pointer w-full h-[28px] py-[4px]"
             onClick={() => toggleItem(item.id)}
           >
             <div className="flex items-center gap-3">
               <CheckBoxButton isChecked={terms[item.id]} />
-              <Typography 
-                variant="body-2" 
-                className={cn(
-                  'transition-colors',
-                  terms[item.id] ? 'text-neutral-100' : 'text-neutral-50'
-                )}
+              <Typography
+                variant="body-2"
+                className={cn('transition-colors', terms[item.id] ? 'text-neutral-100' : 'text-neutral-50')}
               >
                 {item.label}
               </Typography>
             </div>
-            <MoreViewButton 
+            <MoreViewButton
               onClick={(e) => {
                 e.stopPropagation();
                 console.log(`${item.label} 상세보기`);

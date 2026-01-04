@@ -3,7 +3,7 @@ import { validatePassword, validateName, validatePhone, validateId } from '@/uti
 
 export const useAuthForm = () => {
   // --- 1. 상태 관리 ---
-  
+
   // 아이디 관련
   const [id, setId] = useState('');
   const [idError, setIdError] = useState('');
@@ -88,9 +88,9 @@ export const useAuthForm = () => {
       setIdCheckError('이미 사용 중인 아이디입니다.');
       setIdCheckSuccess('');
     } else {
-    setIdCheckError('');
-    setIdCheckSuccess('');  
-    setIdCheckSuccess('사용 가능한 아이디입니다.');
+      setIdCheckError('');
+      setIdCheckSuccess('');
+      setIdCheckSuccess('사용 가능한 아이디입니다.');
     }
   };
 
@@ -130,14 +130,29 @@ export const useAuthForm = () => {
   // --- 4. 값 반환 ---
   return {
     // 상태값들
-    id, idError, idCheckError, idCheckSuccess,
-    pw, pwError, confirmPw, confirmPwError, confirmPwSuccess,
-    userName, nameError,
-    phone, phoneError, verifyCode, verifyError, verifySuccess, isRequested, isVerified,
-    isTyping, 
+    id,
+    idError,
+    idCheckError,
+    idCheckSuccess,
+    pw,
+    pwError,
+    confirmPw,
+    confirmPwError,
+    confirmPwSuccess,
+    userName,
+    nameError,
+    phone,
+    phoneError,
+    verifyCode,
+    verifyError,
+    verifySuccess,
+    isRequested,
+    isVerified,
+    isTyping,
 
     // 상태 변경 함수들
-    setVerifyCode, setIsRequested,
+    setVerifyCode,
+    setIsRequested,
 
     // 핸들러 함수들
     handleNameChange,
@@ -147,6 +162,6 @@ export const useAuthForm = () => {
     handleConfirmPwChange,
     handlePhoneChange,
     handleVerifyButtonClick,
-    handleVerifyCodeChange
+    handleVerifyCodeChange,
   };
 };
