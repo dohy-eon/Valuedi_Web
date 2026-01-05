@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '../typography';
+import { Typography } from '../Typography';
 
 export interface DuplicateCheckButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;

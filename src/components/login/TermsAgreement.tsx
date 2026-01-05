@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '@/components';
+import { Typography } from '@/components/Typography';
 import CheckBoxButton from '@/components/buttons/CheckBoxButton';
 import { MoreViewButton } from '@/components/buttons/MoreViewButton';
 
@@ -49,7 +49,7 @@ export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementCha
   }, [terms, onRequirementChange]);
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-[320px] flex flex-col">
       {/* 전체 동의 영역 */}
       <div className="flex items-center gap-3 cursor-pointer mb-4" onClick={handleAllCheck}>
         <CheckBoxButton isChecked={isAllChecked} />

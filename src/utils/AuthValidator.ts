@@ -31,12 +31,22 @@ export const validateName = (name: string): boolean => {
 };
 
 /**
- * 전화번호 형식 검사:
- * 1. 0: 전화번호는 0으로 시작
- * 2. 한국 휴대폰 번호 기준 8자~10자
+ * 주민등록번호 형식 검사
  */
-export const validatePhone = (phone: string): boolean => {
-  const phoneRegex = /^0\d{8,10}$/;
+// utils/AuthValidator.ts
 
-  return phoneRegex.test(phone);
+export const validateResident = (front: string, back: string): boolean => {
+  // 사용자가 입력한 front(6자)와 back(1자)을 합치고,
+  // 정규식 통과를 위해 나머지 뒷자리 6개를 '0'으로 채웁니다.
+  const fullResidentNumber = `${front}-${back}000000`;
+  const regUnique = /^\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])[-]*[1-4]\d{6}$/;
+
+  return regUnique.test(fullResidentNumber);
+};
+
+/** 이메일 형식 검사
+ */
+export const validateEmail = (email: string): boolean => {
+  const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+  return regEmail.test(email);
 };

@@ -1,51 +1,28 @@
-import { Typography } from '@/components';
-import SocialLoginContainer from '@/components/login/SocialLoginContainer';
-import BaseLoginContainer from '@/components/login/BaseLoginContainer';
+import React from 'react';
 import SignUpContainer from '@/components/login/SignUpContainer';
+import { useAuthForm } from '@/hooks/useAuthForm';
 
 export const HomePage = () => {
-  const handleLogin = () => {
-    console.log('로그인 시도');
-  };
+  // 💡 최종 회원가입 완료 시 호출되는 함수
+  const handleSignUpSubmit = (auth: ReturnType<typeof useAuthForm>) => {
+    // 서버로 보낼 최종 데이터 객체 구성
+    const finalData = {
+      id: auth.id,
+      name: auth.userName,
+      residentNumber: `${auth.residentFront}-${auth.residentBack}`,
+      email: auth.email,
+      password: auth.pw,
+      verifyCode: auth.verifyCode,
+    };
 
-  const handleAction = (action: string, data?: unknown) => {
-    console.log(`${action} action triggered`, data || '');
+    console.log('회원가입 최종 데이터:', finalData);
+    alert(`${finalData.name}님, 회원가입이 완료되었습니다!`);
   };
 
   return (
-    <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-10 font-pretendard">
-      {/* 테스트 페이지 타이틀 */}
-      <div className="mb-12 text-center">
-        <Typography variant="headline-1" weight="bold" className="text-neutral-100">
-          로그인 묶음 컴포넌트
-        </Typography>
-      </div>
-
-      <div className="flex flex-row items-start justify-center gap-12 flex-wrap">
-        {/* 1. 소셜 로그인 버전 (SocialLoginContainer) */}
-        <div className="flex flex-col items-center gap-4">
-          <Typography variant="body-2" className="text-neutral-60 mt-2">
-            소셜로그인
-          </Typography>
-          <SocialLoginContainer />
-        </div>
-
-        {/* 2. 아이디/비밀번호 로그인 버전 (BaseLoginContainer) */}
-        <div className="flex flex-col items-center gap-4">
-          <Typography variant="body-2" className="text-neutral-60 mt-2">
-            아이디/비밀번호 로그인
-          </Typography>
-          <BaseLoginContainer onLogin={handleLogin} />
-        </div>
-
-        {/* 3. 회원가입 (SignUpContainer) */}
-        <div className="flex flex-col items-center gap-4">
-          <Typography variant="body-2" className="text-neutral-60 mt-2">
-            회원가입
-          </Typography>
-          <SignUpContainer onSignUp={(data) => handleAction('Sign Up', data)} />
-        </div>
-      </div>
+    // 배경색과 중앙 정렬 설정
+    <div className="w-full">
+      <SignUpContainer onSignUp={handleSignUpSubmit} />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '@/components';
+import { Typography } from '@/components/Typography';
 import AuthInput from '@/components/login/AuthInput';
 import LoginButton from '@/components/buttons/LoginButton';
 import { useAuthForm } from '@/hooks/useAuthForm';
