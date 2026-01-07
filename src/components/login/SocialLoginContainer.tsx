@@ -6,6 +6,8 @@ import KakaoIcon from '@/assets/icons/kakao.svg?react';
 import { useNavigate } from 'react-router-dom';
 interface SocialLoginContainerProps {
   className?: string;
+  onKakaoClick?: () => void;
+  onEmailClick?: () => void;
 }
 
 const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className }) => {

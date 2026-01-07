@@ -2,16 +2,17 @@ import React from 'react';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components';
 import { useNavigate } from 'react-router-dom';
+
 import AuthInput from '@/components/login/AuthInput';
-import { useAuthForm } from '@/hooks/SignUp/useAuthForm';
 import DuplicateCheckButton from '@/components/buttons/DuplicateCheckButton';
+import { useAuthForm } from '@/hooks/SignUp/useAuthForm';
 import { LoginButton } from '../buttons';
 
 interface SignUpContainerProps {
   className?: string;
 }
 
-const SignUpContainer: React.FC<SignUpContainerProps> = () => {
+const SignUpContainer: React.FC<SignUpContainerProps> = ({ className }) => {
   const navigate = useNavigate();
   const auth = useAuthForm();
 
@@ -20,6 +21,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = () => {
     !auth.idError &&
     !auth.idCheckError &&
     auth.idCheckSuccess &&
+    auth.userName &&
     !auth.nameError &&
     auth.rrnFront.length === 7 &&
     !auth.rrnError &&
@@ -28,9 +30,10 @@ const SignUpContainer: React.FC<SignUpContainerProps> = () => {
     auth.confirmPw &&
     !auth.confirmPwError
   );
+
   return (
-    <div className={cn('flex flex-col items-center bg-white justify-center')}>
-      {/* 2. 상단 헤더 영역 */}
+    <div className={cn('flex flex-col items-center bg-white justify-center w-full', className)}>
+      {/* 헤더 */}
       <div className="text-center space-y-4 my-4">
         <Typography variant="headline-1" weight="bold" className="text-neutral-100">
           회원가입
@@ -40,10 +43,11 @@ const SignUpContainer: React.FC<SignUpContainerProps> = () => {
         </Typography>
       </div>
 
-      {/* 3. 입력 폼 리스트 */}
-      <div className="flex flex-col w-full items-center mt-8">
-        {/* 아이디 중복확인 */}
+      {/* 입력 폼 */}
+      <div className="flex flex-col w-full items-center mt-8 gap-3">
+        {/* 아이디 + 중복확인 */}
         <AuthInput
+          name="userId"
           label="아이디"
           value={auth.id}
           onChange={auth.handleIdChange}
@@ -51,73 +55,37 @@ const SignUpContainer: React.FC<SignUpContainerProps> = () => {
           success={auth.idCheckSuccess}
           error={auth.idError || auth.idCheckError}
           rightElement={<DuplicateCheckButton disabled={auth.id.length === 0} onClick={auth.handleDuplicateCheck} />}
-          name={''}
+          width="full"
         />
 
         {/* 이름 */}
         <AuthInput
+          name="userName"
           label="이름"
           value={auth.userName}
           onChange={auth.handleNameChange}
           placeholder="이름을 입력해주세요."
           error={auth.nameError}
-          name={''}
+          width="full"
         />
 
-        {/* 전화번호 인증 섹션 */}
-        {/* <div className="flex flex-col w-full">
-          <AuthInput
-            label="전화번호"
-            value={auth.phone}
-            width="212px"
-            onChange={auth.handlePhoneChange}
-            placeholder="-없이 전화번호를 입력해주세요"
-            isDouble={true}
-            error={auth.phoneError}
-            rightElement={
-              <AuthRequestButton
-                disabled={auth.phone.length < 10 || !!auth.phoneError || auth.isVerified}
-                isSent={auth.isRequested}
-                onClick={() => auth.setIsRequested(true)}
-              />
-            }
-          /> */}
-        {/* <AuthInput
-            name="auth_code"
-            value={auth.verifyCode}
-            width="withButton"
-            isGrayBg={!auth.isRequested || auth.isVerified}
-            onChange={auth.handleVerifyCodeChange}
-            readOnly={auth.isVerified}
-            placeholder="인증번호를 입력해주세요"
-            error={auth.verifyError}
-            success={auth.verifySuccess}
-            rightElement={
-              <AuthVerifyButton
-                disabled={!auth.isRequested || auth.verifyCode.length === 0 || auth.isVerified}
-                onClick={auth.handleVerifyButtonClick}
-              />
-            }
-          />
-        </div> */}
+        {/* 주민등록번호(앞 7자리만 받는 기존 방식 유지) */}
+        <AuthInput
+          name="rrnFront"
+          label="주민등록번호"
+          type="text"
+          value={auth.rrnFront}
+          onChange={auth.handleRrnFrontChange}
+          placeholder="주민등록번호 앞 7자리"
+          error={auth.rrnError}
+          isDouble={true}
+          width="full"
+        />
 
-        {/*주민등록번호 입력 폼*/}
+        {/* 비밀번호 + 확인 */}
         <div className="flex flex-col w-full">
           <AuthInput
-            label="주민등록번호"
-            type="text"
-            value={auth.rrnFront}
-            onChange={auth.handleRrnFrontChange}
-            placeholder="주민등록번호 앞 7자리"
-            error={auth.rrnError}
-            isDouble={true}
-            name={''}
-          />
-        </div>
-
-        {/* 비밀번호 설정 */}
-        <div className="flex flex-col w-full">
-          <AuthInput
+            name="password"
             label="비밀번호"
             type="password"
             value={auth.pw}
@@ -125,21 +93,22 @@ const SignUpContainer: React.FC<SignUpContainerProps> = () => {
             placeholder="비밀번호를 입력해주세요."
             error={auth.pwError}
             isDouble={true}
-            name={''}
+            width="full"
           />
           <AuthInput
+            name="confirmPassword"
             type="password"
             value={auth.confirmPw}
             onChange={auth.handleConfirmPwChange}
             placeholder="비밀번호를 다시 한 번 입력해주세요."
             error={auth.confirmPwError}
             success={auth.confirmPwSuccess}
-            name={''}
+            width="full"
           />
         </div>
       </div>
 
-      {/* 5. 회원가입 버튼 영역 */}
+      {/* 다음으로 */}
       <div className="w-full mt-8">
         <LoginButton
           text="다음으로"

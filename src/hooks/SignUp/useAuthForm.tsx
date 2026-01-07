@@ -1,26 +1,27 @@
 import { useState, ChangeEvent, useEffect } from 'react';
-import { validatePassword, validateName, validatePhone, validateId, validateRRNFront7 } from '@/utils/AuthValidator';
+import { 
+  validatePassword,
+  validateName,
+  validatePhone,
+  validateId,
+  validateRRNFront7 } from '@/utils/AuthValidator';
 
 export const useAuthForm = () => {
-  // --- 1. 상태 관리 ---
 
   // 아이디 관련
   const [id, setId] = useState('');
   const [idError, setIdError] = useState('');
   const [idCheckError, setIdCheckError] = useState('');
   const [idCheckSuccess, setIdCheckSuccess] = useState('');
-
   // 비밀번호 관련 (숫자 2 제거 및 통합)
   const [pw, setPw] = useState('');
   const [pwError, setPwError] = useState('');
   const [confirmPw, setConfirmPw] = useState('');
   const [confirmPwError, setConfirmPwError] = useState('');
   const [confirmPwSuccess, setConfirmPwSuccess] = useState('');
-
   // 이름 관련
   const [userName, setUserName] = useState('');
   const [nameError, setNameError] = useState('');
-
   // 전화번호 및 인증 관련
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState('');
@@ -38,11 +39,9 @@ export const useAuthForm = () => {
   const [isTyping, setIsTyping] = useState(false);
 
   // --- 2. 통합 비밀번호 검증 로직 (useEffect) ---
-  // pw와 confirmPw의 상태를 실시간으로 감시하여 메시지를 업데이트합니다.
   useEffect(() => {
     const isPwInvalid = pw.length > 0 && !validatePassword(pw);
     setPwError(isPwInvalid ? '영문 대소문자, 숫자, 특수문자 포함 8~16자로 입력해주세요.' : '');
-
     if (confirmPw.length > 0) {
       if (pw !== confirmPw) {
         setConfirmPwError('비밀번호가 일치하지 않습니다.');
@@ -57,18 +56,15 @@ export const useAuthForm = () => {
     } else {
       setConfirmPwError('');
       setConfirmPwSuccess('');
-    }
+  }
   }, [pw, confirmPw]);
-
   // --- 3. 핸들러 함수 ---
-
   // 이름 핸들러
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setUserName(value);
     setNameError(value.length > 0 && !validateName(value) ? '올바르지 않은 이름 형식입니다.' : '');
   };
-
   // 아이디 핸들러
   const handleIdChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -78,7 +74,6 @@ export const useAuthForm = () => {
     setIdCheckSuccess('');
     setIdCheckError('');
   };
-
   // 아이디 중복 확인
   const handleDuplicateCheck = () => {
     setIsTyping(false);
@@ -97,11 +92,9 @@ export const useAuthForm = () => {
       setIdCheckSuccess('사용 가능한 아이디입니다.');
     }
   };
-
   // 비밀번호 핸들러
   const handlePwChange = (e: ChangeEvent<HTMLInputElement>) => setPw(e.target.value);
   const handleConfirmPwChange = (e: ChangeEvent<HTMLInputElement>) => setConfirmPw(e.target.value);
-
   // 전화번호 핸들러
   const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -129,7 +122,6 @@ export const useAuthForm = () => {
     setVerifyError('');
     setVerifySuccess('');
   };
-
   // 인증번호 확인 핸들러
   const handleVerifyButtonClick = () => {
     // 테스트용 목업 번호 '123456'
@@ -143,7 +135,6 @@ export const useAuthForm = () => {
       setVerifySuccess('');
     }
   };
-
   // --- 4. 값 반환 ---
   return {
     // 상태값들
@@ -182,6 +173,6 @@ export const useAuthForm = () => {
     handleConfirmPwChange,
     handlePhoneChange,
     handleVerifyButtonClick,
-    handleVerifyCodeChange,
+    handleVerifyCodeChange
   };
 };
