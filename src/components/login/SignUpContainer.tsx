@@ -1,38 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components';
+import { useNavigate } from 'react-router-dom';
 import AuthInput from '@/components/login/AuthInput';
-import { TermsAgreement } from '@/components/login/TermsAgreement';
-import { useAuthForm } from '@/hooks/useAuthForm';
+import { useAuthForm } from '@/hooks/SignUp/useAuthForm';
 import DuplicateCheckButton from '@/components/buttons/DuplicateCheckButton';
-import AuthRequestButton from '@/components/buttons/AuthRequestButton';
-import AuthVerifyButton from '@/components/buttons/AuthVerifyButton';
 import { LoginButton } from '../buttons';
 
 interface SignUpContainerProps {
   className?: string;
-  onSignUp?: (formData: ReturnType<typeof useAuthForm>) => void;
 }
 
-const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
+const SignUpContainer: React.FC<SignUpContainerProps> = () => {
+  const navigate = useNavigate();
   const auth = useAuthForm();
 
-  // 💡 약관 동의 상태를 하위 컴포넌트로부터 받기 위한 상태 (또는 useAuthForm에 통합 권장)
-  const [isTermsValid, setIsTermsValid] = useState(false);
-
-  // 모든 필수 항목이 채워졌는지 확인 (버튼 활성화 로직)
   const isFormValid = !!(
     auth.id &&
     !auth.idError &&
-    auth.userName &&
+    !auth.idCheckError &&
+    auth.idCheckSuccess &&
     !auth.nameError &&
-    auth.isVerified &&
+    auth.rrnFront.length === 7 &&
+    !auth.rrnError &&
     auth.pw &&
     !auth.pwError &&
-    auth.confirmPwSuccess &&
-    isTermsValid
+    auth.confirmPw &&
+    !auth.confirmPwError
   );
-
   return (
     <div className={cn('flex flex-col items-center bg-white justify-center')}>
       {/* 2. 상단 헤더 영역 */}
@@ -56,6 +51,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
           success={auth.idCheckSuccess}
           error={auth.idError || auth.idCheckError}
           rightElement={<DuplicateCheckButton disabled={auth.id.length === 0} onClick={auth.handleDuplicateCheck} />}
+          name={''}
         />
 
         {/* 이름 */}
@@ -65,10 +61,11 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
           onChange={auth.handleNameChange}
           placeholder="이름을 입력해주세요."
           error={auth.nameError}
+          name={''}
         />
 
         {/* 전화번호 인증 섹션 */}
-        <div className="flex flex-col w-full">
+        {/* <div className="flex flex-col w-full">
           <AuthInput
             label="전화번호"
             value={auth.phone}
@@ -84,8 +81,8 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
                 onClick={() => auth.setIsRequested(true)}
               />
             }
-          />
-          <AuthInput
+          /> */}
+        {/* <AuthInput
             name="auth_code"
             value={auth.verifyCode}
             width="withButton"
@@ -102,6 +99,20 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
               />
             }
           />
+        </div> */}
+
+        {/*주민등록번호 입력 폼*/}
+        <div className="flex flex-col w-full">
+          <AuthInput
+            label="주민등록번호"
+            type="text"
+            value={auth.rrnFront}
+            onChange={auth.handleRrnFrontChange}
+            placeholder="주민등록번호 앞 7자리"
+            error={auth.rrnError}
+            isDouble={true}
+            name={''}
+          />
         </div>
 
         {/* 비밀번호 설정 */}
@@ -114,6 +125,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
             placeholder="비밀번호를 입력해주세요."
             error={auth.pwError}
             isDouble={true}
+            name={''}
           />
           <AuthInput
             type="password"
@@ -122,28 +134,23 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ onSignUp }) => {
             placeholder="비밀번호를 다시 한 번 입력해주세요."
             error={auth.confirmPwError}
             success={auth.confirmPwSuccess}
+            name={''}
           />
         </div>
-      </div>
-
-      {/* 4. 약관 동의 섹션 */}
-      <div className="w-full">
-        <TermsAgreement onRequirementChange={(isValid) => setIsTermsValid(isValid)} />
       </div>
 
       {/* 5. 회원가입 버튼 영역 */}
       <div className="w-full mt-8">
         <LoginButton
-          text="회원가입하기"
+          text="다음으로"
           className={cn(
             'border-none rounded-[8px]',
-            /* 💡 모든 필드 입력 + 필수 약관 동의 시 활성화 */
             !isFormValid
               ? 'bg-atomic-yellow-70 cursor-not-allowed text-neutral-40'
               : 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40 text-neutral-100'
           )}
           disabled={!isFormValid}
-          onClick={() => onSignUp?.(auth)}
+          onClick={() => navigate('/signup/email')}
         />
       </div>
     </div>

@@ -3,12 +3,14 @@ import { cn } from '@/utils/cn';
 import { Typography } from '@/components';
 import LoginButton from '@/components/buttons/LoginButton';
 import KakaoIcon from '@/assets/icons/kakao.svg?react';
-
+import { useNavigate } from 'react-router-dom';
 interface SocialLoginContainerProps {
   className?: string;
 }
 
 const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className }) => {
+  const navigate = useNavigate();
+
   return (
     <div className={cn('flex flex-col items-center justify-center bg-white', className)}>
       {/* 2. 상단 텍스트 영역 */}
@@ -45,7 +47,7 @@ const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className }
         <LoginButton
           text="통합로그인으로 계속하기"
           className={cn('bg-white border border-neutral-90 rounded-[8px]', 'hover:bg-neutral-30 transition-colors')}
-          onClick={() => console.log('통합 로그인')}
+          onClick={() => navigate('/login/form')}
         />
       </div>
     </div>

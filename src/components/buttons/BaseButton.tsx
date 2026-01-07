@@ -125,7 +125,12 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
 
   // children이 있으면 children을 렌더링, 없으면 text를 Typography로 렌더링
   const buttonContent = children || (
-    <Typography style={typographyStyle} className="text-center" fontFamily="pretendard" color={textColorToken as ColorToken}>
+    <Typography
+      style={typographyStyle}
+      className="text-center"
+      fontFamily="pretendard"
+      color={textColorToken as ColorToken}
+    >
       {text}
     </Typography>
   );

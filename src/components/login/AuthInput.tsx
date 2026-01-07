@@ -12,11 +12,12 @@ interface AuthInputProps {
   success?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   rightElement?: ReactNode;
+  timer?: string;
   className?: string;
-  width?: 'full' | 'withButton' | string;
+  width?: 'full' | 'withButton';
   isGrayBg?: boolean;
   isDouble?: boolean;
-  readOnly?: boolean; // 💡 추가됨
+  readOnly?: boolean;
 }
 
 const AuthInput = ({
@@ -29,8 +30,9 @@ const AuthInput = ({
   success,
   onChange,
   rightElement,
+  timer,
   className,
-  width,
+  width = 'full',
   isGrayBg,
   isDouble,
   readOnly,
@@ -44,53 +46,71 @@ const AuthInput = ({
   };
 
   const getBgClass = () => {
-    // 💡 readOnly이거나 isGrayBg일 때 회색 배경 적용
     if ((isGrayBg || readOnly) && !isFocused) return 'bg-neutral-20';
     return 'bg-white';
   };
 
-  const resolvedWidth = (() => {
-    if (width === 'full') return '320px';
-    if (width === 'withButton') return '232px';
-    if (width) return width;
-    return rightElement ? '232px' : '320px';
-  })();
-
   const inputId = `auth-input-${name}`;
+
+  const inputBaseClass = cn(
+    'h-12 px-3 border rounded-lg outline-none transition-all text-sm font-pretendard',
+    'placeholder:text-text-body',
+    getBgClass(),
+    getBorderClass(),
+    readOnly && 'cursor-not-allowed opacity-70'
+  );
 
   return (
     <div className={cn('flex flex-col text-left justify-start transition-all w-full', className)}>
       {label && (
-        <label htmlFor={inputId} className="h-[28px] flex items-start">
+        <label htmlFor={inputId} className="h-7 flex items-start">
           <Typography variant="body-2" weight="semi-bold" className="text-text-body" as="span">
             {label}
           </Typography>
         </label>
       )}
 
-      <div className="flex items-center gap-2 h-[48px]">
-        <input
-          id={inputId}
-          name={name}
-          type={type}
-          value={value}
-          placeholder={placeholder}
-          onChange={onChange}
-          onFocus={() => !readOnly && setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          readOnly={readOnly}
-          aria-label={label || placeholder || name}
-          style={{ width: resolvedWidth }}
-          className={cn(
-            'h-full px-[12px] border rounded-[8px] outline-none transition-all text-[14px] font-pretendard',
-            'placeholder:text-text-body',
-            getBgClass(),
-            getBorderClass(),
-            readOnly && 'cursor-not-allowed opacity-70'
-          )}
-        />
-        {rightElement && <div className="flex-shrink-0">{rightElement}</div>}
-      </div>
+      {width === 'withButton' ? (
+        <div className="flex w-full items-center gap-3">
+          {/* ✅ input + timer를 같은 박스 안에 넣고 싶으면 relative */}
+          <div className="relative flex-1 min-w-0">
+            <input
+              id={inputId}
+              name={name}
+              type={type}
+              value={value}
+              placeholder={placeholder}
+              onChange={onChange}
+              onFocus={() => !readOnly && setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              readOnly={readOnly}
+              aria-label={label || placeholder || name}
+              className={cn('w-full pr-14', inputBaseClass)}
+            />
+            {timer && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-neutral-60">{timer}</span>
+            )}
+          </div>
+
+          {rightElement && <div className="shrink-0 whitespace-nowrap">{rightElement}</div>}
+        </div>
+      ) : (
+        <div className="w-full">
+          <input
+            id={inputId}
+            name={name}
+            type={type}
+            value={value}
+            placeholder={placeholder}
+            onChange={onChange}
+            onFocus={() => !readOnly && setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            readOnly={readOnly}
+            aria-label={label || placeholder || name}
+            className={cn('w-full', inputBaseClass)}
+          />
+        </div>
+      )}
 
       {error || success ? (
         <div className="my-1.5 ml-2 flex items-start">
@@ -99,7 +119,7 @@ const AuthInput = ({
           </Typography>
         </div>
       ) : (
-        <div className={cn(isDouble ? 'h-[8px]' : 'h-[24px]')} />
+        <div className={cn(isDouble ? 'h-2' : 'h-6')} />
       )}
     </div>
   );

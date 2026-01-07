@@ -19,7 +19,7 @@ const SignUpEmailContainer = () => {
     isTermsValid;
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col">
       {/* 헤더 */}
       <div className="text-center space-y-4 my-4">
         <Typography variant="headline-2" weight="bold" className="text-neutral-100">
@@ -53,16 +53,22 @@ const SignUpEmailContainer = () => {
         error={auth.verifyError}
         readOnly={auth.isVerified}
         timer={auth.timerText}
-        rightElement={<AuthRequestButton disabled={!auth.canResend} onClick={auth.startVerification} />}
+        rightElement={
+          auth.verifyCode.length === 6 ? (
+            <AuthRequestButton disabled={auth.isVerified} onClick={auth.confirmVerification} />
+          ) : (
+            <AuthRequestButton disabled={!auth.canResend} onClick={auth.startVerification} />
+          )
+        }
       />
 
       {/* 약관 */}
-      <div className="w-full mt-4 px-4">
+      <div className="w-full mt-4">
         <TermsAgreement onRequirementChange={setIsTermsValid} />
       </div>
 
       {/* 다음으로 */}
-      <div className="w-full mt-8">
+      <div className="flex items-center justify-center w-full mt-8 ">
         <LoginButton
           text="다음으로"
           className={`border-none rounded-[8px] ${

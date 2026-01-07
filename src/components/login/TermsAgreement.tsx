@@ -51,7 +51,7 @@ export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementCha
   return (
     <div className="w-full flex flex-col">
       {/* 전체 동의 영역 */}
-      <div className="flex items-center gap-3 cursor-pointer mb-4" onClick={handleAllCheck}>
+      <div className="flex items-center gap-3 min-w-0 cursor-pointer mb-4" onClick={handleAllCheck}>
         <CheckBoxButton isChecked={isAllChecked} />
         <Typography variant="body-2" weight="bold" className={isAllChecked ? 'text-neutral-100' : 'text-neutral-60'}>
           전체 동의

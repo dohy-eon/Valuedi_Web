@@ -40,3 +40,26 @@ export const validatePhone = (phone: string): boolean => {
 
   return phoneRegex.test(phone);
 };
+
+export const validateRRNFront7 = (value: string) => {
+  // 숫자 7자리인지
+  if (!/^\d{7}$/.test(value)) return false;
+
+  const yy = Number(value.slice(0, 2));
+  const mm = Number(value.slice(2, 4));
+  const dd = Number(value.slice(4, 6));
+  const genderCode = Number(value[6]);
+
+  // 월 / 일 범위
+  if (mm < 1 || mm > 12) return false;
+  if (dd < 1 || dd > 31) return false;
+
+  // 성별 코드 (MVP 기준 1~4)
+  if (![1, 2, 3, 4].includes(genderCode)) return false;
+
+  // 날짜 유효성
+  const fullYear = genderCode <= 2 ? 1900 + yy : 2000 + yy;
+  const date = new Date(fullYear, mm - 1, dd);
+
+  return date.getFullYear() === fullYear && date.getMonth() === mm - 1 && date.getDate() === dd;
+};

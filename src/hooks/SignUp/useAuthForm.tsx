@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useEffect } from 'react';
-import { validatePassword, validateName, validatePhone, validateId } from '@/utils/AuthValidator';
+import { validatePassword, validateName, validatePhone, validateId, validateRRNFront7 } from '@/utils/AuthValidator';
 
 export const useAuthForm = () => {
   // --- 1. 상태 관리 ---
@@ -29,6 +29,10 @@ export const useAuthForm = () => {
   const [verifySuccess, setVerifySuccess] = useState('');
   const [isRequested, setIsRequested] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+
+  //주민등록번호 관련 핸들러
+  const [rrnFront, setRrnFront] = useState('');
+  const [rrnError, setRrnError] = useState('');
 
   // 기타 상태
   const [isTyping, setIsTyping] = useState(false);
@@ -105,6 +109,19 @@ export const useAuthForm = () => {
     setPhoneError(value.length > 0 && !validatePhone(value) ? '올바르지 않은 전화번호 형식입니다.' : '');
   };
 
+  //주민등록번호 핸들러
+  const handleRrnFrontChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 7);
+    setRrnFront(value);
+
+    if (value.length === 0) {
+      setRrnError('');
+    } else if (value.length < 7) {
+      setRrnError('주민등록번호 앞 7자리를 입력해주세요.');
+    } else {
+      setRrnError(validateRRNFront7(value) ? '' : '올바르지 않은 주민등록번호 형식입니다.');
+    }
+  };
   // 인증번호 핸들러
   const handleVerifyCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -136,6 +153,8 @@ export const useAuthForm = () => {
     idCheckSuccess,
     pw,
     pwError,
+    rrnFront,
+    rrnError,
     confirmPw,
     confirmPwError,
     confirmPwSuccess,
@@ -159,6 +178,7 @@ export const useAuthForm = () => {
     handleIdChange,
     handleDuplicateCheck,
     handlePwChange,
+    handleRrnFrontChange,
     handleConfirmPwChange,
     handlePhoneChange,
     handleVerifyButtonClick,
