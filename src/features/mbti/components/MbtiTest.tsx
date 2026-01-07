@@ -1,0 +1,94 @@
+import { useState } from 'react';
+import { Typography } from '@/components';
+import ProgressBar from '@/components/bar/ProgressBar';
+import { cn } from '@/utils/cn';
+import { MBTI_QUESTIONS } from '../constants/questions';
+
+type ScoreType = { [key: string]: number };
+
+interface MbtiTestProps {
+  onNext: (scores: ScoreType) => void;
+  currentStep: number;
+  onStepChange: (step: number) => void;
+}
+
+const OPTIONS = [
+  { label: '매우 그렇다.', score: 5 },
+  { label: '그렇다.', score: 4 },
+  { label: '보통이다.', score: 3 },
+  { label: '아니다.', score: 2 },
+  { label: '매우 아니다.', score: 1 },
+];
+
+export const MbtiTest = ({ onNext, currentStep, onStepChange }: MbtiTestProps) => {
+  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const question = MBTI_QUESTIONS[currentStep];
+
+  // 현재 단계의 답변 저장 및 다음 질문으로 이동
+  const handleAnswer = (score: number) => {
+    const newAnswers = { ...answers, [currentStep]: score };
+    setAnswers(newAnswers);
+
+    if (currentStep < MBTI_QUESTIONS.length - 1) {
+      onStepChange(currentStep + 1);
+    } else {
+      const finalScores = calculateFinalScores(newAnswers);
+      onNext(finalScores);
+    }
+  };
+
+  // 답변 기록(answers)을 기반으로 MBTI 타입별 점수 합산하는 함수
+  const calculateFinalScores = (answerHistory: Record<number, number>): ScoreType => {
+    return MBTI_QUESTIONS.reduce((acc, q, index) => {
+      const type = q.type;
+      const score = answerHistory[index] || 0;
+      return {
+        ...acc,
+        [type]: (acc[type] || 0) + score,
+      };
+    }, {} as ScoreType);
+  };
+
+  const progressPercentage = ((currentStep + 1) / MBTI_QUESTIONS.length) * 100;
+
+  return (
+    <div className={cn('flex flex-col h-full min-h-screen bg-neutral-0')}>
+      <div className="w-full">
+        <ProgressBar percentage={progressPercentage} className="w-full h-[1px]" />
+      </div>
+
+      <div className="flex flex-col flex-1 px-[20px] mt-[19px]">
+        <div className={cn('flex flex-col gap-[12px]')}>
+          <Typography style="text-headline-3-18-semi-bold" className={cn('text-neutral-90 whitespace-pre-line')}>
+            {question.title}
+          </Typography>
+          <Typography style="text-body-2-14-regular" className={cn('text-neutral-70')}>
+            사용자의 소비행태를 분석해요
+          </Typography>
+        </div>
+
+        <div className="flex flex-col mt-[46px] gap-[8px]">
+          {OPTIONS.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => handleAnswer(option.score)}
+              className={cn('w-full p-[12px] flex items-center gap-[8px] border border-neutral-10 rounded-[8px]')}
+            >
+              <div
+                className={cn('flex items-center justify-center w-[24px] h-[24px] rounded-[12px]', 'bg-primary-normal')}
+              >
+                <Typography style="text-caption-1-12-semi-bold" className="text-neutral-90">
+                  {index + 1}
+                </Typography>
+              </div>
+
+              <Typography style="text-body-2-14-regular" className="text-neutral-90">
+                {option.label}
+              </Typography>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
