@@ -2,17 +2,14 @@ import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
 import MbtiIcon from '@/assets/icons/Mbti.svg?react';
 import { LoginButton } from '@/components/buttons';
-import BackPageGNB from '@/components/gnb/BackPageGNB';
 
 interface MbtiIntroProps {
   onStart: () => void;
-  onBack: () => void;
 }
 
-export const MbtiIntro = ({ onStart, onBack }: MbtiIntroProps) => {
+export const MbtiIntro = ({ onStart }: MbtiIntroProps) => {
   return (
     <div className={cn('flex flex-col h-full min-h-screen bg-neutral-0')}>
-      <BackPageGNB onBack={onBack} title="" text="" />
       <div className={cn('flex flex-col flex-1 px-[20px]')}>
         <div className={cn('flex flex-col gap-[12px] mt-[20px]')}>
           <Typography style="text-headline-3-18-semi-bold" className={cn('text-neutral-90')}>

@@ -3,19 +3,15 @@ import { cn } from '@/utils/cn';
 import { MbtiDetailChart } from './MbtiDetailChart';
 import { MbtiResultType } from '../constants/results';
 import { MbtiCard } from '@/components/mbti';
-import BackPageGNB from '@/components/gnb/BackPageGNB';
 
 interface MbtiDetailProps {
   result: MbtiResultType;
   scores: Record<string, number>;
-  onBack: () => void;
 }
 
-export const MbtiDetail = ({ result, scores, onBack }: MbtiDetailProps) => {
+export const MbtiDetail = ({ result, scores }: MbtiDetailProps) => {
   return (
     <div className={cn('flex flex-col min-h-screen bg-neutral-0')}>
-      <BackPageGNB className="w-full" onBack={onBack} title="" text="결과 공유하기" />
-
       <div className={cn('px-[20px]')}>
         <div className={cn('flex flex-col items-center')}>
           <MbtiCard

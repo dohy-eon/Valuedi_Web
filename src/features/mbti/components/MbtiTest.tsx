@@ -3,13 +3,13 @@ import { Typography } from '@/components';
 import ProgressBar from '@/components/bar/ProgressBar';
 import { cn } from '@/utils/cn';
 import { MBTI_QUESTIONS } from '../constants/questions';
-import BackPageGNB from '@/components/gnb/BackPageGNB';
 
 type ScoreType = { [key: string]: number };
 
 interface MbtiTestProps {
   onNext: (scores: ScoreType) => void;
-  onBack: () => void;
+  currentStep: number;
+  onStepChange: (step: number) => void;
 }
 
 const OPTIONS = [
@@ -20,19 +20,9 @@ const OPTIONS = [
   { label: '매우 아니다.', score: 1 },
 ];
 
-export const MbtiTest = ({ onNext, onBack }: MbtiTestProps) => {
-  const [currentStep, setCurrentStep] = useState(0);
+export const MbtiTest = ({ onNext, currentStep, onStepChange }: MbtiTestProps) => {
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const question = MBTI_QUESTIONS[currentStep];
-
-  // GNB 뒤로가기 버튼 핸들러
-  const handleBackClick = () => {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1);
-    } else {
-      onBack();
-    }
-  };
 
   // 현재 단계의 답변 저장 및 다음 질문으로 이동
   const handleAnswer = (score: number) => {
@@ -40,7 +30,7 @@ export const MbtiTest = ({ onNext, onBack }: MbtiTestProps) => {
     setAnswers(newAnswers);
 
     if (currentStep < MBTI_QUESTIONS.length - 1) {
-      setCurrentStep((prev) => prev + 1);
+      onStepChange(currentStep + 1);
     } else {
       const finalScores = calculateFinalScores(newAnswers);
       onNext(finalScores);
@@ -63,8 +53,6 @@ export const MbtiTest = ({ onNext, onBack }: MbtiTestProps) => {
 
   return (
     <div className={cn('flex flex-col h-full min-h-screen bg-neutral-0')}>
-      <BackPageGNB className="w-full" onBack={handleBackClick} title="" text="" />
-
       <div className="w-full">
         <ProgressBar percentage={progressPercentage} className="w-full h-[1px]" />
       </div>
@@ -84,12 +72,7 @@ export const MbtiTest = ({ onNext, onBack }: MbtiTestProps) => {
             <button
               key={index}
               onClick={() => handleAnswer(option.score)}
-              className={cn(
-                'w-full p-[12px] flex items-center gap-[8px] border border-neutral-10 rounded-[8px]',
-                // (선택 사항) 사용자가 선택했던 답변 표시해주고 싶으면 아래 조건 추가 가능
-                // answers[currentStep] === option.score ? 'bg-neutral-10 border-neutral-50' : ''
-                'active:bg-neutral-5' // 클릭 시 살짝 반응
-              )}
+              className={cn('w-full p-[12px] flex items-center gap-[8px] border border-neutral-10 rounded-[8px]')}
             >
               <div
                 className={cn('flex items-center justify-center w-[24px] h-[24px] rounded-[12px]', 'bg-primary-normal')}

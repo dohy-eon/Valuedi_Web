@@ -3,7 +3,6 @@ import { cn } from '@/utils/cn';
 import MbtiCard from '@/components/mbti/MbtiCard';
 import { MBTI_RESULTS } from '../constants/results';
 import { LoginButton } from '@/components/buttons';
-import BackPageGNB from '@/components/gnb/BackPageGNB';
 
 interface MbtiResultProps {
   scores: Record<string, number>;
@@ -17,8 +16,6 @@ export const MbtiResult = ({ scores, onHome, onDetail }: MbtiResultProps) => {
 
   return (
     <div className={cn('flex flex-col h-full min-h-screen bg-neutral-0 overflow-y-auto')}>
-      <BackPageGNB className="w-full" onBack={onHome} text="결과 공유하기" title="" />
-
       <div className={cn('flex-1 flex flex-col items-center px-[20px] pb-[40px]')}>
         <MbtiCard
           mbtiType={result.mbtiType}
