@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Typography } from './Typography';
+import { Typography } from '../typography';
 
 const meta = {
   title: 'Components/Typography',
@@ -50,6 +50,7 @@ export const Default: Story = {
 };
 
 export const TitleVariants: Story = {
+  args: { children: ' ' },
   render: () => (
     <div className="flex flex-col gap-4">
       <Typography variant="title-1" weight="bold" color="title">
@@ -66,6 +67,7 @@ export const TitleVariants: Story = {
 };
 
 export const HeadlineVariants: Story = {
+  args: { children: ' ' },
   render: () => (
     <div className="flex flex-col gap-4">
       <Typography variant="headline-1" weight="semi-bold" color="title">
@@ -82,6 +84,7 @@ export const HeadlineVariants: Story = {
 };
 
 export const BodyVariants: Story = {
+  args: { children: ' ' },
   render: () => (
     <div className="flex flex-col gap-4">
       <Typography variant="body-1" weight="regular" color="body">
@@ -101,6 +104,7 @@ export const BodyVariants: Story = {
 };
 
 export const CaptionVariants: Story = {
+  args: { children: ' ' },
   render: () => (
     <div className="flex flex-col gap-4">
       <Typography variant="caption-1" weight="medium" color="sub-body">
@@ -114,6 +118,7 @@ export const CaptionVariants: Story = {
 };
 
 export const FontWeights: Story = {
+  args: { children: ' ' },
   render: () => (
     <div className="flex flex-col gap-4">
       <Typography variant="body-1" weight="bold" color="title">
@@ -133,6 +138,7 @@ export const FontWeights: Story = {
 };
 
 export const Colors: Story = {
+  args: { children: ' ' },
   render: () => (
     <div className="flex flex-col gap-4">
       <Typography variant="body-1" weight="regular" color="title">

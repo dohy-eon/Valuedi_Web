@@ -1,13 +1,7 @@
 import { useState, ChangeEvent, useEffect } from 'react';
-import { 
-  validatePassword,
-  validateName,
-  validatePhone,
-  validateId,
-  validateRRNFront7 } from '@/utils/AuthValidator';
+import { validatePassword, validateName, validatePhone, validateId, validateRRNFront7 } from '@/utils/AuthValidator';
 
 export const useAuthForm = () => {
-
   // 아이디 관련
   const [id, setId] = useState('');
   const [idError, setIdError] = useState('');
@@ -56,7 +50,7 @@ export const useAuthForm = () => {
     } else {
       setConfirmPwError('');
       setConfirmPwSuccess('');
-  }
+    }
   }, [pw, confirmPw]);
   // --- 3. 핸들러 함수 ---
   // 이름 핸들러
@@ -173,6 +167,6 @@ export const useAuthForm = () => {
     handleConfirmPwChange,
     handlePhoneChange,
     handleVerifyButtonClick,
-    handleVerifyCodeChange
+    handleVerifyCodeChange,
   };
 };

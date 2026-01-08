@@ -6,6 +6,9 @@ import BaseButton from '../buttons/BaseButton';
 const meta = {
   title: 'Components/Login/AuthInput',
   component: AuthInput,
+  args: {
+    onChange: () => {},
+  },
   parameters: {
     layout: 'centered',
     viewport: {
@@ -103,6 +106,11 @@ export const WithSuccess: Story = {
 };
 
 export const WithButton: Story = {
+  args: {
+    name: 'code',
+    value: '',
+    onChange: () => {},
+  },
   render: () => {
     const [value, setValue] = useState('');
     return (

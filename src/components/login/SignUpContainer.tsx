@@ -2,7 +2,6 @@ import React from 'react';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components';
 import { useNavigate } from 'react-router-dom';
-
 import AuthInput from '@/components/login/AuthInput';
 import DuplicateCheckButton from '@/components/buttons/DuplicateCheckButton';
 import { useAuthForm } from '@/hooks/SignUp/useAuthForm';
