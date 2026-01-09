@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '../Typography';
+import { Typography } from '../typography';
 import type { TypographyStyle, ColorToken } from '@/styles/design-system';
 
 export type ButtonSize = 'small' | 'medium' | 'large' | 'custom';
@@ -98,11 +98,10 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
     },
   };
 
-  // 텍스트 색상 매핑 (ColorToken으로 변환)
   const textColorTokens: Record<ButtonVariant, { default: string; disabled: string }> = {
     primary: {
       default: 'neutral-90',
-      disabled: 'neutral-60', // Changed from neutral-50 for WCAG AA compliance
+      disabled: 'neutral-60',
     },
     secondary: {
       default: 'neutral-90',
@@ -114,7 +113,7 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
     },
     ghost: {
       default: 'neutral-90',
-      disabled: 'neutral-60', // Changed from neutral-50 for WCAG AA compliance
+      disabled: 'neutral-60',
     },
   };
 

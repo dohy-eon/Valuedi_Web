@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
 import { MoreViewButton } from '@/components/buttons';
@@ -18,8 +17,6 @@ export const MbtiDetailChart = ({
   descriptionTitle,
   description,
 }: MbtiDetailChartProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <div className={cn('flex flex-col w-full gap-[8px]')}>
       <div className={cn('flex flex-col gap-[4px]')}>

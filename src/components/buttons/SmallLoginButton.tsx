@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '../Typography';
+import { Typography } from '../typography';
 
 export interface SmallLoginButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;

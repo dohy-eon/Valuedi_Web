@@ -10,8 +10,9 @@ interface MbtiResultProps {
   onDetail: () => void;
 }
 
-export const MbtiResult = ({ scores, onHome, onDetail }: MbtiResultProps) => {
-  // 나중에 scores를 이용해서 MBTI 타입을 계산하는 로직을 여기에 넣으면 됩니당
+// export const MbtiResult = ({ scores, onHome, onDetail }: MbtiResultProps) => {
+// 나중에 scores를 이용해서 MBTI 타입을 계산하는 로직을 여기에 넣으면 됩니당
+export const MbtiResult = ({ onHome, onDetail }: MbtiResultProps) => {
   const result = MBTI_RESULTS['DEFAULT'];
 
   return (

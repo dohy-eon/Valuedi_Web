@@ -1,10 +1,10 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { Typography } from '@/components/Typography';
+import { Typography } from '@/components/typography';
 import AuthInput from '@/components/login/AuthInput';
 import LoginButton from '@/components/buttons/LoginButton';
-import { useAuthForm } from '@/hooks/useAuthForm';
-
+import { useAuthForm } from '@/hooks/SignUp/useAuthForm';
+import { useNavigate } from 'react-router-dom';
 interface BaseLoginContainerProps {
   className?: string;
   onLogin?: (id: string, pw: string) => void;
@@ -12,7 +12,7 @@ interface BaseLoginContainerProps {
 
 const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLogin }) => {
   const auth = useAuthForm();
-
+  const navigate = useNavigate();
   const isFormValid = auth.id.length > 0 && auth.pw.length > 0 && !auth.idError && !auth.pwError;
 
   return (
@@ -79,7 +79,7 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
             <Typography variant="caption-1">비밀번호 찾기</Typography>
           </button>
         </div>
-        <button type="button" className="hover:underline text-neutral-80">
+        <button type="button" className="hover:underline text-neutral-80" onClick={() => navigate('/signup')}>
           <Typography variant="caption-1">회원가입</Typography>
         </button>
       </div>

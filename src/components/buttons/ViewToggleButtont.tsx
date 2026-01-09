@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
-
 import ListIcon from '@/assets/icons/List.svg?react';
 import ListOffIcon from '@/assets/icons/ListOff.svg?react';
 import CalendarIcon from '@/assets/icons/Calendar.svg?react';
