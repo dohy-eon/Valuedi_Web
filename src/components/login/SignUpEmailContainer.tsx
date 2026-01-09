@@ -52,12 +52,18 @@ const SignUpEmailContainer = () => {
         success={auth.verifySuccess}
         error={auth.verifyError}
         readOnly={auth.isVerified}
-        timer={auth.timerText}
+        timer={auth.isRequested ? auth.timerText : undefined}
         rightElement={
           auth.verifyCode.length === 6 ? (
-            <AuthRequestButton disabled={auth.isVerified} onClick={auth.confirmVerification} />
+            <AuthRequestButton text="확인" disabled={auth.isVerified} onClick={auth.confirmVerification} />
+          ) : auth.isRequested ? (
+            <AuthRequestButton text="재전송" disabled={!auth.canResend} onClick={auth.startVerification} />
           ) : (
-            <AuthRequestButton disabled={!auth.canResend} onClick={auth.startVerification} />
+            <AuthRequestButton
+              text="전송"
+              disabled={!auth.email || !!auth.emailError}
+              onClick={auth.startVerification}
+            />
           )
         }
       />

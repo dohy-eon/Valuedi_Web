@@ -3,7 +3,7 @@ import { HomePage } from '@/pages';
 import LoginPage from '@/pages/Login/LoginPage';
 import SignUpPage from '@/pages/SignUp/SignUpPage';
 import DefaultLogin from '@/pages/Login/DefaultLogin';
-import SignUpEmailContainer from '@/components/login/SignUpEmailContainer';
+import EmailForm from '@/pages/SignUp/EmailForm';
 import SplashPage from '@/pages/Splash/SplashPage';
 import OnboardingPage from '@/pages/Onboarding/OnboardingPage';
 
@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
       { path: 'login', element: <DefaultLogin /> },
       { path: 'login/form', element: <LoginPage /> },
       { path: 'signup', element: <SignUpPage /> },
-      { path: '/signup/email', element: <SignUpEmailContainer /> },
+      { path: '/signup/email', element: <EmailForm /> },
     ],
   },
 ]);

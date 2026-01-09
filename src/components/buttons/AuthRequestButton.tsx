@@ -4,23 +4,23 @@ import { Typography } from '../typography';
 
 export interface AuthRequestButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
+  text?: string;
 }
 
-const AuthRequestButton: React.FC<AuthRequestButtonProps> = ({ className, disabled, ...props }) => {
+const AuthRequestButton: React.FC<AuthRequestButtonProps> = ({ className, disabled, text = '재전송', ...props }) => {
   return (
     <button
       type="button"
       disabled={disabled}
       className={cn(
         'flex items-center justify-center',
-        'w-[80px]', // 💡 이미지 비율에 맞춘 너비
-        'h-[48px]', // 💡 요청하신 높이 수치
-        'rounded-[8px]', // 💡 border-radius: 8px
+        'w-[80px]',
+        'h-[48px]',
+        'rounded-[8px]',
         'transition-all outline-none',
-        // 💡 이미지 속 '재전송' 버튼 스타일 반영
         disabled
-          ? 'bg-neutral-10 cursor-not-allowed border-none' // 비활성화 시 연한 회색
-          : 'bg-neutral-20 cursor-pointer border-none hover:bg-neutral-30 active:bg-neutral-40', // 활성화 시 스타일
+          ? 'bg-neutral-20 cursor-not-allowed border border-neutral-40' // 비활성화 시
+          : 'bg-primary-normal cursor-pointer hover:bg-atomic-yellow-40 active:bg-atomic-yellow-30 border-none', // 활성화 시 FFE500
         className
       )}
       {...props}
@@ -28,13 +28,9 @@ const AuthRequestButton: React.FC<AuthRequestButtonProps> = ({ className, disabl
       <Typography
         variant="body-2"
         weight="semi-bold"
-        className={cn(
-          'text-center whitespace-nowrap',
-          // 💡 이미지 속 글자색 반영
-          disabled ? 'text-neutral-40' : 'text-neutral-60'
-        )}
+        className={cn('text-center whitespace-nowrap', disabled ? 'text-neutral-60' : 'text-neutral-90')}
       >
-        재전송
+        {text}
       </Typography>
     </button>
   );

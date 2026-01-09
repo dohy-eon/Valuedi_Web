@@ -70,40 +70,42 @@ const AuthInput = ({
       )}
 
       <div className="flex items-center gap-2 h-[48px]">
-        <input
-          name={name}
-          type={type}
-          value={value}
-          placeholder={placeholder}
-          onChange={onChange}
-          onFocus={(e) => {
-            if (readOnly) return;
-            setIsFocused(true);
-            onFocus?.(e);
-          }}
-          onBlur={() => setIsFocused(false)}
-          readOnly={readOnly}
-          style={{ width: rightElement ? undefined : resolvedWidth }}
-          className={cn(
-            'h-full px-[12px] border rounded-[8px] outline-none transition-all text-[14px] font-pretendard',
-            'placeholder:text-text-body',
-            getBgClass(),
-            getBorderClass(),
-            readOnly && 'cursor-not-allowed opacity-70',
-            rightElement && 'flex-1'
-          )}
-        />
-
-        {(timer || rightElement) && (
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {timer && (
+        <div
+          className="relative h-full"
+          style={{ width: rightElement ? undefined : resolvedWidth, flex: rightElement ? 1 : undefined }}
+        >
+          <input
+            name={name}
+            type={type}
+            value={value}
+            placeholder={placeholder}
+            onChange={onChange}
+            onFocus={(e) => {
+              if (readOnly) return;
+              setIsFocused(true);
+              onFocus?.(e);
+            }}
+            onBlur={() => setIsFocused(false)}
+            readOnly={readOnly}
+            className={cn(
+              'h-full w-full px-[12px] border rounded-[8px] outline-none transition-all text-[14px] font-pretendard',
+              'placeholder:text-text-body',
+              getBgClass(),
+              getBorderClass(),
+              readOnly && 'cursor-not-allowed opacity-70',
+              timer && 'pr-[60px]'
+            )}
+          />
+          {timer && (
+            <div className="absolute right-[12px] top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
               <Typography variant="caption-2" weight="medium" className="text-text-body">
                 {timer}
               </Typography>
-            )}
-            {rightElement}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
+
+        {rightElement && <div className="flex items-center gap-2 flex-shrink-0">{rightElement}</div>}
       </div>
 
       {error || success ? (

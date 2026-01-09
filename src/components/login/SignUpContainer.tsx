@@ -82,11 +82,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ className }) => {
           <div
             className={cn(
               'flex items-center gap-2 h-[48px] px-[12px] border rounded-[8px] bg-white transition-all',
-              auth.rrnError
-                ? 'border-status-error'
-                : isRrnFocused
-                  ? 'border-text-title'
-                  : 'border-neutral-40'
+              auth.rrnError ? 'border-status-error' : isRrnFocused ? 'border-text-title' : 'border-neutral-40'
             )}
           >
             <input
