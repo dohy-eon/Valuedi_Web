@@ -56,11 +56,11 @@ const AuthInput = ({
     if (width === 'full') return '320px';
     if (width === 'withButton') return '232px';
     if (width) return width;
-    return rightElement ? '232px' : '320px';
+    return '320px';
   })();
 
   return (
-    <div className={cn('flex flex-col text-left justify-start transition-all w-full', className)}>
+    <div className={cn('flex flex-col text-left justify-start transition-all w-[320px] mx-auto', className)}>
       {label && (
         <div className="h-[28px] flex items-start">
           <Typography variant="body-2" weight="semi-bold" className="text-text-body">
@@ -83,13 +83,14 @@ const AuthInput = ({
           }}
           onBlur={() => setIsFocused(false)}
           readOnly={readOnly}
-          style={{ width: resolvedWidth }}
+          style={{ width: rightElement ? undefined : resolvedWidth }}
           className={cn(
             'h-full px-[12px] border rounded-[8px] outline-none transition-all text-[14px] font-pretendard',
             'placeholder:text-text-body',
             getBgClass(),
             getBorderClass(),
-            readOnly && 'cursor-not-allowed opacity-70'
+            readOnly && 'cursor-not-allowed opacity-70',
+            rightElement && 'flex-1'
           )}
         />
 

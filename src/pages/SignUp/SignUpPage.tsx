@@ -2,8 +2,10 @@ import SignUpContainer from '@/components/login/SignUpContainer';
 
 const SignupPage = () => {
   return (
-    <div className="min-h-screen flex justify-center pt-24 px-4">
-      <SignUpContainer />
+    <div className="min-h-dvh flex justify-center px-4 py-10 sm:py-16">
+      <div className="w-full max-w-[26.25rem]">
+        <SignUpContainer />
+      </div>
     </div>
   );
 };

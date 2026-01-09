@@ -82,7 +82,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ className }) => {
         />
 
         {/* 비밀번호 + 확인 */}
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full items-center">
           <AuthInput
             name="password"
             label="비밀번호"
@@ -108,7 +108,7 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ className }) => {
       </div>
 
       {/* 다음으로 */}
-      <div className="w-full mt-8">
+      <div className="w-full mt-8 flex justify-center">
         <LoginButton
           text="다음으로"
           className={cn(
