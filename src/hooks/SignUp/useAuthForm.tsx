@@ -27,6 +27,7 @@ export const useAuthForm = () => {
 
   //주민등록번호 관련 핸들러
   const [rrnFront, setRrnFront] = useState('');
+  const [rrnBack, setRrnBack] = useState('');
   const [rrnError, setRrnError] = useState('');
 
   // 기타 상태
@@ -52,6 +53,19 @@ export const useAuthForm = () => {
       setConfirmPwSuccess('');
     }
   }, [pw, confirmPw]);
+
+  // 주민등록번호 검증 로직 (useEffect)
+  useEffect(() => {
+    if (rrnFront.length === 0 && rrnBack.length === 0) {
+      setRrnError('');
+    } else if (rrnFront.length < 6 || rrnBack.length < 1) {
+      setRrnError('주민등록번호를 입력해주세요.');
+    } else {
+      const fullRrn = rrnFront + rrnBack;
+      setRrnError(validateRRNFront7(fullRrn) ? '' : '올바르지 않은 주민등록번호 형식입니다.');
+    }
+  }, [rrnFront, rrnBack]);
+
   // --- 3. 핸들러 함수 ---
   // 이름 핸들러
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -98,16 +112,13 @@ export const useAuthForm = () => {
 
   //주민등록번호 핸들러
   const handleRrnFrontChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 7);
+    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
     setRrnFront(value);
+  };
 
-    if (value.length === 0) {
-      setRrnError('');
-    } else if (value.length < 7) {
-      setRrnError('주민등록번호 앞 7자리를 입력해주세요.');
-    } else {
-      setRrnError(validateRRNFront7(value) ? '' : '올바르지 않은 주민등록번호 형식입니다.');
-    }
+  const handleRrnBackChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 1);
+    setRrnBack(value);
   };
   // 인증번호 핸들러
   const handleVerifyCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -139,6 +150,7 @@ export const useAuthForm = () => {
     pw,
     pwError,
     rrnFront,
+    rrnBack,
     rrnError,
     confirmPw,
     confirmPwError,
@@ -164,6 +176,7 @@ export const useAuthForm = () => {
     handleDuplicateCheck,
     handlePwChange,
     handleRrnFrontChange,
+    handleRrnBackChange,
     handleConfirmPwChange,
     handlePhoneChange,
     handleVerifyButtonClick,

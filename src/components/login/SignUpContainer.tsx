@@ -14,6 +14,9 @@ interface SignUpContainerProps {
 const SignUpContainer: React.FC<SignUpContainerProps> = ({ className }) => {
   const navigate = useNavigate();
   const auth = useAuthForm();
+  const [isRrnFocused, setIsRrnFocused] = React.useState(false);
+  const rrnFrontRef = React.useRef<HTMLInputElement>(null);
+  const rrnBackRef = React.useRef<HTMLInputElement>(null);
 
   const isFormValid = !!(
     auth.id &&
@@ -22,7 +25,8 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ className }) => {
     auth.idCheckSuccess &&
     auth.userName &&
     !auth.nameError &&
-    auth.rrnFront.length === 7 &&
+    auth.rrnFront.length === 6 &&
+    auth.rrnBack.length === 1 &&
     !auth.rrnError &&
     auth.pw &&
     !auth.pwError &&
@@ -68,18 +72,76 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ className }) => {
           width="full"
         />
 
-        {/* 주민등록번호(앞 7자리만 받는 기존 방식 유지) */}
-        <AuthInput
-          name="rrnFront"
-          label="주민등록번호"
-          type="text"
-          value={auth.rrnFront}
-          onChange={auth.handleRrnFrontChange}
-          placeholder="주민등록번호 앞 7자리"
-          error={auth.rrnError}
-          isDouble={true}
-          width="full"
-        />
+        {/* 주민등록번호(6자리-1자리) */}
+        <div className="flex flex-col w-[320px] mx-auto">
+          <div className="h-[28px] flex items-start mb-0">
+            <Typography variant="body-2" weight="semi-bold" className="text-text-body">
+              주민등록번호
+            </Typography>
+          </div>
+          <div
+            className={cn(
+              'flex items-center gap-2 h-[48px] px-[12px] border rounded-[8px] bg-white transition-all',
+              auth.rrnError
+                ? 'border-status-error'
+                : isRrnFocused
+                  ? 'border-text-title'
+                  : 'border-neutral-40'
+            )}
+          >
+            <input
+              ref={rrnFrontRef}
+              name="rrnFront"
+              type="text"
+              value={auth.rrnFront}
+              onChange={(e) => {
+                auth.handleRrnFrontChange(e);
+                // 6자리가 입력되면 자동으로 뒷자리로 포커스 이동
+                if (e.target.value.length === 6) {
+                  rrnBackRef.current?.focus();
+                }
+              }}
+              onFocus={() => setIsRrnFocused(true)}
+              onBlur={() => setIsRrnFocused(false)}
+              placeholder="000000"
+              maxLength={6}
+              className={cn(
+                'h-full outline-none transition-all text-[14px] font-pretendard flex-1 bg-transparent',
+                'placeholder:text-text-body'
+              )}
+            />
+            <span className="text-neutral-60 text-[14px] font-pretendard">-</span>
+            <input
+              ref={rrnBackRef}
+              name="rrnBack"
+              type="text"
+              value={auth.rrnBack}
+              onChange={auth.handleRrnBackChange}
+              onKeyDown={(e) => {
+                // 백스페이스 키를 누르고 값이 비어있으면 앞자리로 포커스 이동
+                if (e.key === 'Backspace' && auth.rrnBack.length === 0) {
+                  rrnFrontRef.current?.focus();
+                }
+              }}
+              onFocus={() => setIsRrnFocused(true)}
+              onBlur={() => setIsRrnFocused(false)}
+              placeholder="0"
+              maxLength={1}
+              className={cn(
+                'h-full outline-none transition-all text-[14px] font-pretendard w-[48px] bg-transparent',
+                'placeholder:text-text-body'
+              )}
+            />
+          </div>
+          {auth.rrnError && (
+            <div className="my-1.5 ml-2 flex items-start">
+              <Typography variant="caption-2" weight="medium" className="text-status-error">
+                {auth.rrnError}
+              </Typography>
+            </div>
+          )}
+          {!auth.rrnError && <div className="h-[24px]" />}
+        </div>
 
         {/* 비밀번호 + 확인 */}
         <div className="flex flex-col w-full items-center">
