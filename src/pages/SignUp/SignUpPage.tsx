@@ -1,10 +1,15 @@
 import SignUpContainer from '@/components/login/SignUpContainer';
+import { MobileLayout } from '@/components/layout/MobileLayout';
 
 const SignupPage = () => {
   return (
-    <div className="min-h-screen flex justify-center pt-24 px-4">
-      <SignUpContainer />
-    </div>
+    <MobileLayout>
+      <div className="px-4 py-10 sm:py-16">
+        <div className="w-full max-w-[26.25rem] mx-auto">
+          <SignUpContainer />
+        </div>
+      </div>
+    </MobileLayout>
   );
 };
 
