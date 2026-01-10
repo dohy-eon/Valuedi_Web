@@ -1,3 +1,4 @@
+export { default as CardConnectionStartPage } from './CardConnectionStartPage';
 export { default as CardSelectPage } from './CardSelectPage';
 export { default as CardIdInputPage } from './CardIdInputPage';
 export { default as CardPasswordInputPage } from './CardPasswordInputPage';
