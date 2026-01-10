@@ -23,8 +23,8 @@ const CardConnectedPage = () => {
   };
 
   const handleNext = () => {
-    // 다음 단계로 이동 (예: 홈으로)
-    navigate('/home');
+    // 추가 카드 연결 확인 페이지로 이동
+    navigate('/card/additional');
   };
 
   return (

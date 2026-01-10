@@ -13,7 +13,11 @@ const BankConnectingPage = () => {
   useEffect(() => {
     // 3초 후 연결 완료 페이지로 이동
     const timer = setTimeout(() => {
-      navigate(`/bank/connected?bank=${bankId}`);
+      if (bankId) {
+        navigate(`/bank/connected?bank=${bankId}`);
+      } else {
+        navigate('/bank/connected');
+      }
     }, 3000);
 
     return () => clearTimeout(timer);

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import BankGNB from '@/components/bank/BankGNB';
 import { Typography } from '@/components/typography';
@@ -8,6 +8,8 @@ import AuthInput from '@/components/login/AuthInput';
 
 const BankPasswordInputPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const bankId = searchParams.get('bank');
   const [password, setPassword] = useState('');
   const userName = '김휘주'; // TODO: 실제 사용자 이름으로 변경
 
@@ -21,8 +23,8 @@ const BankPasswordInputPage = () => {
 
   const handleNext = () => {
     if (password.trim()) {
-      // 추가 은행 연결 확인 페이지로 이동
-      navigate('/bank/additional');
+      // 은행 연결 중 페이지로 이동
+      navigate(`/bank/connecting?bank=${bankId}`);
     }
   };
 
