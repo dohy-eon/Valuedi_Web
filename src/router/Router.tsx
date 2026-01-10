@@ -15,6 +15,14 @@ import {
   BankConnectedPage,
   BankAdditionalConnectionPage,
 } from '@/pages/Bank';
+import {
+  CardSelectPage,
+  CardIdInputPage,
+  CardPasswordInputPage,
+  CardConnectingPage,
+  CardConnectedPage,
+  CardAdditionalConnectionPage,
+} from '@/pages/Card';
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +42,12 @@ export const router = createBrowserRouter([
       { path: 'bank/connecting', element: <BankConnectingPage /> },
       { path: 'bank/connected', element: <BankConnectedPage /> },
       { path: 'bank/additional', element: <BankAdditionalConnectionPage /> },
+      { path: 'card/select', element: <CardSelectPage /> },
+      { path: 'card/input-id', element: <CardIdInputPage /> },
+      { path: 'card/input-password', element: <CardPasswordInputPage /> },
+      { path: 'card/connecting', element: <CardConnectingPage /> },
+      { path: 'card/connected', element: <CardConnectedPage /> },
+      { path: 'card/additional', element: <CardAdditionalConnectionPage /> },
     ],
   },
 ]);
