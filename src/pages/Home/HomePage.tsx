@@ -5,6 +5,11 @@ import { Typography } from '@/components/typography';
 import { cn } from '@/utils/cn';
 import { MoreViewButton } from '@/components/buttons/MoreViewButton';
 import { formatCurrency } from '@/utils/formatCurrency';
+import AddGoalIcon from '@/assets/icons/home/AddGoal.svg';
+import kbIcon from '@/assets/icons/bank/kb.svg';
+import SpendTodayIcon from '@/assets/icons/home/SpendToday.svg';
+import SpendYesterdayIcon from '@/assets/icons/home/SpendYesterday.svg';
+import MbtiHomeIcon from '@/assets/icons/home/MbtiHome.svg';
 
 // 임시 목표 데이터
 const goals = [
@@ -21,17 +26,10 @@ const accounts = [
   { id: '4', bankName: 'KB국민ONE통장', balance: 3023, iconBg: '#d8f5c8' },
 ];
 
-// 목표 아이콘 placeholder
-const GoalIconPlaceholder = ({ bgColor }: { bgColor: string }) => (
+// 목표/계좌 아이콘 컴포넌트
+const GoalAccountIcon = ({ bgColor }: { bgColor: string }) => (
   <div className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center')} style={{ backgroundColor: bgColor, opacity: 0.65 }}>
-    <div className="w-[22px] h-[22px] bg-neutral-50 rounded-full" />
-  </div>
-);
-
-// 계좌 아이콘 placeholder
-const AccountIconPlaceholder = ({ bgColor }: { bgColor: string }) => (
-  <div className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center')} style={{ backgroundColor: bgColor, opacity: 0.65 }}>
-    <div className="w-[22px] h-[22px] bg-neutral-50 rounded-full" />
+    <img src={kbIcon} alt="은행 아이콘" className="w-[22px] h-[22px] object-contain" />
   </div>
 );
 
@@ -49,12 +47,10 @@ export const HomePage = () => {
           {/* 목표 추가하기 카드 */}
           <div className="bg-white border border-neutral-10 rounded-[8px] p-[12px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
             <div className="flex gap-[8px] items-center">
-              <div className="w-[32px] h-[32px] flex items-center justify-center">
-                <div className="w-[28px] h-[28px] border border-neutral-30 rounded-full flex items-center justify-center">
-                  <span className="text-neutral-70 text-[16px] leading-[16px]">+</span>
-                </div>
+              <div className="size-8 flex items-center justify-center">
+                <img src={AddGoalIcon} alt="목표 추가" className="w-8 h-8" />
               </div>
-              <div className="flex-1 flex flex-col gap-[2px]">
+              <div className="flex-1 flex flex-col">
                 <Typography style="text-caption-2-11-regular" className="text-neutral-50" fontFamily="pretendard">
                   또 다른 목표가 있나요?
                 </Typography>
@@ -66,7 +62,7 @@ export const HomePage = () => {
           </div>
 
           {/* 나의 목표 섹션 */}
-          <div className="bg-white rounded-[8px] p-[12px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
+          <div className="bg-white rounded-[8px] px-[12px] pt-[16px] pb-[16px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
             <Typography style="text-body-2-14-regular" className="text-neutral-70 mb-[16px]" fontFamily="pretendard">
               나의 목표
             </Typography>
@@ -74,7 +70,7 @@ export const HomePage = () => {
               {goals.map((goal) => (
                 <div key={goal.id} className="flex items-center justify-between py-[8px]">
                   <div className="flex gap-[8px] items-center">
-                    <GoalIconPlaceholder bgColor={goal.iconBg} />
+                    <GoalAccountIcon bgColor={goal.iconBg} />
                     <div className="flex flex-col gap-[2px]">
                       <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
                         {goal.name}
@@ -85,7 +81,7 @@ export const HomePage = () => {
                     </div>
                   </div>
                   <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <MoreViewButton className="rotate-90" />
+                    <MoreViewButton/  >
                   </div>
                 </div>
               ))}
@@ -98,7 +94,7 @@ export const HomePage = () => {
           </div>
 
           {/* 연결된 은행 및 계좌 섹션 */}
-          <div className="bg-white rounded-[8px] p-[12px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
+          <div className="bg-white rounded-[8px] px-[12px] pt-[16px] pb-[16px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
             <Typography style="text-body-2-14-regular" className="text-neutral-70 mb-[16px]" fontFamily="pretendard">
               연결된 은행 및 계좌
             </Typography>
@@ -106,7 +102,7 @@ export const HomePage = () => {
               {accounts.map((account) => (
                 <div key={account.id} className="flex items-center justify-between py-[8px]">
                   <div className="flex gap-[8px] items-center">
-                    <AccountIconPlaceholder bgColor={account.iconBg} />
+                    <GoalAccountIcon bgColor={account.iconBg} />
                     <div className="flex flex-col gap-[2px]">
                       <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
                         {formatCurrency(account.balance)}
@@ -117,7 +113,7 @@ export const HomePage = () => {
                     </div>
                   </div>
                   <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <MoreViewButton className="rotate-90" />
+                    <MoreViewButton/>
                   </div>
                 </div>
               ))}
@@ -130,7 +126,7 @@ export const HomePage = () => {
           </div>
 
           {/* 이번 달 지출 섹션 */}
-          <div className="bg-white rounded-[8px] p-[12px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
+          <div className="bg-white rounded-[8px] px-[12px] pt-[16px] pb-[16px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
             <Typography style="text-body-2-14-regular" className="text-neutral-70 mb-[16px]" fontFamily="pretendard">
               이번 달 지출
             </Typography>
@@ -147,8 +143,8 @@ export const HomePage = () => {
             <div className="flex flex-col gap-[12px]">
               {/* 오늘 지출 */}
               <div className="flex items-center gap-[8px]">
-                <div className="w-[32px] h-[32px] bg-atomic-red-orange-90 rounded-[8px] flex items-center justify-center p-[4px]">
-                  <div className="w-[24px] h-[24px] bg-atomic-red-orange-60 rounded-[4px]" />
+                <div className="w-[32px] h-[32px] flex items-center justify-center">
+                  <img src={SpendTodayIcon} alt="오늘 지출" className="w-8 h-8" />
                 </div>
                 <div className="flex flex-col gap-[2px]">
                   <Typography style="text-body-2-14-regular" className="text-neutral-70" fontFamily="pretendard">
@@ -161,8 +157,8 @@ export const HomePage = () => {
               </div>
               {/* 어제 지출 */}
               <div className="flex items-center gap-[8px]">
-                <div className="w-[32px] h-[32px] bg-atomic-cyan-95 rounded-[8px] flex items-center justify-center p-[4px]">
-                  <div className="w-[18px] h-[16px] bg-atomic-light-blue-40 rounded-[4px]" />
+                <div className="w-[32px] h-[32px] flex items-center justify-center">
+                  <img src={SpendYesterdayIcon} alt="어제 지출" className="w-8 h-8" />
                 </div>
                 <div className="flex flex-col gap-[2px]">
                   <Typography style="text-body-2-14-regular" className="text-neutral-70" fontFamily="pretendard">
@@ -177,7 +173,7 @@ export const HomePage = () => {
           </div>
 
           {/* MBTI 섹션 */}
-          <div className="bg-white rounded-[8px] p-[12px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
+          <div className="bg-white rounded-[8px] px-[12px] pt-[16px] pb-[16px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
             <div className="flex flex-col gap-[4px] mb-[16px]">
               <Typography style="text-body-2-14-regular" className="text-neutral-70" fontFamily="pretendard">
                 회원님의 금융 MBTI는?
@@ -187,12 +183,12 @@ export const HomePage = () => {
               </Typography>
             </div>
             <div className="w-full h-[146px] bg-atomic-yellow-95 rounded-[4px] flex items-center justify-center">
-              <div className="w-[104px] h-[100px] bg-neutral-30 rounded-full" />
+              <img src={MbtiHomeIcon} alt="금융 MBTI" className="w-full h-full object-contain" />
             </div>
           </div>
 
           {/* 맞춤 상품 섹션 */}
-          <div className="bg-white rounded-[8px] p-[12px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
+          <div className="bg-white rounded-[8px] px-[12px] pt-[16px] pb-[16px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
             <div className="flex flex-col gap-[4px] mb-[16px]">
               <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
                 회원님과 같은 유형을 위한
