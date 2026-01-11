@@ -6,6 +6,24 @@ import DefaultLogin from '@/pages/Login/DefaultLogin';
 import EmailForm from '@/pages/SignUp/EmailForm';
 import SplashPage from '@/pages/Splash/SplashPage';
 import OnboardingPage from '@/pages/Onboarding/OnboardingPage';
+import {
+  BankConnectionStartPage,
+  BankSelectPage,
+  BankIdInputPage,
+  BankPasswordInputPage,
+  BankConnectingPage,
+  BankConnectedPage,
+  BankAdditionalConnectionPage,
+} from '@/pages/Bank';
+import {
+  CardConnectionStartPage,
+  CardSelectPage,
+  CardIdInputPage,
+  CardPasswordInputPage,
+  CardConnectingPage,
+  CardConnectedPage,
+  CardAdditionalConnectionPage,
+} from '@/pages/Card';
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +36,20 @@ export const router = createBrowserRouter([
       { path: 'login/form', element: <LoginPage /> },
       { path: 'signup', element: <SignUpPage /> },
       { path: '/signup/email', element: <EmailForm /> },
+      { path: 'bank/start', element: <BankConnectionStartPage /> },
+      { path: 'bank/select', element: <BankSelectPage /> },
+      { path: 'bank/input-id', element: <BankIdInputPage /> },
+      { path: 'bank/input-password', element: <BankPasswordInputPage /> },
+      { path: 'bank/connecting', element: <BankConnectingPage /> },
+      { path: 'bank/connected', element: <BankConnectedPage /> },
+      { path: 'bank/additional', element: <BankAdditionalConnectionPage /> },
+      { path: 'card/start', element: <CardConnectionStartPage /> },
+      { path: 'card/select', element: <CardSelectPage /> },
+      { path: 'card/input-id', element: <CardIdInputPage /> },
+      { path: 'card/input-password', element: <CardPasswordInputPage /> },
+      { path: 'card/connecting', element: <CardConnectingPage /> },
+      { path: 'card/connected', element: <CardConnectedPage /> },
+      { path: 'card/additional', element: <CardAdditionalConnectionPage /> },
     ],
   },
 ]);
