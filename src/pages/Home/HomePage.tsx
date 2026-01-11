@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { HomeGNB } from '@/components/gnb/HomeGNB';
 import { BottomNavigation } from '@/components/gnb/BottomNavigation';
@@ -34,6 +35,25 @@ const GoalAccountIcon = ({ bgColor }: { bgColor: string }) => (
 );
 
 export const HomePage = () => {
+  const navigate = useNavigate();
+
+  const handleNavClick = (item: 'home' | 'asset' | 'recommend' | 'goal') => {
+    switch (item) {
+      case 'home':
+        navigate('/home');
+        break;
+      case 'asset':
+        navigate('/asset');
+        break;
+      case 'recommend':
+        navigate('/recommend');
+        break;
+      case 'goal':
+        navigate('/goal');
+        break;
+    }
+  };
+
   return (
     <MobileLayout className="bg-neutral-10">
       {/* GNB */}
@@ -221,7 +241,7 @@ export const HomePage = () => {
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[360px]">
-        <BottomNavigation activeItem="home" />
+        <BottomNavigation activeItem="home" onItemClick={handleNavClick} />
       </div>
     </MobileLayout>
   );

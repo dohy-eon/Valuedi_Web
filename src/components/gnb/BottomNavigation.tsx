@@ -1,10 +1,14 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components/typography';
-import HomeIconActive from '@/assets/icons/home/Home btn.svg';
-import AssetIcon from '@/assets/icons/home/Home btn-1.svg';
-import RecommendIcon from '@/assets/icons/home/Home btn-2.svg';
-import GoalIcon from '@/assets/icons/home/Home btn-3.svg';
+import HomeIconActive from '@/assets/icons/home/HomeActive.svg';
+import HomeIconInactive from '@/assets/icons/home/HomeInactive.svg';
+import AssetIconActive from '@/assets/icons/home/AssetActive.svg';
+import AssetIconInactive from '@/assets/icons/home/AssetInactive.svg';
+import RecommendIconActive from '@/assets/icons/home/RecommendActive.svg';
+import RecommendIconInactive from '@/assets/icons/home/RecommendInactive.svg';
+import GoalIconActive from '@/assets/icons/home/GoalActive.svg';
+import GoalIconInactive from '@/assets/icons/home/GoalInactive.svg';
 
 export type BottomNavItem = 'home' | 'asset' | 'recommend' | 'goal';
 
@@ -19,11 +23,11 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   className,
   onItemClick,
 }) => {
-  const navItems: { id: BottomNavItem; label: string; icon: string }[] = [
-    { id: 'home', label: '홈', icon: HomeIconActive },
-    { id: 'asset', label: '자산', icon: AssetIcon },
-    { id: 'recommend', label: '추천', icon: RecommendIcon },
-    { id: 'goal', label: '목표', icon: GoalIcon },
+  const navItems: { id: BottomNavItem; label: string; iconActive: string; iconInactive: string }[] = [
+    { id: 'home', label: '홈', iconActive: HomeIconActive, iconInactive: HomeIconInactive },
+    { id: 'asset', label: '자산', iconActive: AssetIconActive, iconInactive: AssetIconInactive },
+    { id: 'recommend', label: '추천', iconActive: RecommendIconActive, iconInactive: RecommendIconInactive },
+    { id: 'goal', label: '목표', iconActive: GoalIconActive, iconInactive: GoalIconInactive },
   ];
 
   return (
@@ -38,6 +42,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
       <div className="flex items-center justify-center w-full max-w-[360px]">
         {navItems.map((item) => {
           const isActive = activeItem === item.id;
+          const iconSrc = isActive ? item.iconActive : item.iconInactive;
           return (
             <button
               key={item.id}
@@ -46,7 +51,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
               className={cn('flex flex-col gap-[4px] items-center justify-center', 'p-[10px] w-[90px]')}
             >
               <div className="w-[24px] h-[24px] flex items-center justify-center">
-                <img src={item.icon} alt={item.label} className="w-full h-full" />
+                <img src={iconSrc} alt={item.label} className="w-full h-full" />
               </div>
               <Typography
                 style={isActive ? 'text-caption-1-12-semi-bold' : 'text-caption-1-12-regular'}
