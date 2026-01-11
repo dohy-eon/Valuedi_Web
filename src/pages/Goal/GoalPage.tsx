@@ -41,4 +41,3 @@ export const GoalPage = () => {
 };
 
 export default GoalPage;
-

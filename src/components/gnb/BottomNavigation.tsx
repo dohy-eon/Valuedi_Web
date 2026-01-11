@@ -18,11 +18,7 @@ export interface BottomNavigationProps {
   onItemClick?: (item: BottomNavItem) => void;
 }
 
-export const BottomNavigation: React.FC<BottomNavigationProps> = ({
-  activeItem = 'home',
-  className,
-  onItemClick,
-}) => {
+export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeItem = 'home', className, onItemClick }) => {
   const navItems: { id: BottomNavItem; label: string; iconActive: string; iconInactive: string }[] = [
     { id: 'home', label: '홈', iconActive: HomeIconActive, iconInactive: HomeIconInactive },
     { id: 'asset', label: '자산', iconActive: AssetIconActive, iconInactive: AssetIconInactive },
@@ -67,4 +63,3 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
     </nav>
   );
 };
-

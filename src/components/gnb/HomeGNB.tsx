@@ -36,4 +36,3 @@ export const HomeGNB: React.FC<HomeGNBProps> = ({ className, onMenuClick }) => {
     </header>
   );
 };
-

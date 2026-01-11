@@ -29,7 +29,10 @@ const accounts = [
 
 // 목표/계좌 아이콘 컴포넌트
 const GoalAccountIcon = ({ bgColor }: { bgColor: string }) => (
-  <div className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center')} style={{ backgroundColor: bgColor, opacity: 0.65 }}>
+  <div
+    className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center')}
+    style={{ backgroundColor: bgColor, opacity: 0.65 }}
+  >
     <img src={kbIcon} alt="은행 아이콘" className="w-[22px] h-[22px] object-contain" />
   </div>
 );
@@ -101,13 +104,17 @@ export const HomePage = () => {
                     </div>
                   </div>
                   <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <MoreViewButton/  >
+                    <MoreViewButton />
                   </div>
                 </div>
               ))}
             </div>
             <button className="w-full bg-white border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
-              <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center" fontFamily="pretendard">
+              <Typography
+                style="text-body-2-14-regular"
+                className="text-neutral-70 text-center"
+                fontFamily="pretendard"
+              >
                 목표 10개 전체보기
               </Typography>
             </button>
@@ -133,13 +140,17 @@ export const HomePage = () => {
                     </div>
                   </div>
                   <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <MoreViewButton/>
+                    <MoreViewButton />
                   </div>
                 </div>
               ))}
             </div>
             <button className="w-full bg-white border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
-              <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center" fontFamily="pretendard">
+              <Typography
+                style="text-body-2-14-regular"
+                className="text-neutral-70 text-center"
+                fontFamily="pretendard"
+              >
                 자산 21개 전체보기
               </Typography>
             </button>
@@ -152,7 +163,11 @@ export const HomePage = () => {
             </Typography>
             <div className="flex flex-col gap-[4px] mb-[16px]">
               <div className="flex items-center gap-[2px]">
-                <Typography style="text-headline-3-18-semi-bold" className="text-black tracking-[-0.36px]" fontFamily="pretendard">
+                <Typography
+                  style="text-headline-3-18-semi-bold"
+                  className="text-black tracking-[-0.36px]"
+                  fontFamily="pretendard"
+                >
                   {formatCurrency(526387)}
                 </Typography>
               </div>
@@ -198,7 +213,11 @@ export const HomePage = () => {
               <Typography style="text-body-2-14-regular" className="text-neutral-70" fontFamily="pretendard">
                 회원님의 금융 MBTI는?
               </Typography>
-              <Typography style="text-headline-3-18-semi-bold" className="text-neutral-90 tracking-[-0.36px]" fontFamily="pretendard">
+              <Typography
+                style="text-headline-3-18-semi-bold"
+                className="text-neutral-90 tracking-[-0.36px]"
+                fontFamily="pretendard"
+              >
                 불안한 안정자산 추구형
               </Typography>
             </div>
@@ -213,24 +232,44 @@ export const HomePage = () => {
               <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
                 회원님과 같은 유형을 위한
               </Typography>
-              <Typography style="text-headline-3-18-semi-bold" className="text-neutral-90 tracking-[-0.36px]" fontFamily="pretendard">
+              <Typography
+                style="text-headline-3-18-semi-bold"
+                className="text-neutral-90 tracking-[-0.36px]"
+                fontFamily="pretendard"
+              >
                 맞춤 상품이에요
               </Typography>
             </div>
             <div className="flex gap-[12px] overflow-x-auto px-[12px] -mx-[12px]">
               <div className="bg-neutral-10 rounded-[16px] p-[16px] min-w-[221px] flex flex-col gap-[4px]">
-                <Typography style="text-body-1-16-semi-bold" className="text-neutral-90 leading-[1.3]" fontFamily="pretendard">
+                <Typography
+                  style="text-body-1-16-semi-bold"
+                  className="text-neutral-90 leading-[1.3]"
+                  fontFamily="pretendard"
+                >
                   ONE 체크카드 (K-패스)
                 </Typography>
-                <Typography style="text-body-3-13-regular" className="text-neutral-50 leading-[1.3]" fontFamily="pretendard">
+                <Typography
+                  style="text-body-3-13-regular"
+                  className="text-neutral-50 leading-[1.3]"
+                  fontFamily="pretendard"
+                >
                   내 맘대로 골라받는 3가지 캐시백
                 </Typography>
               </div>
               <div className="bg-neutral-10 rounded-[16px] p-[16px] min-w-[221px] flex flex-col gap-[4px]">
-                <Typography style="text-body-1-16-semi-bold" className="text-neutral-90 leading-[1.3]" fontFamily="pretendard">
+                <Typography
+                  style="text-body-1-16-semi-bold"
+                  className="text-neutral-90 leading-[1.3]"
+                  fontFamily="pretendard"
+                >
                   신한 쏠 뱅크 체크카드
                 </Typography>
-                <Typography style="text-body-3-13-regular" className="text-neutral-50 leading-[1.3]" fontFamily="pretendard">
+                <Typography
+                  style="text-body-3-13-regular"
+                  className="text-neutral-50 leading-[1.3]"
+                  fontFamily="pretendard"
+                >
                   한양대학교 에리카 학생이라면 !
                 </Typography>
               </div>
@@ -248,4 +287,3 @@ export const HomePage = () => {
 };
 
 export default HomePage;
-
