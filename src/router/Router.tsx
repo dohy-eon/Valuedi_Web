@@ -6,6 +6,9 @@ import DefaultLogin from '@/pages/Login/DefaultLogin';
 import EmailForm from '@/pages/SignUp/EmailForm';
 import SplashPage from '@/pages/Splash/SplashPage';
 import OnboardingPage from '@/pages/Onboarding/OnboardingPage';
+import AssetPage from '@/pages/Asset/AssetPage';
+import RecommendPage from '@/pages/Recommend/RecommendPage';
+import GoalPage from '@/pages/Goal/GoalPage';
 import {
   BankConnectionStartPage,
   BankSelectPage,
@@ -32,6 +35,9 @@ export const router = createBrowserRouter([
       { index: true, element: <SplashPage /> },
       { path: 'onboarding', element: <OnboardingPage /> },
       { path: 'home', element: <HomePage /> },
+      { path: 'asset', element: <AssetPage /> },
+      { path: 'recommend', element: <RecommendPage /> },
+      { path: 'goal', element: <GoalPage /> },
       { path: 'login', element: <DefaultLogin /> },
       { path: 'login/form', element: <LoginPage /> },
       { path: 'signup', element: <SignUpPage /> },
