@@ -5,17 +5,8 @@ import kbIcon from '@/assets/icons/bank/kb.svg';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useNavigate } from 'react-router-dom';
 import BackPageGNB from '@/components/gnb/BackPageGNB';
-import { CATEGORY_STYLES } from '@/features/asset/constants/category';
-
-const TransactionIcon = ({ category }: { category: string }) => {
-  const style = CATEGORY_STYLES[category] || CATEGORY_STYLES.default;
-
-  return (
-    <div className={cn('w-[32px] h-[32px] rounded-[8px] p-[4px] flex items-center justify-center', style.bgColor)}>
-      <img src={style.icon} alt="거래 아이콘" className="w-[20px] h-[20px] object-contain" />
-    </div>
-  );
-};
+import { AssetItemList } from './components/AssetItemList';
+import { AssetDailyHeader } from './components/AssetDailyHeader';
 
 export const AssetAccountDetailPage = () => {
   const navigate = useNavigate();
@@ -180,48 +171,21 @@ export const AssetAccountDetailPage = () => {
             총 {transactionHistory.reduce((acc, group) => acc + group.items.length, 0)}건
           </Typography>
 
-          <div className={cn('flex flex-col gap-[4px]')}>
+          <div className={cn('flex flex-col gap-[12px]')}>
             {transactionHistory.map((group, groupIndex) => (
               <div key={groupIndex} className={cn('flex flex-col')}>
-                <div className={cn('flex items-center justify-between py-[4px]')}>
-                  <Typography style="text-caption-1-12-regular" className={cn('text-neutral-90')}>
-                    {group.date}
-                  </Typography>
-                  <Typography style="text-caption-1-12-regular" className={cn('text-neutral-70')}>
-                    {formatCurrency(group.dailyTotal)}
-                  </Typography>
-                </div>
-
-                <div className="w-full h-[1px] bg-neutral-10 my-[8px]" />
+                <AssetDailyHeader date={group.date} dailyTotal={group.dailyTotal} />
 
                 <div className={cn('flex flex-col gap-[8px]')}>
                   {group.items.map((item) => (
-                    <div key={item.id} className={cn('flex items-center justify-between py-[8px]')}>
-                      <div className={cn('flex items-center gap-[8px]')}>
-                        <TransactionIcon category={item.category} />
-
-                        <div className={cn('flex flex-col gap-[2px]')}>
-                          <Typography
-                            style="text-body-2-14-semi-bold"
-                            className={cn(item.type === 'expense' ? 'text-primary-heavy' : 'text-neutral-90')}
-                          >
-                            {item.title}
-                          </Typography>
-                          <Typography style="text-caption-1-12-regular" className={cn('text-neutral-50')}>
-                            {item.sub}
-                          </Typography>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-[2px]">
-                        <Typography
-                          style="text-body-2-14-semi-bold"
-                          className={cn(item.type === 'expense' ? 'text-primary-heavy' : 'text-neutral-90')}
-                        >
-                          {formatCurrency(item.amount)}
-                        </Typography>
-                      </div>
-                    </div>
+                    <AssetItemList
+                      key={item.id}
+                      title={item.title}
+                      subTitle={item.sub}
+                      amount={item.amount}
+                      type={item.type as 'income' | 'expense'}
+                      category={item.category}
+                    />
                   ))}
                 </div>
               </div>
