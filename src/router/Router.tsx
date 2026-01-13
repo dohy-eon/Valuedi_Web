@@ -27,6 +27,7 @@ import {
   CardConnectedPage,
   CardAdditionalConnectionPage,
 } from '@/pages/Card';
+import { AssetAccountDetailPage } from '@/pages/Asset/tab/AssetDetails/AssetAccountDetailPage';
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
       { path: 'onboarding', element: <OnboardingPage /> },
       { path: 'home', element: <HomePage /> },
       { path: 'asset', element: <AssetPage /> },
+      { path: 'asset/account/:id', element: <AssetAccountDetailPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'goal', element: <GoalPage /> },
       { path: 'login', element: <DefaultLogin /> },
