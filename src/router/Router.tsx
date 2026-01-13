@@ -8,7 +8,9 @@ import SplashPage from '@/pages/Splash/SplashPage';
 import OnboardingPage from '@/pages/Onboarding/OnboardingPage';
 import AssetPage from '@/pages/Asset/AssetPage';
 import RecommendPage from '@/pages/Recommend/RecommendPage';
-import GoalPage from '@/pages/Goal/GoalPage';
+import CurrentGoalPage from '@/pages/Goal/CurrentGoalPage';
+import PastGoalPage from '@/pages/Goal/PastGoalPage';
+
 import {
   BankConnectionStartPage,
   BankSelectPage,
@@ -37,7 +39,8 @@ export const router = createBrowserRouter([
       { path: 'home', element: <HomePage /> },
       { path: 'asset', element: <AssetPage /> },
       { path: 'recommend', element: <RecommendPage /> },
-      { path: 'goal', element: <GoalPage /> },
+      { path: 'currentgoal', element: <CurrentGoalPage /> },
+            { path: 'pastgoal', element: <PastGoalPage /> },
       { path: 'login', element: <DefaultLogin /> },
       { path: 'login/form', element: <LoginPage /> },
       { path: 'signup', element: <SignUpPage /> },
