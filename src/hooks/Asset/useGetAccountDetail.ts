@@ -44,5 +44,6 @@ export const useGetAccountDetail = () => {
   return {
     accountInfo: mockAccountInfo,
     transactionHistory: mockHistory,
+    totalCount: 10,
   };
 };

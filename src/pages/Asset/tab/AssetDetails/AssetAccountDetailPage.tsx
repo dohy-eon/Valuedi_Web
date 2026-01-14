@@ -21,7 +21,7 @@ const BankIcon = ({ bgColor }: { bgColor: ColorToken }) => (
 
 export const AssetAccountDetailPage = () => {
   const navigate = useNavigate();
-  const { accountInfo, transactionHistory } = useGetAccountDetail();
+  const { accountInfo, transactionHistory, totalCount } = useGetAccountDetail();
 
   const handleBack = () => {
     navigate(-1);
@@ -58,7 +58,7 @@ export const AssetAccountDetailPage = () => {
 
         <div className={cn('flex-1 flex flex-col px-[20px] gap-[12px] mt-[20px]')}>
           <Typography style="text-body-2-14-semi-bold" className={cn('text-neutral-90')}>
-            총 {transactionHistory.reduce((acc, group) => acc + group.items.length, 0)}건
+            총 {totalCount}건
           </Typography>
 
           <div className={cn('flex flex-col gap-[12px]')}>
