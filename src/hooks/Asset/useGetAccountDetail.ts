@@ -7,8 +7,7 @@ export const useGetAccountDetail = () => {
     bankName: 'KB국민ONE은행',
     accountNumber: '국민은행 | 592802-04-170725',
     balance: 526387,
-    bgColor: '#FFF4D9',
-    themeColor: '#FFCC00',
+    bgColor: 'bank-kb',
   };
 
   const mockHistory: TransactionGroup[] = [

@@ -8,17 +8,14 @@ import BackPageGNB from '@/components/gnb/BackPageGNB';
 import { AssetItemList } from './components/AssetItemList';
 import { AssetDailyHeader } from './components/AssetDailyHeader';
 import { useGetAccountDetail } from '@/hooks/Asset/useGetAccountDetail';
+import { ColorToken, getColorToken } from '@/styles/design-system';
 
-const BankIcon = ({ bgColor }: { bgColor: string }) => (
+const BankIcon = ({ bgColor }: { bgColor: ColorToken }) => (
   <div
     className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center')}
-    style={{ backgroundColor: bgColor, opacity: 0.65 }}
+    style={{ backgroundColor: getColorToken(bgColor) }}
   >
-    <img
-      src={kbIcon}
-      alt="은행 아이콘"
-      className="w-[22px] h-[22px] object-contain shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]"
-    />
+    <img src={kbIcon} alt="은행 아이콘" className="w-[22px] h-[22px] object-contain" />
   </div>
 );
 
@@ -45,7 +42,7 @@ export const AssetAccountDetailPage = () => {
 
         <div
           className={cn('flex flex-col p-[20px] w-full h-[134px] gap-[12px]')}
-          style={{ backgroundColor: accountInfo.bgColor }}
+          style={{ backgroundColor: getColorToken(accountInfo.bgColor) }}
         >
           <BankIcon bgColor={accountInfo.bgColor} />
 

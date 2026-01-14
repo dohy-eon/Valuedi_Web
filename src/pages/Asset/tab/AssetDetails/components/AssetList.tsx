@@ -6,20 +6,30 @@ import BankPlusIcon from '@/assets/icons/asset/BankPlus.svg';
 import CardPlusIcon from '@/assets/icons/asset/CardPlus.svg';
 import { MoreViewButton } from '@/components/buttons';
 import { useNavigate } from 'react-router-dom';
+import { ColorToken, getColorToken } from '@/styles/design-system';
 
-const BankIcon = ({ bgColor }: { bgColor: string }) => (
+interface AccountData {
+  id: number;
+  name: string;
+  amount: number;
+  bankName?: string;
+  cardName?: string;
+  iconBg: ColorToken;
+}
+
+const BankIcon = ({ bgColor }: { bgColor: ColorToken }) => (
   <div
     className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center')}
-    style={{ backgroundColor: bgColor, opacity: 0.65 }}
+    style={{ backgroundColor: getColorToken(bgColor) }}
   >
     <img src={kbIcon} alt="은행 아이콘" className="w-[22px] h-[22px] object-contain" />
   </div>
 );
 
-const CardIcon = ({ bgColor }: { bgColor: string }) => (
+const CardIcon = ({ bgColor }: { bgColor: ColorToken }) => (
   <div
     className={cn('w-[32px] h-[40px] rounded-[8px] flex items-center justify-center')}
-    style={{ backgroundColor: bgColor, opacity: 0.65 }}
+    style={{ backgroundColor: getColorToken(bgColor) }}
   >
     <img src={kbIcon} alt="카드 아이콘" className="w-[22px] h-[22px] object-contain" />
   </div>
@@ -28,19 +38,19 @@ const CardIcon = ({ bgColor }: { bgColor: string }) => (
 export const AssetList = () => {
   const navigate = useNavigate();
 
-  const bankAccounts = [
-    { id: 1, name: 'KB국민ONE통장', amount: 11125023, bankName: 'KB국민은행', iconBg: '#f1e2c0' },
-    { id: 2, name: 'KB국민ONE통장', amount: 11125023, bankName: '신한은행', iconBg: '#c0e8f1' },
-    { id: 3, name: 'KB국민ONE통장', amount: 11125023, bankName: 'NH농협은행', iconBg: '#c0c9f1' },
-    { id: 4, name: 'KB국민ONE통장', amount: 11125023, bankName: '밸류디은행', iconBg: '#c0d8f1' },
-    { id: 5, name: 'KB국민ONE통장', amount: 11125023, bankName: '은행나무은행', iconBg: '#c0d8f1' },
+  const bankAccounts: AccountData[] = [
+    { id: 1, name: 'KB국민ONE통장', amount: 11125023, bankName: 'KB국민은행', iconBg: 'bank-kb' },
+    { id: 2, name: 'KB국민ONE통장', amount: 11125023, bankName: '새마을은행', iconBg: 'bank-saemaul' },
+    { id: 3, name: 'KB국민ONE통장', amount: 11125023, bankName: 'Kbank은행', iconBg: 'bank-kbank' },
+    { id: 4, name: 'KB국민ONE통장', amount: 11125023, bankName: '씨티은행', iconBg: 'bank-citi' },
+    { id: 5, name: 'KB국민ONE통장', amount: 11125023, bankName: '은행나무은행', iconBg: 'bank-plus' },
   ];
 
-  const cardAccounts = [
-    { id: 1, name: 'KB국민ONE카드', amount: 11125023, cardName: 'KB국민카드', iconBg: '#f1e2c0' },
-    { id: 2, name: 'KB국민ONE카드', amount: 11125023, cardName: '신한카드', iconBg: '#aab6ee' },
-    { id: 3, name: 'KB국민ONE카드', amount: 11125023, cardName: '블루카드', iconBg: '#c0e8f1' },
-    { id: 4, name: 'KB국민ONE카드', amount: 11125023, cardName: '레드카드', iconBg: '#aab7ee' },
+  const cardAccounts: AccountData[] = [
+    { id: 1, name: 'KB국민ONE카드', amount: 11125023, cardName: 'KB국민카드', iconBg: 'bank-kb' },
+    { id: 2, name: 'KB국민ONE카드', amount: 11125023, cardName: '전북카드', iconBg: 'bank-gwangju_jeonbuk' },
+    { id: 3, name: 'KB국민ONE카드', amount: 11125023, cardName: '새마을카드', iconBg: 'bank-saemaul' },
+    { id: 4, name: 'KB국민ONE카드', amount: 11125023, cardName: 'ibk카드', iconBg: 'bank-ibk' },
   ];
 
   const totalAsset = 526387;
@@ -132,10 +142,7 @@ export const AssetList = () => {
 
       <div className={cn('flex items-center justify-between py-[8px]')}>
         <div className={cn('flex items-center gap-[8px]')}>
-          <div
-            className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center')}
-            style={{ backgroundColor: '#c8d1f5' }}
-          >
+          <div className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center bg-bank-plus')}>
             <img src={BankPlusIcon} alt="은행 추가" className="w-[20px] h-[20px] object-contain opacity-70" />
           </div>
           <Typography style="text-body-2-14-semi-bold" className="text-neutral-90">
@@ -147,10 +154,7 @@ export const AssetList = () => {
 
       <div className={cn('flex items-center justify-between py-[8px]')}>
         <div className={cn('flex items-center gap-[8px]')}>
-          <div
-            className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center')}
-            style={{ backgroundColor: '#f0eab8' }}
-          >
+          <div className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center bg-atomic-yellow-95')}>
             <img src={CardPlusIcon} alt="카드 추가" className="w-[20px] h-[20px] object-contain opacity-70" />
           </div>
           <Typography style="text-body-2-14-semi-bold" className="text-neutral-90">

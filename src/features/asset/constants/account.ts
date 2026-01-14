@@ -1,9 +1,10 @@
+import { ColorToken } from "@/styles/design-system";
+
 export interface AccountInfo {
   bankName: string;
   accountNumber: string;
   balance: number;
-  bgColor: string;
-  themeColor: string;
+  bgColor: ColorToken;
 }
 
 export interface TransactionItem {
