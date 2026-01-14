@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import Hamburger from '@/assets/icons/Hamburger.svg';
+import Hamburger from '@/assets/icons/hamburger.svg';
 
 const GoalGNB = () => {
   const navigate = useNavigate();
@@ -19,9 +19,7 @@ const GoalGNB = () => {
         <button
           onClick={() => navigate('/currentgoal')}
           className={`flex-1 py-4 text-center text-[16px] transition-all ${
-            isCurrentActive 
-              ? 'font-bold text-[#171714] border-b-2 border-[#171714]' 
-              : 'font-medium text-[#999999]'
+            isCurrentActive ? 'font-bold text-[#171714] border-b-2 border-[#171714]' : 'font-medium text-[#999999]'
           }`}
         >
           현재 목표
@@ -29,9 +27,7 @@ const GoalGNB = () => {
         <button
           onClick={() => navigate('/pastgoal')}
           className={`flex-1 py-4 text-center text-[16px] transition-all ${
-            isPastActive 
-              ? 'font-bold text-[#171714] border-b-2 border-[#171714]' 
-              : 'font-medium text-[#999999]'
+            isPastActive ? 'font-bold text-[#171714] border-b-2 border-[#171714]' : 'font-medium text-[#999999]'
           }`}
         >
           지난 목표

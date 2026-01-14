@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import GoalGNB from '@/components/goal/GoalGNB';
 import { BottomNavigation } from '@/components/gnb/BottomNavigation';
 import DropDown from '@/assets/icons/goal/Dropdown.svg';
@@ -15,10 +17,11 @@ const mockGoals = [
 ];
 
 export const GoalPage = () => {
+  const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
+  const navigate = useNavigate();
+
   return (
-    // MobileLayout 제거, 전체 화면 너비 사용
     <div className="min-h-screen w-full bg-[#F2F4F6] flex flex-col">
-      {/* 1. 상단 GNB & 탭 메뉴 (고정) */}
       <div className="sticky top-0 z-20 w-full bg-white">
         <GoalGNB />
         <div className="flex w-full border-b border-[#E0E0E0]"></div>
@@ -27,8 +30,10 @@ export const GoalPage = () => {
       {/* 2. 메인 컨텐츠 영역 */}
       <main className="flex-1 pb-24 overflow-y-auto">
         <div className="flex flex-col gap-5 p-5">
-          {/* 목표 추가하기 카드 */}
-          <div className="flex items-center w-full gap-4 p-6 bg-white shadow-sm rounded-xl">
+          <div
+            onClick={() => navigate('/goal/create')}
+            className="flex items-center w-full gap-4 p-6 transition-colors bg-white shadow-sm cursor-pointer rounded-xl active:bg-gray-50"
+          >
             <div className="flex items-center justify-center w-12 h-12 border border-[#E0E0E0] rounded-full text-[#999999]">
               <span className="text-3xl font-light">+</span>
             </div>
@@ -39,22 +44,36 @@ export const GoalPage = () => {
           </div>
 
           {/* 정렬 필터 */}
-          <div className="text-[13px] text-[#999999] px-1 font-medium">최신순 · 달성순</div>
+          <div className="flex items-center gap-2 px-1 text-[13px] font-medium">
+            <button
+              onClick={() => setSortBy('latest')}
+              className={`${sortBy === 'latest' ? 'text-[#171714]' : 'text-[#999999]'}`}
+            >
+              최신순
+            </button>
+            <span className="text-[#E0E0E0]">·</span>
+            <button
+              onClick={() => setSortBy('achieve')}
+              className={`${sortBy === 'achieve' ? 'text-[#171714]' : 'text-[#999999]'}`}
+            >
+              달성순
+            </button>
+          </div>
 
-          {/* 목표 카드 리스트 */}
+          {/* 목표 카드 리스트 - 클릭 시 상세 이동 추가 */}
           {mockGoals.map((goal) => (
-            <div key={goal.id} className="w-full bg-white shadow-sm p-7 rounded-xl">
-              {/* 카드 상단: 아이콘 + 제목 + 달성률이 순서대로 나란히 배치 */}
+            <div
+              key={goal.id}
+              onClick={() => navigate(`/goal/detail/${goal.id}/amountAchieved`)}
+              className="w-full transition-colors bg-white shadow-sm cursor-pointer p-7 rounded-xl active:bg-gray-50"
+            >
               <div className="flex items-center gap-3 mb-8">
-                {/* 1. 은행 아이콘 배경박스 (사진과 동일하게 연청색 배경 추가) */}
                 <div className="flex items-center justify-center w-[48px] h-[48px] bg-[#E8EFFF] rounded-[14px]">
                   <img src={goal.bankIcon} alt="bank" className="w-8 h-8" />
                 </div>
 
-                {/* 2. 제목과 배지를 묶어서 나란히 배치 */}
                 <div className="flex items-center gap-2">
                   <span className="text-[18px] font-bold text-[#171714] tracking-tight">{goal.title}</span>
-                  {/* 달성률 배지: 제목 바로 옆에 붙음 */}
                   <div className="px-3 py-1 bg-[#FFE500] rounded-full text-[13px] font-bold text-[#171714] whitespace-nowrap">
                     {goal.progress}% 달성
                   </div>
@@ -62,23 +81,21 @@ export const GoalPage = () => {
               </div>
 
               {/* 카드 하단: 목표 상세 정보 */}
-              <div className="space-y-5">
-                {/* 목표금액 행 */}
+              <div className="space-y-5 text-[#171714]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 text-[#999999]">
                     <img src={MoneyIcon} alt="money" className="w-6 h-6 opacity-40" />
                     <span className="text-sm font-medium">목표금액</span>
                   </div>
-                  <span className="text-sm font-bold text-[#171714]">{goal.targetAmount.toLocaleString()}원</span>
+                  <span className="text-sm font-bold">{goal.targetAmount.toLocaleString()}원</span>
                 </div>
 
-                {/* 남은일자 행 */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 text-[#999999]">
                     <img src={CalendarIcon} alt="calendar" className="w-6 h-6 opacity-40" />
                     <span className="text-sm font-medium">남은일자</span>
                   </div>
-                  <span className="text-sm font-bold text-[#171714]">{goal.remainingDays}일</span>
+                  <span className="text-sm font-bold">{goal.remainingDays}일</span>
                 </div>
               </div>
             </div>
