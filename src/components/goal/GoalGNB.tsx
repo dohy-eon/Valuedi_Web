@@ -17,7 +17,7 @@ const GoalGNB = () => {
       {/* 탭 메뉴 영역 */}
       <div className="flex w-full border-b border-[#E0E0E0]">
         <button
-          onClick={() => navigate('/currentgoal')}
+          onClick={() => navigate('/goal/current')}
           className={`flex-1 py-4 text-center text-[16px] transition-all ${
             isCurrentActive ? 'font-bold text-[#171714] border-b-2 border-[#171714]' : 'font-medium text-[#999999]'
           }`}
@@ -25,7 +25,7 @@ const GoalGNB = () => {
           현재 목표
         </button>
         <button
-          onClick={() => navigate('/pastgoal')}
+          onClick={() => navigate('/goal/past')}
           className={`flex-1 py-4 text-center text-[16px] transition-all ${
             isPastActive ? 'font-bold text-[#171714] border-b-2 border-[#171714]' : 'font-medium text-[#999999]'
           }`}

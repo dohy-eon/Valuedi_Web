@@ -50,11 +50,7 @@ const TransactionBottomSheet = ({ isOpen, item, onClose }: TransactionBottomShee
                 placeholder="메모를 남겨주세요 (최대 20자)"
                 className="w-full text-[16px] outline-none placeholder:text-[#ADB5BD]"
               />
-              <img
-                src={WriteIcon}
-                alt="edit memo"
-                className="absolute w-5 h-5 right-4 top-4 opacity-40"
-              />
+              <img src={WriteIcon} alt="edit memo" className="absolute w-5 h-5 right-4 top-4 opacity-40" />
             </div>
 
             <div className="mb-12 space-y-6">
