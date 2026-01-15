@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import MoneyIcon from '@/assets/icons/goal/MoneyIcon.svg';
 import CalendarIcon from '@/assets/icons/goal/CalendarIcon.svg';
+import { paths } from '@/router/Router';
 
 interface GoalCardProps {
   goal: {
@@ -19,7 +20,7 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
 
   return (
     <div
-      onClick={() => navigate(`/goal/detail/${goal.id}/amountAchieved`)}
+      onClick={() => navigate(paths.goal.amountAchieved(goal.id))}
       className={`w-full transition-colors bg-white shadow-sm cursor-pointer p-7 rounded-xl active:bg-gray-50 ${
         type === 'past' ? 'opacity-70' : ''
       }`}
