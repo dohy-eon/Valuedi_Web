@@ -20,52 +20,61 @@ export const CurrentGoalPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen w-full bg-[#F2F4F6] flex flex-col">
+    <div className="flex flex-col w-full min-h-screen bg-gray-50">
       <div className="sticky top-0 z-20 w-full bg-white">
         <GoalGNB />
-        <div className="flex w-full border-b border-[#E0E0E0]"></div>
       </div>
 
-      <main className="flex-1 pb-24 overflow-y-auto">
+      <main className="flex-1 pb-24">
         <div className="flex flex-col gap-5 p-5">
-          {/* 목표 추가 버튼 */}
+          {/* 목표 추가 버튼: paths.goal.create (추가 필요) 또는 직접 경로 */}
           <div
-            onClick={() => navigate('/goal/create')}
-            className="flex items-center w-full gap-4 p-6 transition-colors bg-white shadow-sm cursor-pointer rounded-xl active:bg-gray-50"
+            onClick={() => navigate('/goal/create')} // paths에 추가되어 있다면 교체 권장
+            className="flex items-center gap-4 p-6 transition-colors bg-white shadow-sm cursor-pointer rounded-2xl active:bg-gray-50"
           >
-            <div className="flex items-center justify-center w-12 h-12 border border-[#E0E0E0] rounded-full text-[#999999]">
+            <div className="flex items-center justify-center w-12 h-12 text-gray-400 border border-gray-200 rounded-full">
               <span className="text-3xl font-light">+</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[14px] text-[#999999]">또 다른 목표가 있나요?</span>
-              <span className="text-[18px] font-bold text-[#171714]">목표 추가하기</span>
+              <span className="text-sm text-gray-400">또 다른 목표가 있나요?</span>
+              <span className="text-lg font-bold text-gray-900">목표 추가하기</span>
             </div>
           </div>
 
           {/* 정렬 필터 UI */}
           <div className="flex items-center gap-2 px-1 text-[13px] font-medium">
-            <button onClick={() => setSortBy('latest')} className={sortBy === 'latest' ? 'text-[#171714]' : 'text-[#999999]'}>최신순</button>
-            <span className="text-[#E0E0E0]">·</span>
-            <button onClick={() => setSortBy('achieve')} className={sortBy === 'achieve' ? 'text-[#171714]' : 'text-[#999999]'}>달성순</button>
+            <button 
+              onClick={() => setSortBy('latest')} 
+              className={`transition-colors ${sortBy === 'latest' ? 'text-gray-900' : 'text-gray-400'}`}
+            >
+              최신순
+            </button>
+            <span className="text-gray-200">·</span>
+            <button 
+              onClick={() => setSortBy('achieve')} 
+              className={`transition-colors ${sortBy === 'achieve' ? 'text-gray-900' : 'text-gray-400'}`}
+            >
+              달성순
+            </button>
           </div>
 
-          {/* GoalCard 사용 */}
-          {mockGoals.map((goal) => (
-            <GoalCard key={goal.id} goal={goal} type="current" />
-          ))}
+          {/* Goal 리스트 */}
+          <div className="flex flex-col gap-4">
+            {mockGoals.map((goal) => (
+              <GoalCard key={goal.id} goal={goal} type="current" />
+            ))}
+          </div>
 
-          <button className="flex items-center justify-center gap-1 py-6 text-[15px] text-[#999999] font-medium">
+          <button className="flex items-center justify-center gap-1 py-6 text-sm font-medium text-gray-400 transition-opacity active:opacity-50">
             목록 더 보기
             <img src={DropDown} alt="dropdown" className="w-4 h-4 opacity-40" />
           </button>
         </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#E0E0E0] z-30">
+      <footer className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-100">
         <BottomNavigation activeItem="goal" />
       </footer>
     </div>
   );
 };
-
-export default CurrentGoalPage;

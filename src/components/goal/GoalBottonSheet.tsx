@@ -32,23 +32,22 @@ const TransactionBottomSheet = ({ isOpen, item, onClose }: TransactionBottomShee
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/40 z-[100]"
+            className="fixed inset-0 z-[100] bg-black/40"
           />
           <motion.div
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[32px] z-[101] px-8 pt-12 pb-10 shadow-2xl"
+            className="fixed bottom-0 left-0 right-0 z-[101] rounded-t-3xl bg-white px-8 pb-10 pt-12 shadow-2xl"
           >
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-[#E5E8EB] rounded-full" />
-            <h2 className="text-2xl font-bold text-[#191F28] mb-8">{item.type}</h2>
-
-            <div className="relative mb-3 border rounded-xl border-[#E0E0E0] p-2 py-4">
+            <div className="absolute left-1/2 top-4 h-1.5 w-12 -translate-x-1/2 rounded-full bg-gray-200" />
+            <h2 className="mb-8 text-2xl font-bold text-gray-900">{item.type}</h2>
+            <div className="relative p-2 py-4 mb-3 border border-gray-200 rounded-xl">
               <input
                 type="text"
                 placeholder="메모를 남겨주세요 (최대 20자)"
-                className="w-full text-[16px] outline-none placeholder:text-[#ADB5BD]"
+                className="w-full text-base outline-none placeholder:text-gray-400"
               />
               <img src={WriteIcon} alt="edit memo" className="absolute w-5 h-5 right-4 top-4 opacity-40" />
             </div>
@@ -60,10 +59,9 @@ const TransactionBottomSheet = ({ isOpen, item, onClose }: TransactionBottomShee
               <DetailRow label="거래 후 잔액" value={item.balanceAfter} isBold />
               <DetailRow label="입금계좌" value={item.account} />
             </div>
-
             <button
               onClick={onClose}
-              className="w-full bg-[#FFE500] py-5 rounded-2xl font-bold text-lg active:scale-[0.98]"
+              className="w-full rounded-2xl bg-primary-normal py-5 text-lg font-bold transition-transform active:scale-[0.98]"
             >
               확인하기
             </button>
@@ -75,9 +73,9 @@ const TransactionBottomSheet = ({ isOpen, item, onClose }: TransactionBottomShee
 };
 
 const DetailRow = ({ label, value, isBold }: { label: string; value: string; isBold?: boolean }) => (
-  <div className="flex justify-between text-[15px]">
-    <span className="text-[#8B95A1]">{label}</span>
-    <span className={isBold ? 'text-[#191F28] font-bold' : 'text-[#4E5968]'}>{value}</span>
+  <div className="flex justify-between text-sm">
+    <span className="text-gray-500">{label}</span>
+    <span className={`${isBold ? 'font-bold text-gray-900' : 'text-gray-600'}`}>{value}</span>
   </div>
 );
 
