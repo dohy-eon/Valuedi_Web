@@ -1,9 +1,6 @@
 import { useMemo } from 'react';
 import { TransactionItem } from '@/features/asset/constants/account';
-import {
-  transformToCategoryGroups,
-  TransactionWithDetails,
-} from '@/pages/Asset/tab/SectorAnalysis/components/sectorUtils';
+import { transformToCategoryGroups, TransactionWithDetails } from '@/pages/Asset/tab/SectorAnalysis/utils/sectorUtils';
 import { useGetAccountDetail } from '@/hooks/Asset/useGetAccountDetail';
 
 const rawData: (TransactionItem & { date: string })[] = [

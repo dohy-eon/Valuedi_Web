@@ -1,5 +1,5 @@
 import { TransactionItem, TransactionGroup } from '@/features/asset/constants/account';
-import { SectorData } from './SectorListItem';
+import { SectorData } from '../components/SectorListItem';
 
 /**
  * 💡 1. 기초 상세 항목 타입 (모달용)
@@ -21,21 +21,24 @@ export type TransactionWithDetails = TransactionItem & {
 
 /**
  * 💡 3. 유틸리티 전용 그룹 타입
- * TransactionGroup의 items를 우리가 만든 TransactionWithDetails로 교체
  */
 export interface SectorTransactionGroup extends Omit<TransactionGroup, 'items'> {
   items: TransactionWithDetails[];
 }
 
 /**
- * 1. 카테고리별 그룹화 (메인/전체리스트용)
+ * 💡 4. 카테고리별 그룹화 (가로형 막대 차트 및 메인 리스트용)
  */
 export const transformToCategoryGroups = (
   transactions: TransactionWithDetails[],
   totalExpense: number
 ): SectorData[] => {
+  // 카테고리별로 금액 합산
   const sectorMap = transactions.reduce<Record<string, SectorData>>((acc, item) => {
-    const cat = item.category || 'default';
+    // 지출(expense) 데이터만 합산 로직에 포함
+    if (item.type !== 'expense') return acc;
+
+    const cat = item.category || 'others'; // 카테고리 없으면 '그외'로 분류 ㅋ
 
     if (!acc[cat]) {
       acc[cat] = {
@@ -47,25 +50,27 @@ export const transformToCategoryGroups = (
       };
     }
 
-    if (item.type === 'expense') {
-      acc[cat].amount += Math.abs(item.amount);
-    }
-
-    // 💡 이제 any 없이 안전하게 push 가능!
+    acc[cat].amount += Math.abs(item.amount);
     acc[cat].items?.push(item);
+
     return acc;
   }, {});
 
-  return Object.values(sectorMap)
-    .map((sector) => ({
-      ...sector,
-      percentage: totalExpense > 0 ? Math.round((sector.amount / totalExpense) * 100) : 0,
-    }))
-    .sort((a, b) => b.amount - a.amount);
+  // 최종 배열 변환 및 비율(percentage) 계산
+  return (
+    Object.values(sectorMap)
+      .map((sector) => ({
+        ...sector,
+        // 💡 가로 막대 차트의 정밀한 너비를 위해 소수점까지 유지 (Math.round 제외)
+        percentage: totalExpense > 0 ? (sector.amount / totalExpense) * 100 : 0,
+      }))
+      // 금액이 큰 순서대로 정렬 (차트와 리스트가 시각적으로 안정감 있게 보임 ㅋ)
+      .sort((a, b) => b.amount - a.amount)
+  );
 };
 
 /**
- * 2. 날짜별 그룹화 (상세 페이지용)
+ * 💡 5. 날짜별 그룹화 (상세 페이지용)
  */
 export const transformToDateGroups = (items: TransactionWithDetails[]): SectorTransactionGroup[] => {
   return items.reduce<SectorTransactionGroup[]>((acc, item) => {
@@ -77,7 +82,6 @@ export const transformToDateGroups = (items: TransactionWithDetails[]): SectorTr
       acc.push(group);
     }
 
-    // 💡 items가 TransactionWithDetails[] 타입이므로 any 없이 push!
     group.items.push(item);
 
     if (item.type === 'expense') {

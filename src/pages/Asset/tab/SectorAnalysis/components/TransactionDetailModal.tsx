@@ -4,7 +4,7 @@ import { cn } from '@/utils/cn';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import PenIcon from '@/assets/icons/asset/Pen.svg';
 // 💡 유틸리티에서 정의한 정석 타입들을 임포트합니다.
-import { TransactionWithDetails, TransactionDetail } from './sectorUtils';
+import { TransactionWithDetails, TransactionDetail } from '../utils/sectorUtils';
 
 interface TransactionDetailModalProps {
   // 💡 any 대신 정석 타입을 적용합니다.
