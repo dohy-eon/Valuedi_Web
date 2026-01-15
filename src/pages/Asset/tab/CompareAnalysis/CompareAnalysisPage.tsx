@@ -1,13 +1,26 @@
-import { Typography } from '@/components/typography';
+import { MobileLayout } from '@/components/layout/MobileLayout';
+import { PeerCompareSection } from './components/PeerCompareSection';
+import { CategoryCompareSection } from './components/CategoryCompareSection'; // 나중에 추가
+import { HistoryCompareSection } from './components/HistoryCompareSection'; // 나중에 추가
 
 export const CompareAnalysis = () => {
   return (
-    <div className="flex flex-col w-full min-h-screen bg-white p-5">
-      <div className="mb-6 flex flex-col items-center justify-center gap-2">
-        <Typography variant="body-3" weight="regular" color="neutral-90">
-          비교 분석 페이지 준비중
-        </Typography>
+    <MobileLayout className="bg-neutral-0 shadow-none">
+      <div className="flex flex-col min-h-screen bg-neutral-0">
+        {/* 1. 또래별 비교 섹션 */}
+        <PeerCompareSection />
+
+        {/* 2. 카테고리별 비교 섹션 (구현 전이면 주석 처리) */}
+        <div className="h-2 bg-neutral-5" />
+        <CategoryCompareSection />
+
+        {/* 3. 소비내역 비교 섹션 (구현 전이면 주석 처리) */}
+        <div className="h-2 bg-neutral-5" />
+        <HistoryCompareSection />
+
+        {/* 바닥 여백을 위해 추가 */}
+        <div className="pb-20" />
       </div>
-    </div>
+    </MobileLayout>
   );
 };

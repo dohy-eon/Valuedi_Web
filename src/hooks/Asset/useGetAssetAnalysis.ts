@@ -211,7 +211,7 @@ const rawData: (TransactionItem & { date: string })[] = [
     date: '2025-12-10',
   },
 
-  // --- 2025년 11월 (지지난달) ---
+  // --- 2025년 11월 ---
   {
     id: 301,
     title: '유니클로',
@@ -256,6 +256,79 @@ const rawData: (TransactionItem & { date: string })[] = [
     type: 'income',
     category: 'transfer',
     date: '2025-11-01',
+  },
+  // --- 2025년 10월 ---
+  {
+    id: 401,
+    title: '카카오T_택시',
+    sub: '교통 | 카카오뱅크 카드',
+    amount: -15000,
+    type: 'expense',
+    category: 'traffic',
+    date: '2025-10-15',
+  },
+  {
+    id: 402,
+    title: '지하철 정기권',
+    sub: '교통 | 신용카드',
+    amount: -100000,
+    type: 'expense',
+    category: 'traffic',
+    date: '2025-10-15',
+  },
+  {
+    id: 403,
+    title: '올리브영 사당',
+    sub: '쇼핑 | 화장품',
+    amount: -30000,
+    type: 'expense',
+    category: 'shopping',
+    date: '2025-10-02',
+  },
+  {
+    id: 404,
+    title: '김*주',
+    sub: '내계좌이체 | KB국민ONE통장',
+    amount: -30000,
+    type: 'expense',
+    category: 'transfer',
+    date: '2025-10-01',
+  },
+  {
+    id: 405,
+    title: '신한할인캐쉬백',
+    sub: '금융수입 | 쏠편한 입출금통장',
+    amount: 3000,
+    type: 'income',
+    category: 'transfer',
+    date: '2025-10-01',
+  },
+  {
+    id: 406,
+    title: 'SKT',
+    sub: '통신 | 신용카드',
+    amount: -20000,
+    type: 'expense',
+    category: 'living',
+    date: '2025-10-17',
+  },
+  {
+    id: 407,
+    title: '메가커피',
+    sub: '카페 | 체크카드',
+    amount: -8000,
+    type: 'expense',
+    category: 'cafe',
+    date: '2025-10-17',
+  },
+  {
+    id: 408,
+    title: '하이디라오',
+    sub: '식비 | 신용카드',
+    amount: -100000,
+    type: 'expense',
+    category: 'food',
+    date: '2025-10-18',
   },
 ];
 
