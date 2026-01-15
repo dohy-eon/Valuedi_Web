@@ -28,6 +28,7 @@ import {
   CardAdditionalConnectionPage,
 } from '@/pages/Card';
 import { AssetAccountDetailPage } from '@/pages/Asset/tab/AssetDetails/AssetAccountDetailPage';
+import { MbtiPage } from '@/features/mbti/MbtiPage';
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
       { path: 'login/form', element: <LoginPage /> },
       { path: 'signup', element: <SignUpPage /> },
       { path: '/signup/email', element: <EmailForm /> },
+      { path: 'mbti', element: <MbtiPage /> },
       { path: 'bank/start', element: <BankConnectionStartPage /> },
       { path: 'bank/select', element: <BankSelectPage /> },
       { path: 'bank/input-id', element: <BankIdInputPage /> },

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components/typography';
 import { formatCurrency } from '@/utils/formatCurrency';
@@ -7,6 +8,7 @@ import CardPlusIcon from '@/assets/icons/asset/CardPlus.svg';
 import { MoreViewButton } from '@/components/buttons';
 import { useNavigate } from 'react-router-dom';
 import { ColorToken, getColorToken } from '@/styles/design-system';
+import CheckDownIcon from '@/assets/icons/CheckDown.svg?react';
 
 interface AccountData {
   id: number;
@@ -38,6 +40,9 @@ const CardIcon = ({ bgColor }: { bgColor: ColorToken }) => (
 export const AssetList = () => {
   const navigate = useNavigate();
 
+  const [isBankExpanded, setIsBankExpanded] = useState(false);
+  const [isCardExpanded, setIsCardExpanded] = useState(false);
+
   const bankAccounts: AccountData[] = [
     { id: 1, name: 'KB국민ONE통장', amount: 11125023, bankName: 'KB국민은행', iconBg: 'bank-kb' },
     { id: 2, name: 'KB국민ONE통장', amount: 11125023, bankName: '새마을은행', iconBg: 'bank-saemaul' },
@@ -68,13 +73,12 @@ export const AssetList = () => {
         </div>
       </div>
 
-      {/* 은행 리스트 */}
       <div className={cn('flex flex-col rounded-[8px] px-[12px] py-[16px] gap-[16px]')}>
         <Typography style="text-body-2-14-regular" className="text-neutral-70">
           연결된 은행
         </Typography>
         <div className={cn('flex flex-col gap-[8px]')}>
-          {bankAccounts.slice(0, 4).map((account) => (
+          {(isBankExpanded ? bankAccounts : bankAccounts.slice(0, 4)).map((account) => (
             <div key={account.id} className={cn('flex items-center justify-between py-[8px]')}>
               <div className={cn('flex items-center gap-[8px]')}>
                 <BankIcon bgColor={account.iconBg} />
@@ -93,24 +97,26 @@ export const AssetList = () => {
             </div>
           ))}
         </div>
+
         <button
+          onClick={() => setIsBankExpanded(!isBankExpanded)}
           className={cn(
-            'w-full border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]'
+            'flex items-center justify-center gap-[8px] border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]'
           )}
         >
           <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center">
-            {`은행 ${bankAccounts.length}개 전체보기`}
+            {isBankExpanded ? '은행 목록 접기' : '은행 목록 더보기'}
           </Typography>
+          <CheckDownIcon className={cn('text-neutral-70', isBankExpanded && 'rotate-180')} />
         </button>
       </div>
 
-      {/* 카드 리스트 */}
       <div className={cn('flex flex-col rounded-[8px] px-[12px] py-[16px] gap-[16px]')}>
         <Typography style="text-body-2-14-regular" className="text-neutral-70">
           연결된 카드
         </Typography>
         <div className={cn('flex flex-col gap-[8px]')}>
-          {cardAccounts.slice(0, 4).map((card) => (
+          {(isCardExpanded ? cardAccounts : cardAccounts.slice(0, 4)).map((card) => (
             <div key={card.id} className={cn('flex items-center justify-between py-[8px]')}>
               <div className={cn('flex items-center gap-[8px]')}>
                 <CardIcon bgColor={card.iconBg} />
@@ -129,14 +135,17 @@ export const AssetList = () => {
             </div>
           ))}
         </div>
+
         <button
+          onClick={() => setIsCardExpanded(!isCardExpanded)}
           className={cn(
-            'w-full border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]'
+            'flex items-center justify-center gap-[8px] border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]'
           )}
         >
           <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center">
-            {`카드 ${cardAccounts.length}개 전체보기`}
+            {isCardExpanded ? '카드 목록 접기' : '카드 목록 더보기'}
           </Typography>
+          <CheckDownIcon className={cn('text-neutral-70', isCardExpanded && 'rotate-180')} />
         </button>
       </div>
 

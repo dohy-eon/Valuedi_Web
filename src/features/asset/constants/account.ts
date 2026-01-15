@@ -18,6 +18,9 @@ export interface TransactionItem {
 
 export interface TransactionGroup {
   date: string;
+  day: number;
   dailyTotal: number;
+  totalIncome: number;
+  totalExpense: number;
   items: TransactionItem[];
 }
