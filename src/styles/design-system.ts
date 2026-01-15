@@ -34,7 +34,7 @@ export type ColorToken =
   | 'bank-kbank'
   | 'bank-saemaul'
   | 'bank-ibk'
-  | 'bank-gwangju_jeonbuk'
+  | 'bank-gwangju_jeonbuk';
 
 export type FontFamily = 'pretendard' | 'preahvihear';
 

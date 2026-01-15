@@ -1,4 +1,4 @@
-import { ColorToken } from "@/styles/design-system";
+import { ColorToken } from '@/styles/design-system';
 
 export interface AccountInfo {
   bankName: string;
