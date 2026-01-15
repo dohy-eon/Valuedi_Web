@@ -8,7 +8,7 @@ import BackPageGNB from '@/components/gnb/BackPageGNB';
 import { AssetDailyHeader } from '../AssetDetails/components/AssetDailyHeader';
 import { AssetItemList } from '../AssetDetails/components/AssetItemList';
 import { CATEGORY_STYLES, CATEGORY_LABELS } from '@/features/asset/constants/category';
-import { useGetSectorAnalysis } from '@/hooks/Asset/useGetSectorAnalysis';
+import { useGetAssetAnalysis } from '@/hooks/Asset/useGetAssetAnalysis';
 import { TransactionDetailModal } from './components/TransactionDetailModal';
 
 // 정석 타입 및 유틸 임포트
@@ -35,7 +35,7 @@ export const SectorDetailPage = () => {
   const stateData = location.state?.sectorData as SectorData | undefined;
 
   // 만약 state가 없다면(직접 링크 진입 등) 대비를 위해 훅을 호출합니다. (Fallback)
-  const { transactions, totalExpense } = useGetSectorAnalysis();
+  const { transactions, totalExpense } = useGetAssetAnalysis();
 
   // stateData가 있으면 그것을 쓰고, 없으면 전체 데이터에서 찾습니다.
   const selectedCategory =
