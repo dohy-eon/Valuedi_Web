@@ -11,50 +11,50 @@ import { CATEGORY_STYLES, CATEGORY_LABELS } from '@/features/asset/constants/cat
 import { useGetAssetAnalysis } from '@/hooks/Asset/useGetAssetAnalysis';
 import { TransactionDetailModal } from './components/TransactionDetailModal';
 
-// 정석 타입 및 유틸 임포트
+// 💡 리팩토링된 정석 타입 및 유틸 임포트
 import {
   TransactionWithDetails,
   SectorTransactionGroup,
   transformToDateGroups,
   transformToCategoryGroups,
-  SectorData, // 💡 전달받을 데이터 타입
-} from './components/sectorUtils';
+  SectorData,
+} from './utils/sectorUtils';
 
 export const SectorDetailPage = () => {
   const { categoryKey } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const now = new Date(); // 💡 데이터 기준 날짜 (2026년 1월 기준)
 
-  // 💡 1. 상세 모달 상태
+  // 1. 상세 모달 상태
   const [selectedItem, setSelectedItem] = useState<TransactionWithDetails | null>(null);
 
   /**
-   * 💡 2. 최적화 로직 (피드백 반영)
-   * 부모(FullList)가 navigate state로 전달한 데이터가 있는지 확인합니다.
+   * 2. 데이터 로드 로직
+   * 부모 페이지에서 넘겨준 state가 있으면 우선 사용하고, 없으면 직접 훅으로 가져옵니다. ㅋ
    */
   const stateData = location.state?.sectorData as SectorData | undefined;
 
-  // 만약 state가 없다면(직접 링크 진입 등) 대비를 위해 훅을 호출합니다. (Fallback)
-  const { transactions, totalExpense } = useGetAssetAnalysis();
+  // 💡 훅 호출 시 현재 날짜(now)를 명시적으로 전달하여 데이터 일관성 유지
+  const { transactions, totalExpense } = useGetAssetAnalysis(now);
 
-  // stateData가 있으면 그것을 쓰고, 없으면 전체 데이터에서 찾습니다.
   const selectedCategory =
     stateData || transformToCategoryGroups(transactions, totalExpense).find((s) => s.key === categoryKey);
 
-  // 데이터가 아예 없으면 렌더링하지 않습니다.
+  // 데이터가 없으면 안전하게 차단 ㅋ
   if (!selectedCategory || !selectedCategory.items) return null;
 
   const { key, amount: totalAmount, items } = selectedCategory;
   const style = CATEGORY_STYLES[key] || CATEGORY_STYLES.default;
   const label = CATEGORY_LABELS[key] || CATEGORY_LABELS.default;
 
-  // 💡 3. 날짜별 그룹화 (이건 화면에 뿌리기 위해 꼭 필요하므로 실행)
+  // 3. 화면 렌더링을 위한 날짜별 그룹화 실행
   const historyData: SectorTransactionGroup[] = transformToDateGroups(items);
 
   return (
     <MobileLayout className="bg-neutral-0">
       <div className="flex flex-col min-h-screen bg-neutral-0 relative">
-        {/* 1. 상단 헤더 */}
+        {/* 상단 GNB */}
         <div className="sticky top-0 z-10 w-full bg-white border-b border-neutral-5">
           <BackPageGNB
             title="세부내역"
@@ -65,14 +65,15 @@ export const SectorDetailPage = () => {
           />
         </div>
 
-        {/* 2. 요약 카드 (배경색 적용) */}
+        {/* 요약 카드: 카테고리별 테마 컬러(bgColor) 적용 ㅋ */}
         <div className={cn('flex flex-col p-[20px] w-full h-[134px] gap-[12px]', style.bgColor)}>
           <div className="w-8 h-8 rounded-lg flex items-center justify-center">
             <img src={style.icon} alt={label} className="w-8 h-8 object-contain" />
           </div>
           <div className="flex flex-col gap-[4px]">
             <Typography variant="caption-1" className="text-neutral-70">
-              11월 {label} 총 금액
+              {/* 💡 하드코딩 대신 동적 월 노출 (예: 1월) */}
+              {now.getMonth() + 1}월 {label} 총 금액
             </Typography>
             <Typography variant="headline-1" weight="bold" className="text-neutral-90">
               {formatCurrency(totalAmount)}
@@ -80,7 +81,7 @@ export const SectorDetailPage = () => {
           </div>
         </div>
 
-        {/* 3. 리스트 영역 */}
+        {/* 지출 리스트 영역 */}
         <div className="flex-1 flex flex-col px-[20px] mt-[20px] pb-10">
           <Typography variant="body-2" weight="semi-bold" className="text-neutral-90 mb-[12px]">
             총 {items.length}건
@@ -89,10 +90,10 @@ export const SectorDetailPage = () => {
           <div className="flex flex-col gap-[20px]">
             {historyData.map((group: SectorTransactionGroup) => (
               <div key={group.date} className="flex flex-col">
-                {/* 날짜 헤더 */}
+                {/* 날짜 구분선 헤더 */}
                 <AssetDailyHeader date={group.date} dailyTotal={group.dailyTotal} />
 
-                {/* 해당 날짜 아이템 리스트 */}
+                {/* 해당 날짜의 지출 아이템들 ㅋ */}
                 <div className="flex flex-col gap-[8px] mt-[8px]">
                   {group.items.map((item: TransactionWithDetails) => (
                     <div
@@ -115,7 +116,7 @@ export const SectorDetailPage = () => {
           </div>
         </div>
 
-        {/* 4. 거래 상세 정보 모달 */}
+        {/* 거래 내역 상세 모달 (Portal 사용) */}
         {selectedItem && <TransactionDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />}
       </div>
     </MobileLayout>

@@ -3,7 +3,7 @@ import { Typography } from '@/components/typography';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { CATEGORY_STYLES } from '@/features/asset/constants/category';
 // 💡 유틸리티 파일에서 모든 핵심 타입을 임포트합니다.
-import { TransactionWithDetails } from './sectorUtils';
+import { TransactionWithDetails } from '../utils/sectorUtils';
 
 /**
  * 💡 훅 -> 유틸리티를 거쳐 나오는 데이터 구조
@@ -50,8 +50,8 @@ export const SectorListItem = ({ data, label, onClick }: SectorListItemProps) =>
           </Typography>
           {/* 퍼센트가 0보다 클 때만 노출 (소수점 없이 정수형) */}
           {data.percentage > 0 && (
-            <Typography variant="caption-1" weight="regular" color="neutral-40">
-              {data.percentage}%
+            <Typography variant="caption-1" color="neutral-40">
+              {Math.floor(data.percentage)}% {/* 💡 여기서도 한 번 더 안전하게 처리 ㅋ */}
             </Typography>
           )}
         </div>
