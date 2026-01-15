@@ -8,8 +8,8 @@ import SplashPage from '@/pages/Splash/SplashPage';
 import OnboardingPage from '@/pages/Onboarding/OnboardingPage';
 import AssetPage from '@/pages/Asset/AssetPage';
 import RecommendPage from '@/pages/Recommend/RecommendPage';
-import CurrentGoalPage from '@/pages/Goal/CurrentGoalPage';
-import PastGoalPage from '@/pages/Goal/PastGoalPage';
+import { CurrentGoalPage } from '@/pages/Goal/CurrentGoalPage';
+import { PastGoalPage } from '@/pages/Goal/PastGoalPage';
 import AmountAchievedPage from '@/pages/Goal/AmountAchievedPage';
 import SavingsSimulationPage from '@/pages/Goal/SavingsSimulationPage';
 
@@ -32,6 +32,17 @@ import {
   CardAdditionalConnectionPage,
 } from '@/pages/Card';
 
+export const paths = {
+  goal: {
+    current: '/goal/current',
+    past: '/goal/past',
+    amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
+    savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
+    amountAchievedRoute: '/goal/detail/:id/amount-achieved',
+    savingsSimulationRoute: '/goal/detail/:id/savingsimulation',
+  },
+} as const;
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -41,10 +52,10 @@ export const router = createBrowserRouter([
       { path: 'home', element: <HomePage /> },
       { path: 'asset', element: <AssetPage /> },
       { path: 'recommend', element: <RecommendPage /> },
-      { path: 'goal/current', element: <CurrentGoalPage /> },
-      { path: 'goal/past', element: <PastGoalPage /> },
-      { path: 'goal/detail/:id/amountAchieved', element: <AmountAchievedPage /> },
-      { path: 'goal/detail/:id/savingsimulation', element: <SavingsSimulationPage /> },
+      { path: paths.goal.current, element: <CurrentGoalPage /> },
+      { path: paths.goal.past, element: <PastGoalPage /> },
+      { path: paths.goal.amountAchievedRoute, element: <AmountAchievedPage /> },
+      { path: paths.goal.savingsSimulationRoute, element: <SavingsSimulationPage /> },
       { path: 'login', element: <DefaultLogin /> },
       { path: 'login/form', element: <LoginPage /> },
       { path: 'signup', element: <SignUpPage /> },
