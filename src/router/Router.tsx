@@ -32,6 +32,7 @@ import { SectorDetailPage } from '@/pages/Asset/tab/SectorAnalysis/SectorDetailP
 import { SectorFullListPage } from '@/pages/Asset/tab/SectorAnalysis/SectorFullListPage';
 import { AssetDetails } from '@/pages/Asset/tab/AssetDetails/AssetDetailsPage';
 import { SectorAnalysis } from '@/pages/Asset/tab/SectorAnalysis/SectorAnalysisPage';
+import { CompareAnalysis } from '@/pages/Asset/tab/CompareAnalysis/CompareAnalysisPage';
 
 export const router = createBrowserRouter([
   {
@@ -46,7 +47,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <AssetDetails /> }, // /asset (기본탭)
           { path: 'sector', element: <SectorAnalysis /> }, // /asset/sector (분야별)
-          // { path: 'compare', element: <AssetCompare /> }, // /asset/compare (비교)
+          { path: 'compare', element: <CompareAnalysis /> }, // /asset/compare (비교)
         ],
       },
       { path: 'asset/account/:id', element: <AssetAccountDetailPage /> },

@@ -87,3 +87,5 @@ export const transformToDateGroups = (items: TransactionWithDetails[]): SectorTr
     return acc;
   }, []);
 };
+
+export type { SectorData };
