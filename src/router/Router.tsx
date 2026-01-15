@@ -28,6 +28,10 @@ import {
   CardAdditionalConnectionPage,
 } from '@/pages/Card';
 import { AssetAccountDetailPage } from '@/pages/Asset/tab/AssetDetails/AssetAccountDetailPage';
+import { SectorDetailPage } from '@/pages/Asset/tab/SectorAnalysis/SectorDetailPage';
+import { SectorFullListPage } from '@/pages/Asset/tab/SectorAnalysis/SectorFullListPage';
+import { AssetDetails } from '@/pages/Asset/tab/AssetDetails/AssetDetailsPage';
+import { SectorAnalysis } from '@/pages/Asset/tab/SectorAnalysis/SectorAnalysisPage';
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +40,15 @@ export const router = createBrowserRouter([
       { index: true, element: <SplashPage /> },
       { path: 'onboarding', element: <OnboardingPage /> },
       { path: 'home', element: <HomePage /> },
-      { path: 'asset', element: <AssetPage /> },
+      {
+        path: 'asset',
+        element: <AssetPage />, // 여기에 탭 버튼과 레이아웃이 있음
+        children: [
+          { index: true, element: <AssetDetails /> }, // /asset (기본탭)
+          { path: 'sector', element: <SectorAnalysis /> }, // /asset/sector (분야별)
+          // { path: 'compare', element: <AssetCompare /> }, // /asset/compare (비교)
+        ],
+      },
       { path: 'asset/account/:id', element: <AssetAccountDetailPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'goal', element: <GoalPage /> },
@@ -58,6 +70,8 @@ export const router = createBrowserRouter([
       { path: 'card/connecting', element: <CardConnectingPage /> },
       { path: 'card/connected', element: <CardConnectedPage /> },
       { path: 'card/additional', element: <CardAdditionalConnectionPage /> },
+      { path: 'asset/sector-full', element: <SectorFullListPage /> },
+      { path: 'asset/sector/:categoryKey', element: <SectorDetailPage /> },
     ],
   },
 ]);
