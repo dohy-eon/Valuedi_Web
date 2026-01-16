@@ -9,15 +9,7 @@ import { MoreViewButton } from '@/components/buttons';
 import { useNavigate } from 'react-router-dom';
 import { ColorToken, getColorToken } from '@/styles/design-system';
 import CheckDownIcon from '@/assets/icons/CheckDown.svg?react';
-
-interface AccountData {
-  id: number;
-  name: string;
-  amount: number;
-  bankName?: string;
-  cardName?: string;
-  iconBg: ColorToken;
-}
+import { useGetAssetList } from '@/hooks/Asset/useGetAssetList';
 
 const BankIcon = ({ bgColor }: { bgColor: ColorToken }) => (
   <div
@@ -39,26 +31,10 @@ const CardIcon = ({ bgColor }: { bgColor: ColorToken }) => (
 
 export const AssetList = () => {
   const navigate = useNavigate();
+  const { bankAccounts, cardAccounts, totalAsset } = useGetAssetList();
 
   const [isBankExpanded, setIsBankExpanded] = useState(false);
   const [isCardExpanded, setIsCardExpanded] = useState(false);
-
-  const bankAccounts: AccountData[] = [
-    { id: 1, name: 'KB국민ONE통장', amount: 11125023, bankName: 'KB국민은행', iconBg: 'bank-kb' },
-    { id: 2, name: 'KB국민ONE통장', amount: 11125023, bankName: '새마을은행', iconBg: 'bank-saemaul' },
-    { id: 3, name: 'KB국민ONE통장', amount: 11125023, bankName: 'Kbank은행', iconBg: 'bank-kbank' },
-    { id: 4, name: 'KB국민ONE통장', amount: 11125023, bankName: '씨티은행', iconBg: 'bank-citi' },
-    { id: 5, name: 'KB국민ONE통장', amount: 11125023, bankName: '은행나무은행', iconBg: 'bank-plus' },
-  ];
-
-  const cardAccounts: AccountData[] = [
-    { id: 1, name: 'KB국민ONE카드', amount: 11125023, cardName: 'KB국민카드', iconBg: 'bank-kb' },
-    { id: 2, name: 'KB국민ONE카드', amount: 11125023, cardName: '전북카드', iconBg: 'bank-gwangju_jeonbuk' },
-    { id: 3, name: 'KB국민ONE카드', amount: 11125023, cardName: '새마을카드', iconBg: 'bank-saemaul' },
-    { id: 4, name: 'KB국민ONE카드', amount: 11125023, cardName: 'ibk카드', iconBg: 'bank-ibk' },
-  ];
-
-  const totalAsset = 526387;
 
   return (
     <div className={cn('flex flex-col gap-[8px] px-[20px] mt-[20px] ')}>
