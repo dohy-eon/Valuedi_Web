@@ -5,16 +5,14 @@ import { formatCurrency } from '@/utils/formatCurrency';
 import { useGetAccountDetail } from '@/hooks/Asset/useGetAccountDetail';
 import { TransactionGroup } from '@/features/asset/constants/account';
 import { DailyTransactionSheet } from './DailyTransactionSheet';
-
-interface LedgerCalendarProps {
-  currentMonth: number;
-}
+import { useLedgerStore } from '@/hooks/Asset/usetLedgerStore';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
-export const LedgerCalendar = ({ currentMonth }: LedgerCalendarProps) => {
+export const LedgerCalendar = () => {
   const { transactionHistory } = useGetAccountDetail();
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
+  const currentMonth = useLedgerStore((state) => state.currentMonth);
 
   // 데이터를 미리 날짜별로 정리정돈 해주는 코드
   const calendarData = useMemo(() => {

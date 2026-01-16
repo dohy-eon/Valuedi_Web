@@ -1,12 +1,9 @@
+import { useGetAccountDetail } from '@/hooks/Asset/useGetAccountDetail';
 import { AssetDailyHeader } from './AssetDailyHeader';
 import { AssetItemList } from './AssetItemList';
-import { TransactionGroup } from '@/features/asset/constants/account';
 
-interface LedgerListProps {
-  transactionHistory: TransactionGroup[];
-}
-
-export const LedgerList = ({ transactionHistory }: LedgerListProps) => {
+export const LedgerList = () => {
+  const { transactionHistory } = useGetAccountDetail();
   return (
     <div className="flex flex-col gap-[12px]">
       {transactionHistory.map((group, index) => (

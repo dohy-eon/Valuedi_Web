@@ -1,20 +1,16 @@
-import { useState } from 'react';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components/typography';
 import { formatCurrency } from '@/utils/formatCurrency';
 import PolygonButtonIcon from '@/assets/icons/asset/PolygonButton.svg?react';
-import { useGetAccountDetail } from '@/hooks/Asset/useGetAccountDetail';
-import { ViewMode, ViewToggleButton } from '@/components/buttons';
+import { ViewToggleButton } from '@/components/buttons';
 import { LedgerList } from './LedgerList';
 import LedgerCalendar from './LedgerCalendar';
+import { useLedgerActions, useLedgerStore } from '@/hooks/Asset/usetLedgerStore';
 
 export const AssetLedger = () => {
-  const [currentMonth, setCurrentMonth] = useState(11);
-  const { transactionHistory } = useGetAccountDetail();
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
-
-  const handlePrevMonth = () => setCurrentMonth((prev) => (prev === 1 ? 12 : prev - 1));
-  const handleNextMonth = () => setCurrentMonth((prev) => (prev === 12 ? 1 : prev + 1));
+  const currentMonth = useLedgerStore((state) => state.currentMonth);
+  const viewMode = useLedgerStore((state) => state.viewMode);
+  const { prevMonth, nextMonth, setViewMode } = useLedgerActions();
 
   return (
     <div className={cn('flex flex-col w-full h-full bg-neutral-0 mt-[20px] px-[20px] gap-[20px]')}>
@@ -27,7 +23,7 @@ export const AssetLedger = () => {
                 'text-neutral-50 hover:text-neutral-90 cursor-pointer'
               )}
             >
-              <PolygonButtonIcon onClick={handlePrevMonth} className={cn('fill-current')} />
+              <PolygonButtonIcon onClick={prevMonth} className={cn('fill-current')} />
             </div>
 
             <Typography style="text-body-1-16-semi-bold" className={cn('text-neutral-90')}>
@@ -40,7 +36,7 @@ export const AssetLedger = () => {
                 'text-neutral-50 hover:text-neutral-90 cursor-pointer'
               )}
             >
-              <PolygonButtonIcon className={cn('rotate-180')} onClick={handleNextMonth} />
+              <PolygonButtonIcon className={cn('rotate-180')} onClick={nextMonth} />
             </div>
           </div>
 
@@ -81,12 +77,7 @@ export const AssetLedger = () => {
         <ViewToggleButton mode={viewMode} onToggle={setViewMode} leftText="목록" rightText="달력" />
       </div>
 
-      {viewMode === 'list' ? (
-        <LedgerList transactionHistory={transactionHistory} />
-      ) : (
-        // 이후에 Zustand로 props drilling 문제 해결할 것
-        <LedgerCalendar currentMonth={currentMonth} />
-      )}
+      {viewMode === 'list' ? <LedgerList /> : <LedgerCalendar />}
     </div>
   );
 };
