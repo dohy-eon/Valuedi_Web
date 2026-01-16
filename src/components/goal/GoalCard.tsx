@@ -17,8 +17,6 @@ interface GoalCardProps {
 
 const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   const navigate = useNavigate();
-
-  // 클릭 시 paths 객체의 함수를 사용하여 이동
   const handleClick = () => {
     navigate(paths.goal.amountAchieved(goal.id));
   };
