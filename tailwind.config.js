@@ -62,7 +62,17 @@ export default {
           kbank: 'var(--color-bank-kbank)',
           saemaul: 'var(--color-bank-saemaul)',
           ibk: 'var(--color-bank-ibk)',
-          gwanju_jeonbuk: 'var(--color-bank-gwanju_jeonbuk)'
+          gwanju_jeonbuk: 'var(--color-bank-gwanju_jeonbuk)',
+          kdb: 'var(--color-bank-kdb)',
+          suhyup: 'var(--color-bank-suhyup)',
+          nh: 'var(--color-bank-nh)',
+          woori: 'var(--color-bank-woori)',
+          sc: 'var(--color-bank-sc)',
+          busan: 'var(--color-bank-busan)',
+          shinhyup: 'var(--color-bank-shinhyup)',
+          postbank: 'var(--color-bank-postbank)',
+          hana: 'var(--color-bank-hana)',
+          shinhan: 'var(--color-bank-shinhan)',
         },
         // Atomic Colors
         atomic: {
