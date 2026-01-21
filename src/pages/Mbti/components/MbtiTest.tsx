@@ -22,8 +22,10 @@ export const MbtiTest = () => {
     if (!question) return;
 
     setAnswer(question.id, score);
+
     if (testStep < MBTI_QUESTIONS.length - 1) {
       setTestStep(testStep + 1);
+      window.scrollTo(0, 0);
     } else {
       setStep('loading');
     }
