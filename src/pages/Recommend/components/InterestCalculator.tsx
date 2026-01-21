@@ -5,6 +5,7 @@ import { cn } from '@/utils/cn';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { CustomSlider } from './CustomSlider';
 import { NumberInputBottomSheet } from './NumberInputSheet';
+import { useInterestCalculator } from '@/hooks/Recommend/useInterestCalculator';
 
 const AMOUNT_LIMITS = {
   MIN: 50000,
@@ -22,30 +23,21 @@ const DURATION_LIMITS = {
   STEP: 1,
 };
 
-interface InterestCalculatorProps {
-  monthlyAmount: number;
-  setMonthlyAmount: (value: number) => void;
-  duration: number;
-  setDuration: (value: number) => void;
-  basicRate: number;
-  maxRate: number;
-}
-
-export const InterestCalculator = ({
-  monthlyAmount,
-  setMonthlyAmount,
-  duration,
-  setDuration,
-  basicRate,
-  maxRate,
-}: InterestCalculatorProps) => {
-  const [currentRate, setCurrentRate] = useState<number>(basicRate);
+export const InterestCalculator = () => {
+  const {
+    monthlyAmount,
+    setMonthlyAmount,
+    duration,
+    setDuration,
+    currentRate,
+    setCurrentRate,
+    estimatedInterest,
+    basicRate,
+    maxRate,
+  } = useInterestCalculator();
 
   const [isAmountSheetOpen, setIsAmountSheetOpen] = useState(false);
   const [isDurationSheetOpen, setIsDurationSheetOpen] = useState(false);
-
-  // 이자 계산 공식 (단리)
-  const estimatedInterest = Math.floor(monthlyAmount * ((duration * (duration + 1)) / 2) * (currentRate / 100 / 12));
 
   const buttonStyle = 'h-auto px-[8px] py-[4px]';
 

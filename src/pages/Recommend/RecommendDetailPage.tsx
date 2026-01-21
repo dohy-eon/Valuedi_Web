@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { Typography } from '@/components/typography';
@@ -16,9 +15,6 @@ export const RecommendDetailPage = () => {
   const navigate = useNavigate();
 
   const { productInfo, preferentialRates, productDetailInfo } = useGetRecommendDetail();
-
-  const [monthlyAmount, setMonthlyAmount] = useState(400000);
-  const [duration, setDuration] = useState(12);
 
   const targetBank = BANNER.find((bank) => bank.id === productInfo.bankId);
   const backgroundColor = targetBank ? getColorToken(targetBank.color) : getColorToken('neutral-10');
@@ -98,14 +94,8 @@ export const RecommendDetailPage = () => {
           </div>
         </div>
         <div className={cn('h-[8px] bg-neutral-10 mx-[-20px]')} />
-        <InterestCalculator
-          monthlyAmount={monthlyAmount}
-          setMonthlyAmount={setMonthlyAmount}
-          duration={duration}
-          setDuration={setDuration}
-          basicRate={productInfo.basicRate}
-          maxRate={productInfo.maxRate}
-        />
+
+        <InterestCalculator />
 
         <InterestRateList items={preferentialRates} />
 
