@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import GoalGNB from '@/components/goal/GoalGNB';
 import { BottomNavigation } from '@/components/gnb/BottomNavigation';
 import DropDown from '@/assets/icons/goal/Dropdown.svg';
-import GoalCard from '@/components/goal/GoalCard';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
+import GoalCard from '@/components/goal/GoalCard';
 
 /* 목데이터 */
 const mockGoals = [
@@ -13,8 +14,10 @@ const mockGoals = [
   { id: 4, bankIcon: ExBank, title: '목표진행입니다', progress: 32, targetAmount: 10000000, remainingDays: 91 },
   { id: 5, bankIcon: ExBank, title: '목표진행입니다', progress: 32, targetAmount: 10000000, remainingDays: 91 },
 ];
-export const PastGoalPage = () => {
+
+export const CurrentGoalPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-gray-50">
@@ -24,6 +27,20 @@ export const PastGoalPage = () => {
 
       <main className="flex-1 pb-24">
         <div className="flex flex-col gap-5 p-5">
+          {/* 목표 추가 버튼 */}
+          <div
+            onClick={() => navigate('/goal/create')}
+            className="flex items-center gap-4 p-6 transition-colors bg-white shadow-sm cursor-pointer rounded-2xl active:bg-gray-50"
+          >
+            <div className="flex items-center justify-center w-12 h-12 text-gray-400 border border-gray-200 rounded-full">
+              <span className="text-3xl font-light">+</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm text-gray-400">또 다른 목표가 있나요?</span>
+              <span className="text-lg font-bold text-gray-900">목표 추가하기</span>
+            </div>
+          </div>
+
           {/* 정렬 필터 UI */}
           <div className="flex items-center gap-2 px-1 text-[13px] font-medium">
             <button
@@ -41,15 +58,15 @@ export const PastGoalPage = () => {
             </button>
           </div>
 
-          {/* Goal 리스트: type="past" 적용 */}
+          {/* Goal 리스트 */}
           <div className="flex flex-col gap-4">
             {mockGoals.map((goal) => (
-              <GoalCard key={goal.id} goal={goal} type="past" />
+              <GoalCard key={goal.id} goal={goal} type="current" />
             ))}
           </div>
 
           <button className="flex items-center justify-center gap-1 py-6 text-sm font-medium text-gray-400 transition-opacity active:opacity-50">
-            지난 목록 더 보기
+            목록 더 보기
             <img src={DropDown} alt="dropdown" className="w-4 h-4 opacity-40" />
           </button>
         </div>
