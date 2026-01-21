@@ -6,7 +6,7 @@ const GoalGNB = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // paths 객체를 활용한 활성화 상태 체크 (오타 방지)
+  // paths 객체를 활용한 활성화 상태 체크
   const isCurrentActive = location.pathname === paths.goal.current || location.pathname === '/goal';
   const isPastActive = location.pathname === paths.goal.past;
 

@@ -5,7 +5,7 @@ import ExBank from '@/assets/icons/goal/ExBank.svg';
 import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
 import { paths } from '@/router/Router';
-
+import { MobileLayout } from '@/components/layout/MobileLayout';
 interface TransactionItem {
   id: number;
   type: string;
@@ -92,6 +92,7 @@ const AmountAchievedPage = () => {
   };
 
   return (
+    <MobileLayout>
     <div className="relative flex flex-col w-full min-h-screen bg-white">
       {/* 헤더 및 탭 섹션 */}
       <div className="sticky top-0 z-20 bg-white">
@@ -178,6 +179,7 @@ const AmountAchievedPage = () => {
 
       <GoalBottomSheet isOpen={isSheetOpen} item={selectedItem} onClose={() => setIsSheetOpen(false)} />
     </div>
+    </MobileLayout>
   );
 };
 

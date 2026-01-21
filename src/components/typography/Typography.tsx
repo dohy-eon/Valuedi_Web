@@ -152,6 +152,13 @@ const colorTokenToClass: Record<ColorToken, string> = {
   'status-abled': 'text-status-abled',
   // Line colors
   'line-900': 'text-line-900',
+  'bank-plus': '',
+  'bank-kb': '',
+  'bank-citi': '',
+  'bank-kbank': '',
+  'bank-saemaul': '',
+  'bank-ibk': '',
+  'bank-gwangju_jeonbuk': ''
 };
 
 /**
