@@ -32,7 +32,7 @@ import {
   CardAdditionalConnectionPage,
 } from '@/pages/Card';
 import { AssetAccountDetailPage } from '@/pages/Asset/tab/AssetDetails/AssetAccountDetailPage';
-import { MbtiPage } from '@/features/mbti/MbtiPage';
+import { MbtiPage } from '@/pages/Mbti/MbtiPage';
 
 export const paths = {
   goal: {
