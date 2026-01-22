@@ -47,11 +47,15 @@ export const SectorSummarySection = ({
     <section className="px-5 pt-5 pb-5 bg-white flex flex-col items-start">
       {/* 📅 날짜 선택 */}
       <div className="flex items-center gap-1 mb-4">
-        <button onClick={onPrev} className="text-neutral-40 px-1 text-xl">◀</button>
+        <button onClick={onPrev} className="text-neutral-40 px-1 text-xl">
+          ◀
+        </button>
         <Typography variant="body-1" weight="bold" color="neutral-90">
           {monthDisplay}
         </Typography>
-        <button onClick={onNext} className="text-neutral-40 px-1 text-xl">▶</button>
+        <button onClick={onNext} className="text-neutral-40 px-1 text-xl">
+          ▶
+        </button>
       </div>
 
       {/* 💰 이번 달 총 지출 금액 섹션 */}
@@ -82,11 +86,7 @@ export const SectorSummarySection = ({
       {/* 📊 차트 섹션 */}
       <div className="w-full flex justify-center mb-0">
         {/* 💡 5. 로딩 중일 때는 차트 대신 아까 만든 차트 스켈레톤 표시! */}
-        {isLoading ? (
-          <SectorChartSkeleton />
-        ) : (
-          <SectorChart data={chartData} />
-        )}
+        {isLoading ? <SectorChartSkeleton /> : <SectorChart data={chartData} />}
       </div>
     </section>
   );

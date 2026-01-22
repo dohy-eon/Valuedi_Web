@@ -50,7 +50,7 @@ export const HistoryCompareSection = ({ isLoading = false }: HistoryCompareSecti
             <CompareBarSkeleton />
             <CompareBarSkeleton />
             <CompareBarSkeleton />
-            <CompareBarSkeleton/>
+            <CompareBarSkeleton />
           </>
         ) : (
           <>

@@ -19,17 +19,16 @@ export const CompareAnalysis = () => {
   return (
     <MobileLayout className="bg-neutral-0 shadow-none">
       <div className="flex flex-col min-h-screen bg-neutral-0">
-        
         {/* 1. 또래별 비교 섹션 */}
-        <PeerCompareSection isLoading={isLoading} /> 
+        <PeerCompareSection isLoading={isLoading} />
 
         <div className="h-2 bg-neutral-5" />
-        
+
         {/* 2. 카테고리별 비교 섹션 */}
         <CategoryCompareSection isLoading={isLoading} />
 
         <div className="h-2 bg-neutral-5" />
-        
+
         {/* 3. 소비내역 비교 섹션 */}
         <HistoryCompareSection isLoading={isLoading} />
       </div>

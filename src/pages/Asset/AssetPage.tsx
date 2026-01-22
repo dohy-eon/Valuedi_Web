@@ -9,8 +9,12 @@ export const AssetPage = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation(); // 💡 현재 주소를 가져옵니다.
 
-  // 💡 현재 주소에 따라 활성화된 탭을 판별합니다.
   const activeTab = pathname.includes('/sector') ? 'sector' : pathname.includes('/compare') ? 'compare' : 'details';
+
+  const handleTabClick = (tab: 'details' | 'sector' | 'compare') => {
+    if (tab === 'details') navigate('/asset');
+    else navigate(`/asset/${tab}`);
+  };
 
   const handleNavClick = (item: 'home' | 'asset' | 'recommend' | 'goal') => {
     navigate(`/${item}`);
