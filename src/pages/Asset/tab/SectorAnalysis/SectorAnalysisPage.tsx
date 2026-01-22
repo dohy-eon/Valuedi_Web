@@ -60,6 +60,7 @@ export const SectorAnalysis = () => {
         <SectorListSection 
           data={sectorData} 
           isLoading={isLoading} // 💡 isLoading 전달!
+          selectedDate={selectedDate}
         />
       </div>
     </MobileLayout>

@@ -7,11 +7,13 @@ import { Skeleton } from '@/components/skeleton/Skeleton'; // 💡 1. 스켈레�
 interface SectorListSectionProps {
   data: SectorData[];
   isLoading?: boolean;
+  selectedDate: Date;
 }
 
 export const SectorListSection = ({ 
   data, 
-  isLoading = false // 💡 3. props에서 꺼내기
+  isLoading = false, // 💡 3. props에서 꺼내기
+  selectedDate
 }: SectorListSectionProps) => {
   const navigate = useNavigate();
 
@@ -47,7 +49,7 @@ export const SectorListSection = ({
                 data={{ ...item, percentage: Math.floor(item.percentage) }}
                 label={CATEGORY_LABELS[item.key] || CATEGORY_LABELS.default}
                 onClick={() => {
-                  navigate(`/asset/sector/${item.key}`, { state: { sectorData: item } });
+                  navigate(`/asset/sector/${item.key}`, { state: { sectorData: item, selectedDate: selectedDate.toISOString() } });
                 }}
               />
             ))}
@@ -63,7 +65,7 @@ export const SectorListSection = ({
                   items: [],
                 }}
                 label={`그외 ${otherCount}개`}
-                onClick={() => navigate('/asset/sector-full', { state: { filter: 'others' } })}
+                onClick={() => navigate('/asset/sector-full', { state: { filter: 'others', selectedDate: selectedDate.toISOString() } })}
               />
             )}
           </>

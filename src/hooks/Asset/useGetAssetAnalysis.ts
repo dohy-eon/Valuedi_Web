@@ -35,14 +35,20 @@ export const useGetAssetAnalysis = (selectedDate: Date = new Date()) => {
 
   // 💡 4. 상세 정보를 포함한 트랜잭션 데이터 가공
   const mockTransactions = useMemo((): TransactionWithDetails[] => {
+    // 임시 시작 잔액
+    let tempBalance = 5230450;
     return filteredData.map((item) => {
       const simpleType = item.sub.includes('|') ? item.sub.split('|')[1].trim() : item.sub;
+      const currentBalance = tempBalance;
+      tempBalance -= item.amount; // 다음 아이템을 위해 역산 (리스트가 최신순일 경우)
+      
       return {
         ...item,
         displayDetails: [
           { label: '거래시간', value: `${item.date.replace(/-/g, '.')} 18:44:44` },
           { label: '거래구분', value: simpleType },
           { label: '거래금액', value: `${Math.abs(item.amount).toLocaleString()}원`, isBold: true },
+          { label: '거래 후 잔액', value: `${currentBalance.toLocaleString()}원` },
           { label: '입금계좌', value: accountDisplay },
         ],
       };

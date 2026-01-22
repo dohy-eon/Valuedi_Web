@@ -23,7 +23,7 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
       onClick={onClose}
     >
       <div
-        className="w-[360px] h-[479px] bg-white rounded-t-xl flex flex-col shadow-2xl relative animate-slide-up"
+        className="w-[360px] h-auto bg-white rounded-t-xl flex flex-col shadow-2xl relative animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 상단 핸들 바 */}
@@ -31,7 +31,7 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
           <div className="w-10 h-1 bg-neutral-20 rounded-full mx-auto" />
         </div>
 
-        <div className="w-80 mx-auto flex-1 flex flex-col">
+        <div className="w-80 mx-auto flex flex-col justify-center">
           {/* 제목 영역 */}
           <Typography
             variant="body-1"
@@ -44,7 +44,7 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
           </Typography>
 
           {/* 메모 입력창 */}
-          <div className="relative mb-7">
+          <div className="relative mb-8">
             <input
               type="text"
               placeholder="메모를 남겨주세요 (최대 20자)"
@@ -62,7 +62,7 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
           </div>
 
           {/* 상세 정보 리스트 */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
             {/* 💡 any를 제거하고 정확한 타입을 매핑합니다. */}
             {item.displayDetails?.map((detail: TransactionDetail, index: number) => (
               <div key={index} className="flex justify-between items-center">

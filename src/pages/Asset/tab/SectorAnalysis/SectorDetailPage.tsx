@@ -24,7 +24,9 @@ export const SectorDetailPage = () => {
   const { categoryKey } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const now = new Date(); // 💡 데이터 기준 날짜 (2026년 1월 기준)
+  const selectedDate = location.state?.selectedDate ? new Date(location.state.selectedDate) : new Date();
+
+  const { transactions, totalExpense } = useGetAssetAnalysis(selectedDate);
 
   // 1. 상세 모달 상태
   const [selectedItem, setSelectedItem] = useState<TransactionWithDetails | null>(null);
@@ -34,9 +36,6 @@ export const SectorDetailPage = () => {
    * 부모 페이지에서 넘겨준 state가 있으면 우선 사용하고, 없으면 직접 훅으로 가져옵니다. ㅋ
    */
   const stateData = location.state?.sectorData as SectorData | undefined;
-
-  // 💡 훅 호출 시 현재 날짜(now)를 명시적으로 전달하여 데이터 일관성 유지
-  const { transactions, totalExpense } = useGetAssetAnalysis(now);
 
   const selectedCategory =
     stateData || transformToCategoryGroups(transactions, totalExpense).find((s) => s.key === categoryKey);
@@ -58,7 +57,12 @@ export const SectorDetailPage = () => {
         <div className="sticky top-0 z-10 w-full bg-white border-b border-neutral-5">
           <BackPageGNB
             title="세부내역"
-            onBack={() => navigate(-1)}
+            onBack={() => {
+            navigate('/asset/sector', { 
+              state: { selectedDate: selectedDate.toISOString() },
+              replace: true // 히스토리가 중복으로 쌓이지 않게 교체
+              });
+            }}
             text=""
             className="bg-white"
             titleColor="text-neutral-90"
@@ -73,7 +77,7 @@ export const SectorDetailPage = () => {
           <div className="flex flex-col gap-[4px]">
             <Typography variant="caption-1" className="text-neutral-70">
               {/* 💡 하드코딩 대신 동적 월 노출 (예: 1월) */}
-              {now.getMonth() + 1}월 {label} 총 금액
+              {selectedDate.getMonth() + 1}월 {label} 총 금액
             </Typography>
             <Typography variant="headline-1" weight="bold" className="text-neutral-90">
               {formatCurrency(totalAmount)}
