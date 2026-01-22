@@ -51,7 +51,7 @@ export const SectorListItem = ({ data, label, onClick }: SectorListItemProps) =>
           {/* 퍼센트가 0보다 클 때만 노출 (소수점 없이 정수형) */}
           {data.percentage > 0 && (
             <Typography variant="caption-1" color="neutral-40">
-              {Math.floor(data.percentage)}% {/* 💡 여기서도 한 번 더 안전하게 처리 ㅋ */}
+              {Math.floor(data.percentage)}% {/* 💡 여기서도 한 번 더 안전하게 처리 */}
             </Typography>
           )}
         </div>

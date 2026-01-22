@@ -38,7 +38,7 @@ export const transformToCategoryGroups = (
     // 지출(expense) 데이터만 합산 로직에 포함
     if (item.type !== 'expense') return acc;
 
-    const cat = item.category || 'others'; // 카테고리 없으면 '그외'로 분류 ㅋ
+    const cat = item.category || 'others'; // 카테고리 없으면 '그외'로 분류
 
     if (!acc[cat]) {
       acc[cat] = {
@@ -64,7 +64,7 @@ export const transformToCategoryGroups = (
         // 💡 가로 막대 차트의 정밀한 너비를 위해 소수점까지 유지 (Math.round 제외)
         percentage: totalExpense > 0 ? (sector.amount / totalExpense) * 100 : 0,
       }))
-      // 금액이 큰 순서대로 정렬 (차트와 리스트가 시각적으로 안정감 있게 보임 ㅋ)
+      // 금액이 큰 순서대로 정렬 (차트와 리스트가 시각적으로 안정감 있게 보임)
       .sort((a, b) => b.amount - a.amount)
   );
 };

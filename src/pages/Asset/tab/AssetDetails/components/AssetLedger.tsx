@@ -1,14 +1,5 @@
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components/typography';
-<<<<<<< HEAD
-
-export const AssetLedger = () => {
-  return (
-    <div className={cn('flex flex-col items-center justify-center h-[300px] px-[20px]')}>
-      <Typography style="text-body-1-16-semi-bold" className="text-neutral-90 mb-[8px]">
-        가계부 페이지 준비 중
-      </Typography>
-=======
 import { formatCurrency } from '@/utils/formatCurrency';
 import PolygonButtonIcon from '@/assets/icons/asset/PolygonButton.svg?react';
 import { ViewToggleButton } from '@/components/buttons';
@@ -87,7 +78,6 @@ export const AssetLedger = () => {
       </div>
 
       {viewMode === 'list' ? <LedgerList /> : <LedgerCalendar />}
->>>>>>> origin/main
     </div>
   );
 };

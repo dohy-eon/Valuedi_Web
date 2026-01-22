@@ -43,25 +43,15 @@ export const CurrentGoalPage = () => {
 
           {/* 정렬 필터 UI */}
           <div className="flex items-center gap-2 px-1 text-[13px] font-medium">
-<<<<<<< HEAD
             <button
               onClick={() => setSortBy('latest')}
-=======
-            <button 
-              onClick={() => setSortBy('latest')} 
->>>>>>> origin/main
               className={`transition-colors ${sortBy === 'latest' ? 'text-gray-900' : 'text-gray-400'}`}
             >
               최신순
             </button>
             <span className="text-gray-200">·</span>
-<<<<<<< HEAD
             <button
               onClick={() => setSortBy('achieve')}
-=======
-            <button 
-              onClick={() => setSortBy('achieve')} 
->>>>>>> origin/main
               className={`transition-colors ${sortBy === 'achieve' ? 'text-gray-900' : 'text-gray-400'}`}
             >
               달성순

@@ -35,7 +35,7 @@ export const SectorFullListPage = () => {
             text=""
             titleColor="text-neutral-90"
             title={title}
-            onBack={() => navigate('/asset/sector', { state: { selectedDate } })} // 💡 단순 -1 이동이 더 안전합니다 ㅋ
+            onBack={() => navigate('/asset/sector', { state: { selectedDate } })} // 💡 단순 -1 이동이 더 안전합니다
           />
         </div>
 
@@ -46,7 +46,7 @@ export const SectorFullListPage = () => {
 
             return (
               <SectorListItem
-                key={categoryKey} // 💡 index 없이 key만으로 유니크하게 설정 ㅋ
+                key={categoryKey} // 💡 index 없이 key만으로 유니크하게 설정
                 data={item}
                 label={CATEGORY_LABELS[categoryKey] || CATEGORY_LABELS.default}
                 onClick={() => {

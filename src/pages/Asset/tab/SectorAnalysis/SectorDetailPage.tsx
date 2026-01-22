@@ -24,13 +24,13 @@ export const SectorDetailPage = () => {
   const { categoryKey } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-const selectedDate = location.state?.selectedDate ? new Date(location.state.selectedDate) : new Date();
+  const selectedDate = location.state?.selectedDate ? new Date(location.state.selectedDate) : new Date();
   // 1. 상세 모달 상태
   const [selectedItem, setSelectedItem] = useState<TransactionWithDetails | null>(null);
 
   /**
    * 2. 데이터 로드 로직
-   * 부모 페이지에서 넘겨준 state가 있으면 우선 사용하고, 없으면 직접 훅으로 가져옵니다. ㅋ
+   * 부모 페이지에서 넘겨준 state가 있으면 우선 사용하고, 없으면 직접 훅으로 가져옵니다.
    */
   const stateData = location.state?.sectorData as SectorData | undefined;
 
@@ -40,7 +40,7 @@ const selectedDate = location.state?.selectedDate ? new Date(location.state.sele
   const selectedCategory =
     stateData || transformToCategoryGroups(transactions, totalExpense).find((s) => s.key === categoryKey);
 
-  // 데이터가 없으면 안전하게 차단 ㅋ
+  // 데이터가 없으면 안전하게 차단
   if (!selectedCategory || !selectedCategory.items) return null;
 
   const { key, amount: totalAmount, items } = selectedCategory;
@@ -69,7 +69,7 @@ const selectedDate = location.state?.selectedDate ? new Date(location.state.sele
           />
         </div>
 
-        {/* 요약 카드: 카테고리별 테마 컬러(bgColor) 적용 ㅋ */}
+        {/* 요약 카드: 카테고리별 테마 컬러(bgColor) 적용 */}
         <div className={cn('flex flex-col p-[20px] w-full h-[134px] gap-[12px]', style.bgColor)}>
           <div className="w-8 h-8 rounded-lg flex items-center justify-center">
             <img src={style.icon} alt={label} className="w-8 h-8 object-contain" />
@@ -97,7 +97,7 @@ const selectedDate = location.state?.selectedDate ? new Date(location.state.sele
                 {/* 날짜 구분선 헤더 */}
                 <AssetDailyHeader date={group.date} dailyTotal={group.dailyTotal} />
 
-                {/* 해당 날짜의 지출 아이템들 ㅋ */}
+                {/* 해당 날짜의 지출 아이템들 */}
                 <div className="flex flex-col gap-[8px] mt-[8px]">
                   {group.items.map((item: TransactionWithDetails) => (
                     <div

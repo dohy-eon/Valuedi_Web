@@ -50,11 +50,9 @@ export const HistoryCompareSection = ({ isLoading = false }: HistoryCompareSecti
             <CompareBarSkeleton />
             <CompareBarSkeleton />
             <CompareBarSkeleton />
-            <CompareBarSkeleton />
           </>
         ) : (
           <>
-            <CompareBar label="10월" amount={totalOct} maxAmount={maxAmount * 1.2} />
             <CompareBar label="11월" amount={totalNov} maxAmount={maxAmount * 1.2} />
             <CompareBar label="12월" amount={totalDec} maxAmount={maxAmount * 1.2} />
             <CompareBar label="이번 달" amount={totalJan} isHighlight={true} maxAmount={maxAmount * 1.2} />

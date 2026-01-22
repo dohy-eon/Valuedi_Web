@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import { useState } from 'react';
->>>>>>> origin/main
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components/typography';
 import { formatCurrency } from '@/utils/formatCurrency';
@@ -11,20 +8,8 @@ import CardPlusIcon from '@/assets/icons/asset/CardPlus.svg';
 import { MoreViewButton } from '@/components/buttons';
 import { useNavigate } from 'react-router-dom';
 import { ColorToken, getColorToken } from '@/styles/design-system';
-<<<<<<< HEAD
-
-interface AccountData {
-  id: number;
-  name: string;
-  amount: number;
-  bankName?: string;
-  cardName?: string;
-  iconBg: ColorToken;
-}
-=======
 import CheckDownIcon from '@/assets/icons/CheckDown.svg?react';
 import { useGetAssetList } from '@/hooks/Asset/useGetAssetList';
->>>>>>> origin/main
 
 const BankIcon = ({ bgColor }: { bgColor: ColorToken }) => (
   <div
@@ -46,30 +31,10 @@ const CardIcon = ({ bgColor }: { bgColor: ColorToken }) => (
 
 export const AssetList = () => {
   const navigate = useNavigate();
-<<<<<<< HEAD
-
-  const bankAccounts: AccountData[] = [
-    { id: 1, name: 'KB국민ONE통장', amount: 11125023, bankName: 'KB국민은행', iconBg: 'bank-kb' },
-    { id: 2, name: 'KB국민ONE통장', amount: 11125023, bankName: '새마을은행', iconBg: 'bank-saemaul' },
-    { id: 3, name: 'KB국민ONE통장', amount: 11125023, bankName: 'Kbank은행', iconBg: 'bank-kbank' },
-    { id: 4, name: 'KB국민ONE통장', amount: 11125023, bankName: '씨티은행', iconBg: 'bank-citi' },
-    { id: 5, name: 'KB국민ONE통장', amount: 11125023, bankName: '은행나무은행', iconBg: 'bank-plus' },
-  ];
-
-  const cardAccounts: AccountData[] = [
-    { id: 1, name: 'KB국민ONE카드', amount: 11125023, cardName: 'KB국민카드', iconBg: 'bank-kb' },
-    { id: 2, name: 'KB국민ONE카드', amount: 11125023, cardName: '전북카드', iconBg: 'bank-gwangju_jeonbuk' },
-    { id: 3, name: 'KB국민ONE카드', amount: 11125023, cardName: '새마을카드', iconBg: 'bank-saemaul' },
-    { id: 4, name: 'KB국민ONE카드', amount: 11125023, cardName: 'ibk카드', iconBg: 'bank-ibk' },
-  ];
-
-  const totalAsset = 526387;
-=======
   const { bankAccounts, cardAccounts, totalAsset } = useGetAssetList();
 
   const [isBankExpanded, setIsBankExpanded] = useState(false);
   const [isCardExpanded, setIsCardExpanded] = useState(false);
->>>>>>> origin/main
 
   return (
     <div className={cn('flex flex-col gap-[8px] px-[20px] mt-[20px] ')}>
@@ -84,20 +49,12 @@ export const AssetList = () => {
         </div>
       </div>
 
-<<<<<<< HEAD
-      {/* 은행 리스트 */}
-=======
->>>>>>> origin/main
       <div className={cn('flex flex-col rounded-[8px] px-[12px] py-[16px] gap-[16px]')}>
         <Typography style="text-body-2-14-regular" className="text-neutral-70">
           연결된 은행
         </Typography>
         <div className={cn('flex flex-col gap-[8px]')}>
-<<<<<<< HEAD
-          {bankAccounts.slice(0, 4).map((account) => (
-=======
           {(isBankExpanded ? bankAccounts : bankAccounts.slice(0, 4)).map((account) => (
->>>>>>> origin/main
             <div key={account.id} className={cn('flex items-center justify-between py-[8px]')}>
               <div className={cn('flex items-center gap-[8px]')}>
                 <BankIcon bgColor={account.iconBg} />
@@ -116,20 +73,6 @@ export const AssetList = () => {
             </div>
           ))}
         </div>
-<<<<<<< HEAD
-        <button
-          className={cn(
-            'w-full border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]'
-          )}
-        >
-          <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center">
-            {`은행 ${bankAccounts.length}개 전체보기`}
-          </Typography>
-        </button>
-      </div>
-
-      {/* 카드 리스트 */}
-=======
 
         <button
           onClick={() => setIsBankExpanded(!isBankExpanded)}
@@ -144,17 +87,12 @@ export const AssetList = () => {
         </button>
       </div>
 
->>>>>>> origin/main
       <div className={cn('flex flex-col rounded-[8px] px-[12px] py-[16px] gap-[16px]')}>
         <Typography style="text-body-2-14-regular" className="text-neutral-70">
           연결된 카드
         </Typography>
         <div className={cn('flex flex-col gap-[8px]')}>
-<<<<<<< HEAD
-          {cardAccounts.slice(0, 4).map((card) => (
-=======
           {(isCardExpanded ? cardAccounts : cardAccounts.slice(0, 4)).map((card) => (
->>>>>>> origin/main
             <div key={card.id} className={cn('flex items-center justify-between py-[8px]')}>
               <div className={cn('flex items-center gap-[8px]')}>
                 <CardIcon bgColor={card.iconBg} />
@@ -173,16 +111,6 @@ export const AssetList = () => {
             </div>
           ))}
         </div>
-<<<<<<< HEAD
-        <button
-          className={cn(
-            'w-full border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]'
-          )}
-        >
-          <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center">
-            {`카드 ${cardAccounts.length}개 전체보기`}
-          </Typography>
-=======
 
         <button
           onClick={() => setIsCardExpanded(!isCardExpanded)}
@@ -194,7 +122,6 @@ export const AssetList = () => {
             {isCardExpanded ? '카드 목록 접기' : '카드 목록 더보기'}
           </Typography>
           <CheckDownIcon className={cn('text-neutral-70', isCardExpanded && 'rotate-180')} />
->>>>>>> origin/main
         </button>
       </div>
 

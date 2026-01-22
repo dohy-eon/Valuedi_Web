@@ -13,8 +13,7 @@ export const AssetPage = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation(); // 💡 현재 주소를 가져옵니다.
 
-const activeTab = pathname.includes('/sector') ? 'sector' : 
-                    pathname.includes('/compare') ? 'compare' : 'details';
+  const activeTab = pathname.includes('/sector') ? 'sector' : pathname.includes('/compare') ? 'compare' : 'details';
 
   const handleTabClick = (tab: 'details' | 'sector' | 'compare') => {
     if (tab === 'details') navigate('/asset');

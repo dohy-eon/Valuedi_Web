@@ -1,7 +1,5 @@
 import { ColorToken } from '@/styles/design-system';
 
-<<<<<<< HEAD
-=======
 export interface AccountData {
   id: number;
   name: string;
@@ -11,7 +9,6 @@ export interface AccountData {
   iconBg: ColorToken;
 }
 
->>>>>>> origin/main
 export interface AccountInfo {
   bankName: string;
   accountNumber: string;

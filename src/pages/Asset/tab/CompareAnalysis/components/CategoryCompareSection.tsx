@@ -10,11 +10,11 @@ import { CompareBarSkeleton } from './CompareBarSkeleton'; // 💡 2. 추가
 
 const DISPLAY_NAMES: Record<string, string> = {
   traffic: '교통',
-  transfer: '금융',
   food: '식비',
   living: '주거/통신',
   shopping: '쇼핑',
   leisure: '문화생활',
+  transfer: '이체',
 };
 
 const TARGET_CATEGORIES = Object.keys(DISPLAY_NAMES);
