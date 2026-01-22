@@ -12,6 +12,9 @@ export const useGetAccountDetail = () => {
   const mockHistory: TransactionGroup[] = [
     {
       date: '19일 오늘',
+      day: 19,
+      totalIncome: 0,
+      totalExpense: 45500,
       dailyTotal: -45500,
       items: [
         { id: 1, title: '스타벅스 사당점', sub: '식비 | 체크카드', amount: -4500, type: 'expense', category: 'food' },
@@ -29,7 +32,10 @@ export const useGetAccountDetail = () => {
     },
     {
       date: '18일 어제',
+      day: 18,
       dailyTotal: 2457000,
+      totalIncome: 2500000,
+      totalExpense: 43000,
       items: [
         {
           id: 6,
@@ -59,7 +65,10 @@ export const useGetAccountDetail = () => {
     },
     {
       date: '17일 금요일',
+      day: 17,
       dailyTotal: -60550,
+      totalIncome: 350,
+      totalExpense: 60900,
       items: [
         {
           id: 10,

@@ -1,5 +1,14 @@
 import { ColorToken } from '@/styles/design-system';
 
+export interface AccountData {
+  id: number;
+  name: string;
+  amount: number;
+  bankName?: string;
+  cardName?: string;
+  iconBg: ColorToken;
+}
+
 export interface AccountInfo {
   bankName: string;
   accountNumber: string;
@@ -18,6 +27,9 @@ export interface TransactionItem {
 
 export interface TransactionGroup {
   date: string;
+  day: number;
   dailyTotal: number;
+  totalIncome: number;
+  totalExpense: number;
   items: TransactionItem[];
 }

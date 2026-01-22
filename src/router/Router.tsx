@@ -8,7 +8,11 @@ import SplashPage from '@/pages/Splash/SplashPage';
 import OnboardingPage from '@/pages/Onboarding/OnboardingPage';
 import AssetPage from '@/pages/Asset/AssetPage';
 import RecommendPage from '@/pages/Recommend/RecommendPage';
-import GoalPage from '@/pages/Goal/GoalPage';
+import { CurrentGoalPage } from '@/pages/Goal/CurrentGoalPage';
+import { PastGoalPage } from '@/pages/Goal/PastGoalPage';
+import AmountAchievedPage from '@/pages/Goal/AmountAchievedPage';
+import SavingsSimulationPage from '@/pages/Goal/SavingsSimulationPage';
+
 import {
   BankConnectionStartPage,
   BankSelectPage,
@@ -33,6 +37,18 @@ import { SectorFullListPage } from '@/pages/Asset/tab/SectorAnalysis/SectorFullL
 import { AssetDetails } from '@/pages/Asset/tab/AssetDetails/AssetDetailsPage';
 import { SectorAnalysis } from '@/pages/Asset/tab/SectorAnalysis/SectorAnalysisPage';
 import { CompareAnalysis } from '@/pages/Asset/tab/CompareAnalysis/CompareAnalysisPage';
+import { MbtiPage } from '@/features/mbti/MbtiPage';
+
+export const paths = {
+  goal: {
+    current: '/goal/current',
+    past: '/goal/past',
+    amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
+    savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
+    amountAchievedRoute: '/goal/detail/:id/amount-achieved',
+    savingsSimulationRoute: '/goal/detail/:id/savingsimulation',
+  },
+} as const;
 
 export const router = createBrowserRouter([
   {
@@ -50,13 +66,18 @@ export const router = createBrowserRouter([
           { path: 'compare', element: <CompareAnalysis /> }, // /asset/compare (비교)
         ],
       },
+      { path: 'asset', element: <AssetPage /> },
       { path: 'asset/account/:id', element: <AssetAccountDetailPage /> },
       { path: 'recommend', element: <RecommendPage /> },
-      { path: 'goal', element: <GoalPage /> },
+      { path: paths.goal.current, element: <CurrentGoalPage /> },
+      { path: paths.goal.past, element: <PastGoalPage /> },
+      { path: paths.goal.amountAchievedRoute, element: <AmountAchievedPage /> },
+      { path: paths.goal.savingsSimulationRoute, element: <SavingsSimulationPage /> },
       { path: 'login', element: <DefaultLogin /> },
       { path: 'login/form', element: <LoginPage /> },
       { path: 'signup', element: <SignUpPage /> },
       { path: '/signup/email', element: <EmailForm /> },
+      { path: 'mbti', element: <MbtiPage /> },
       { path: 'bank/start', element: <BankConnectionStartPage /> },
       { path: 'bank/select', element: <BankSelectPage /> },
       { path: 'bank/input-id', element: <BankIdInputPage /> },
