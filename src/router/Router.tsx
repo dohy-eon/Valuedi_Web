@@ -45,6 +45,17 @@ export const paths = {
   },
 } as const;
 
+export const paths = {
+  goal: {
+    current: '/goal/current',
+    past: '/goal/past',
+    amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
+    savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
+    amountAchievedRoute: '/goal/detail/:id/amount-achieved',
+    savingsSimulationRoute: '/goal/detail/:id/savingsimulation',
+  },
+} as const;
+
 export const router = createBrowserRouter([
   {
     path: '/',
