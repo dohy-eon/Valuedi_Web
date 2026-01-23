@@ -33,6 +33,9 @@ import {
 } from '@/pages/Card';
 import { AssetAccountDetailPage } from '@/pages/Asset/tab/AssetDetails/AssetAccountDetailPage';
 import { MbtiPage } from '@/features/mbti/MbtiPage';
+import { MenuGNB } from '@/components/mypage/MenuGNB';
+import { SettingsPage } from '@/pages/MyPage/subpages/SettingsPage';
+import { ConnectionPage } from '@/pages/MyPage/subpages/ConnectionPage';
 
 export const paths = {
   goal: {
@@ -45,16 +48,16 @@ export const paths = {
   },
 } as const;
 
-export const paths = {
-  goal: {
-    current: '/goal/current',
-    past: '/goal/past',
-    amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
-    savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
-    amountAchievedRoute: '/goal/detail/:id/amount-achieved',
-    savingsSimulationRoute: '/goal/detail/:id/savingsimulation',
-  },
-} as const;
+// export const paths = {
+//   goal: {
+//     current: '/goal/current',
+//     past: '/goal/past',
+//     amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
+//     savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
+//     amountAchievedRoute: '/goal/detail/:id/amount-achieved',
+//     savingsSimulationRoute: '/goal/detail/:id/savingsimulation',
+//   },
+// } as const;
 
 export const router = createBrowserRouter([
   {
@@ -89,6 +92,14 @@ export const router = createBrowserRouter([
       { path: 'card/connecting', element: <CardConnectingPage /> },
       { path: 'card/connected', element: <CardConnectedPage /> },
       { path: 'card/additional', element: <CardAdditionalConnectionPage /> },
+      { path: 'menu', element: <MenuGNB />},
+      {
+        path: 'mypage',
+        children: [
+          { path: 'settings', element: <SettingsPage /> },
+          { path: 'connection', element: <ConnectionPage /> },
+        ]
+      }
     ],
   },
 ]);
