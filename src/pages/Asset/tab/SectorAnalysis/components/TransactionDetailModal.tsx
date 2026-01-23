@@ -15,8 +15,8 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
   if (!item) return null;
 
   return (
-    <BottomSheet 
-      isOpen={!!item} 
+    <BottomSheet
+      isOpen={!!item}
       onClose={onClose}
       // title={} 💡 필요하다면 여기에 "상세 내역" 같은 타이틀을 넣으세요!
     >

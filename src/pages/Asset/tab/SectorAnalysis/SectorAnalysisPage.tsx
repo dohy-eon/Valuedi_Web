@@ -8,7 +8,7 @@ import { transformToCategoryGroups } from './utils/sectorUtils';
 
 export const SectorAnalysis = () => {
   const location = useLocation();
-    
+
   // 선택된 날짜 상태 관리
   const [selectedDate, setSelectedDate] = useState<Date>(
     location.state?.selectedDate ? new Date(location.state.selectedDate) : new Date()
@@ -25,8 +25,8 @@ export const SectorAnalysis = () => {
   const sectorData = transformToCategoryGroups(transactions, totalExpense);
 
   // 💡 2. 지난달 데이터 가져오기 (지출 차액 계산용)
-  const lastMonthDate = useMemo(() => 
-    new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1), 
+  const lastMonthDate = useMemo(
+    () => new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1),
     [selectedDate]
   );
   const { totalExpense: lastMonthTotal } = useGetAssetAnalysis(lastMonthDate);
@@ -54,11 +54,11 @@ export const SectorAnalysis = () => {
           isMore={isMore}
           isLoading={isLoading} // 💡 isLoading 전달!
         />
-        
+
         {/* 하단 리스트 섹션 (지출 상세) */}
         {/* 💡 SectorListSection 내부 인터페이스에 isLoading? 추가하셔야 빨간줄 사라져요! */}
-        <SectorListSection 
-          data={sectorData} 
+        <SectorListSection
+          data={sectorData}
           isLoading={isLoading} // 💡 isLoading 전달!
           selectedDate={selectedDate}
         />

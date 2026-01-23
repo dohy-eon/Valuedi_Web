@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { HomeGNB } from '@/components/gnb/HomeGNB';
 import { BottomNavigation } from '@/components/gnb/BottomNavigation';
@@ -14,8 +13,7 @@ export const AssetPage = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const activeTab = pathname.includes('/sector') ? 'sector' : 
-                    pathname.includes('/compare') ? 'compare' : 'details';
+  const activeTab = pathname.includes('/sector') ? 'sector' : pathname.includes('/compare') ? 'compare' : 'details';
 
   const handleTabClick = (tab: 'details' | 'sector' | 'compare') => {
     if (tab === 'details') navigate('/asset');
@@ -23,20 +21,7 @@ export const AssetPage = () => {
   };
 
   const handleNavClick = (item: 'home' | 'asset' | 'recommend' | 'goal') => {
-    switch (item) {
-      case 'home':
-        navigate('/home');
-        break;
-      case 'asset':
-        navigate('/asset');
-        break;
-      case 'recommend':
-        navigate('/recommend');
-        break;
-      case 'goal':
-        navigate('/goal');
-        break;
-    }
+    navigate(`/${item}`);
   };
 
   return (

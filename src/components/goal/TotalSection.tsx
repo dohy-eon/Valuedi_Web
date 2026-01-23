@@ -21,9 +21,7 @@ const TotalSection = ({ goal }: GoalSummaryProps) => (
         <img src={goal.bankIcon} alt="bank icon" className="w- h-9" />
       </div>
 
-      <div className="text-[15px] text-gray-500 font-semibold whitespace-nowrap">
-        하나카드 | 1213190120-42-12233
-      </div>
+      <div className="text-[15px] text-gray-500 font-semibold whitespace-nowrap">하나카드 | 1213190120-42-12233</div>
     </div>
 
     {/* 달성 게이지 */}

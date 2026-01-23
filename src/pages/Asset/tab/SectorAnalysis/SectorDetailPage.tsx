@@ -58,9 +58,9 @@ export const SectorDetailPage = () => {
           <BackPageGNB
             title="세부내역"
             onBack={() => {
-            navigate('/asset/sector', { 
-              state: { selectedDate: selectedDate.toISOString() },
-              replace: true // 히스토리가 중복으로 쌓이지 않게 교체
+              navigate('/asset/sector', {
+                state: { selectedDate: selectedDate.toISOString() },
+                replace: true, // 히스토리가 중복으로 쌓이지 않게 교체
               });
             }}
             text=""

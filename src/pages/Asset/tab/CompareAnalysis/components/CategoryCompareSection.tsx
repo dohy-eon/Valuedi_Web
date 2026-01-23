@@ -10,11 +10,11 @@ import { CompareBarSkeleton } from './CompareBarSkeleton'; // 💡 2. 추가
 
 const DISPLAY_NAMES: Record<string, string> = {
   traffic: '교통',
-  transfer: '금융',
   food: '식비',
   living: '주거/통신',
   shopping: '쇼핑',
   leisure: '문화생활',
+  transfer: '이체',
 };
 
 const TARGET_CATEGORIES = Object.keys(DISPLAY_NAMES);
@@ -65,30 +65,28 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
         ref={scrollRef}
         className="flex gap-2 mb-10 overflow-x-auto pb-1 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {isLoading ? (
-          // 로딩 중일 땐 칩 모양 스켈레톤 5개 표시 ㅋ
-          Array.from({ length: 5 }).map((_, idx) => (
-            <Skeleton key={idx} className="min-w-[60px] h-8 rounded-full flex-shrink-0" />
-          ))
-        ) : (
-          TARGET_CATEGORIES.map((catKey) => {
-            const isSelected = selectedCategory === catKey;
-            return (
-              <button
-                key={catKey}
-                onClick={(e) => handleCategoryClick(catKey, e)}
-                className={cn(
-                  'px-4 py-1.5 rounded-full text-[12px] whitespace-nowrap transition-all duration-200 h-fit flex items-center justify-center',
-                  isSelected
-                    ? 'bg-atomic-yellow-50 text-neutral-90 font-bold'
-                    : 'bg-neutral-10 text-neutral-70 font-normal'
-                )}
-              >
-                {DISPLAY_NAMES[catKey]}
-              </button>
-            );
-          })
-        )}
+        {isLoading
+          ? // 로딩 중일 땐 칩 모양 스켈레톤 5개 표시
+            Array.from({ length: 5 }).map((_, idx) => (
+              <Skeleton key={idx} className="min-w-[60px] h-8 rounded-full flex-shrink-0" />
+            ))
+          : TARGET_CATEGORIES.map((catKey) => {
+              const isSelected = selectedCategory === catKey;
+              return (
+                <button
+                  key={catKey}
+                  onClick={(e) => handleCategoryClick(catKey, e)}
+                  className={cn(
+                    'px-4 py-1.5 rounded-full text-[12px] whitespace-nowrap transition-all duration-200 h-fit flex items-center justify-center',
+                    isSelected
+                      ? 'bg-atomic-yellow-50 text-neutral-90 font-bold'
+                      : 'bg-neutral-10 text-neutral-70 font-normal'
+                  )}
+                >
+                  {DISPLAY_NAMES[catKey]}
+                </button>
+              );
+            })}
       </div>
 
       {/* 💡 5. 바 차트 영역 로딩 처리 */}
@@ -119,18 +117,32 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
       <div className="bg-neutral-10 rounded-xl p-5 space-y-3">
         {isLoading ? (
           <>
-            <div className="flex justify-between"><Skeleton className="w-16 h-4 rounded" /><Skeleton className="w-24 h-5 rounded" /></div>
-            <div className="flex justify-between"><Skeleton className="w-16 h-4 rounded" /><Skeleton className="w-24 h-5 rounded" /></div>
+            <div className="flex justify-between">
+              <Skeleton className="w-16 h-4 rounded" />
+              <Skeleton className="w-24 h-5 rounded" />
+            </div>
+            <div className="flex justify-between">
+              <Skeleton className="w-16 h-4 rounded" />
+              <Skeleton className="w-24 h-5 rounded" />
+            </div>
           </>
         ) : (
           <>
             <div className="flex justify-between items-center">
-              <Typography variant="body-3" color="neutral-90">내 소비</Typography>
-              <Typography variant="body-2" weight="semi-bold">{formatCurrency(myCategoryTotal)}</Typography>
+              <Typography variant="body-3" color="neutral-90">
+                내 소비
+              </Typography>
+              <Typography variant="body-2" weight="semi-bold">
+                {formatCurrency(myCategoryTotal)}
+              </Typography>
             </div>
             <div className="flex justify-between items-center">
-              <Typography variant="body-3" color="neutral-70">또래 평균</Typography>
-              <Typography variant="body-2" weight="semi-bold">{formatCurrency(peerCategoryTotal)}</Typography>
+              <Typography variant="body-3" color="neutral-70">
+                또래 평균
+              </Typography>
+              <Typography variant="body-2" weight="semi-bold">
+                {formatCurrency(peerCategoryTotal)}
+              </Typography>
             </div>
           </>
         )}
