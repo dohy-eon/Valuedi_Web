@@ -25,9 +25,7 @@ const GoalGNB = () => {
         <button
           onClick={() => navigate(paths.goal.current)}
           className={`flex-1 py-4 text-center text-base transition-all ${
-            isCurrentActive 
-              ? 'font-bold text-gray-900 border-b-2 border-gray-900' 
-              : 'font-medium text-gray-400'
+            isCurrentActive ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-medium text-gray-400'
           }`}
         >
           현재 목표
@@ -35,9 +33,7 @@ const GoalGNB = () => {
         <button
           onClick={() => navigate(paths.goal.past)}
           className={`flex-1 py-4 text-center text-base transition-all ${
-            isPastActive 
-              ? 'font-bold text-gray-900 border-b-2 border-gray-900' 
-              : 'font-medium text-gray-400'
+            isPastActive ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-medium text-gray-400'
           }`}
         >
           지난 목표

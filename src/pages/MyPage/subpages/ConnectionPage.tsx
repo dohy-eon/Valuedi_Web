@@ -81,7 +81,6 @@ export const ConnectionPage = () => {
     </MobileLayout>
   );
 };
-
 const ConnectionSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="flex flex-col py-6">
     <div className="px-5 mb-4">
