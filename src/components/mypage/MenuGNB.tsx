@@ -31,10 +31,10 @@ export const MenuGNB = () => {
       <div className="flex-1 overflow-y-auto pb-10">
         {/* 1. 상단 퀵 메뉴 그리드 */}
         <div className="grid grid-cols-4 gap-y-6 px-5 py-8">
-          <QuickMenuButton label="MBTI" icon={MBTIIcon} onClick={() => navigate('/mbti')} />
+          <QuickMenuButton label="MBTI" icon={MBTIIcon} />
           <QuickMenuButton label="트로피" icon={TrophyIcon} />
           <QuickMenuButton label="가계부" icon={LedgerIcon} />
-          <QuickMenuButton label="연결관리" icon={ConnectionIcon} />
+          <QuickMenuButton label="연결관리" icon={ConnectionIcon} onClick={() => navigate('/mypage/connection')} />
         </div>
 
         {/* 💡 2. 리스트 섹션 영역 시작 */}

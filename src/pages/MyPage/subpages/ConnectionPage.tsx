@@ -1,22 +1,18 @@
-import { useEffect, useRef } from 'react'; // 💡 useRef, useEffect 추가
-import { useLocation, useNavigate } from 'react-router-dom'; // 💡 useLocation 추가
+import { useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import BackPageGNB from '@/components/gnb/BackPageGNB';
 import { Typography } from '@/components/typography';
 import { MoreViewButton } from '@/components/buttons/MoreViewButton';
-import AddIcon from '@/assets/icons/Add.svg';
+import { BANKS } from '@/features/bank/constants/banks';
 
 export const ConnectionPage = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // 💡 현재 위치와 전달받은 state를 가져옴
-
-  // 💡 카드 섹션을 가리킬 "핀"을 만듭니다.
+  const location = useLocation();
   const cardSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 💡 SettingsPage에서 { state: { target: 'card' } }를 보냈을 때만 작동!
     if (location.state?.target === 'card' && cardSectionRef.current) {
-      // 0.1초 정도 아주 살짝 딜레이를 주면 페이지 로드 후 더 확실하게 이동해요 ㅋ
       const timer = setTimeout(() => {
         cardSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
@@ -24,50 +20,68 @@ export const ConnectionPage = () => {
     }
   }, [location]);
 
+  /**
+   * 💡 요청하신 매칭 규칙에 따른 정보 추출 함수
+   */
+  const getBankInfo = (label: string) => {
+    // 1. 아이콘 찾기 (이름 기반)
+    const bank = BANKS.find((b) => label.includes(b.name.replace('은행', '').replace('카드', '')));
+    
+    // 2. 배경색 매핑 규칙 적용
+    const colorMapping: Record<string, string> = {
+      '국민은행': 'kb',
+      'KB국민카드': 'kb',
+      '기업은행': 'ibk',
+      'IBK기업은행': 'ibk',
+      '신한은행': 'kbank',   // 신한 -> kbank 컬러칩
+      '농협은행': 'nh',
+      '우리은행': 'kbank',   // 우리 -> kbank 컬러칩
+      '수협은행': 'suhyup',
+      '하나카드': 'hana',    // 하나 -> hana 컬러칩
+    };
+
+    // 매핑 테이블에 있으면 해당 값을, 없으면 데이터의 id를 우선 사용
+    const colorId = colorMapping[label] || bank?.id;
+
+    return {
+      icon: bank?.icon,
+      bgColor: colorId ? `var(--color-bank-${colorId})` : 'var(--color-neutral-5)'
+    };
+  };
+
   return (
     <MobileLayout className="bg-white flex flex-col h-screen overflow-hidden">
       <BackPageGNB
         title="연결관리"
         onBack={() => navigate(-1)}
-        text={
-          <div className="flex items-center gap-1 cursor-pointer">
-            <img src={AddIcon} alt="추가" />
-            <Typography variant="body-2" className="text-neutral-70">
-              추가하기
-            </Typography>
-          </div>
-        }
+        text=""
         className="bg-white border-b border-neutral-5"
       />
 
       <div className="flex-1 overflow-y-auto pb-[50vh]">
-        {/* 2. 연결된 은행 섹션 */}
+        {/* 연결된 은행 섹션 */}
         <ConnectionSection title="연결된 은행">
-          <ConnectionItem label="국민은행" />
-          <ConnectionItem label="기업은행" />
-          <ConnectionItem label="신한은행" />
-          <ConnectionItem label="농협은행" />
-          <ConnectionItem label="우리은행" />
-          <ConnectionItem label="수협은행" />
+          {['국민은행', '기업은행', '신한은행', '농협은행', '우리은행', '수협은행'].map((name) => {
+            const { icon, bgColor } = getBankInfo(name);
+            return <ConnectionItem key={name} label={name} icon={icon} bgColor={bgColor} />;
+          })}
         </ConnectionSection>
 
-        {/* 💡 3. 연결된 카드 섹션 */}
+        {/* 연결된 카드 섹션 */}
         <div ref={cardSectionRef}>
           <div className="h-2 bg-neutral-10 w-full" />
           <ConnectionSection title="연결된 카드">
-            <ConnectionItem label="KB국민카드" />
-            <ConnectionItem label="IBK기업은행" />
-            <ConnectionItem label="하나카드" />
-            <ConnectionItem label="농협은행" />
+            {['KB국민카드', 'IBK기업은행', '하나카드', '농협은행'].map((name) => {
+              const { icon, bgColor } = getBankInfo(name);
+              return <ConnectionItem key={name} label={name} icon={icon} bgColor={bgColor} />;
+            })}
           </ConnectionSection>
         </div>
       </div>
     </MobileLayout>
   );
 };
-/**
- * 💡 섹션 컴포넌트
- */
+
 const ConnectionSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="flex flex-col py-6">
     <div className="px-5 mb-4">
@@ -80,17 +94,19 @@ const ConnectionSection = ({ title, children }: { title: string; children: React
 );
 
 /**
- * 💡 아이템 컴포넌트 (은행/카드 리스트 한 줄)
+ * 💡 ConnectionItem: bgColor를 props로 받아 style에 적용
  */
-const ConnectionItem = ({ label, icon }: { label: string; icon?: string }) => (
+const ConnectionItem = ({ label, icon, bgColor }: { label: string; icon?: string; bgColor?: string }) => (
   <div className="w-full px-5 py-4 flex items-center justify-between active:bg-neutral-3 transition-colors cursor-pointer">
     <div className="flex items-center gap-3">
-      {/* 은행/카드 로고 영역 (40x40 박스) */}
-      <div className="w-10 h-10 rounded-xl bg-neutral-10 flex items-center justify-center overflow-hidden">
+      <div 
+        className="w-8 h-8 rounded-xl flex items-center justify-center overflow-hidden border border-neutral-10"
+        style={{ backgroundColor: bgColor }} // 💡 인라인 스타일로 컬러칩 적용
+      >
         {icon ? (
-          <img src={icon} alt={label} className="w-full h-full object-cover" />
+          <img src={icon} alt={label} className="w-[22px] h-[22px] object-contain" />
         ) : (
-          <div className="w-6 h-6 bg-neutral-20 rounded-full" /> // 임시 아이콘
+          <div className="w-6 h-6 bg-neutral-20 rounded-full" />
         )}
       </div>
       <Typography variant="body-2" className="text-neutral-80">
