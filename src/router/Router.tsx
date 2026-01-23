@@ -32,6 +32,7 @@ import {
   CardAdditionalConnectionPage,
 } from '@/pages/Card';
 import { AssetAccountDetailPage } from '@/pages/Asset/tab/AssetDetails/AssetAccountDetailPage';
+import { MbtiPage } from '@/pages/Mbti/MbtiPage';
 import { SectorDetailPage } from '@/pages/Asset/tab/SectorAnalysis/SectorDetailPage';
 import { SectorFullListPage } from '@/pages/Asset/tab/SectorAnalysis/SectorFullListPage';
 import { AssetDetails } from '@/pages/Asset/tab/AssetDetails/AssetDetailsPage';

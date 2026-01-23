@@ -2,12 +2,15 @@ import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
 import MbtiIcon from '@/assets/icons/Mbti.svg?react';
 import { LoginButton } from '@/components/buttons';
+import { useMbtiActions } from '@/hooks/Mbti/useMbtiStore';
 
-interface MbtiIntroProps {
-  onStart: () => void;
-}
+export const MbtiIntro = () => {
+  const { setStep } = useMbtiActions();
 
-export const MbtiIntro = ({ onStart }: MbtiIntroProps) => {
+  const handleStart = () => {
+    setStep('test');
+  };
+
   return (
     <div className={cn('flex flex-col h-full min-h-screen bg-neutral-0')}>
       <div className={cn('flex flex-col flex-1 px-[20px]')}>
@@ -32,7 +35,7 @@ export const MbtiIntro = ({ onStart }: MbtiIntroProps) => {
               나중에 할게요
             </Typography>
           </button>
-          <LoginButton text="검사 시작하기" onClick={onStart} />
+          <LoginButton text="검사 시작하기" onClick={handleStart} />
         </div>
       </div>
     </div>

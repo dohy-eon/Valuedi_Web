@@ -3,6 +3,7 @@ import { cn } from '@/utils/cn';
 import { MoreViewButton } from '@/components/buttons';
 
 interface MbtiDetailChartProps {
+  title: string;
   leftLabel: string;
   rightLabel: string;
   leftScore: number;
@@ -11,6 +12,7 @@ interface MbtiDetailChartProps {
 }
 
 export const MbtiDetailChart = ({
+  title,
   leftLabel,
   rightLabel,
   leftScore,
@@ -18,7 +20,10 @@ export const MbtiDetailChart = ({
   description,
 }: MbtiDetailChartProps) => {
   return (
-    <div className={cn('flex flex-col w-full gap-[8px]')}>
+    <div className={cn('flex flex-col w-full gap-[12px]')}>
+      <Typography style="text-body-1-16-semi-bold" className="text-neutral-90">
+        {title}
+      </Typography>
       <div className={cn('flex flex-col gap-[4px]')}>
         <div className={cn('flex justify-between items-center')}>
           <Typography style="text-body-1-16-semi-bold" className={cn('text-neutral-90')}>

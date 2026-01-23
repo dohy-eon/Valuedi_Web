@@ -40,7 +40,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     mbtiType: 'ENFP',
-    subTitle: '재기발랄한 활동가',
+    subDetail: '재기발랄한 활동가',
     description:
       '열정적이고 창의적인 활동가입니다. 새로운 경험과 사람들을 만나는 것을 좋아하며, 항상 긍정적인 에너지로 주변을 밝게 만듭니다.',
     icon: PlaceholderIcon,
@@ -50,7 +50,7 @@ export const Default: Story = {
 export const INTJ: Story = {
   args: {
     mbtiType: 'INTJ',
-    subTitle: '용의주도한 전략가',
+    subDetail: '용의주도한 전략가',
     description:
       '체계적이고 논리적인 사고를 가진 전략가입니다. 장기적인 목표를 세우고 계획을 실행하는데 탁월하며, 독립적으로 일하는 것을 선호합니다.',
     icon: PlaceholderIcon,
@@ -60,7 +60,7 @@ export const INTJ: Story = {
 export const ISFP: Story = {
   args: {
     mbtiType: 'ISFP',
-    subTitle: '호기심 많은 예술가',
+    subDetail: '호기심 많은 예술가',
     description:
       '부드럽고 친절한 성격의 예술가입니다. 아름다움을 추구하고 감성적이며, 개인의 가치관을 중요하게 생각합니다.',
     icon: PlaceholderIcon,
@@ -70,7 +70,7 @@ export const ISFP: Story = {
 export const ESTJ: Story = {
   args: {
     mbtiType: 'ESTJ',
-    subTitle: '엄격한 관리자',
+    subDetail: '엄격한 관리자',
     description:
       '체계적이고 조직적인 관리자입니다. 규칙과 질서를 중시하며, 목표 달성을 위해 효율적으로 일하는 것을 좋아합니다.',
     icon: PlaceholderIcon,
@@ -80,7 +80,7 @@ export const ESTJ: Story = {
 export const AllTypes: Story = {
   args: {
     mbtiType: 'ENFP',
-    subTitle: '재기발랄한 활동가',
+    subDetail: '재기발랄한 활동가',
     description: '열정적이고 창의적인 활동가입니다.',
     icon: PlaceholderIcon,
   },
@@ -88,19 +88,19 @@ export const AllTypes: Story = {
     <div className="flex flex-col gap-8">
       <MbtiCard
         mbtiType="ENFP"
-        subTitle="재기발랄한 활동가"
+        subDetail="재기발랄한 활동가"
         description="열정적이고 창의적인 활동가입니다. 새로운 경험과 사람들을 만나는 것을 좋아하며, 항상 긍정적인 에너지로 주변을 밝게 만듭니다."
         icon={PlaceholderIcon}
       />
       <MbtiCard
         mbtiType="INTJ"
-        subTitle="용의주도한 전략가"
+        subDetail="용의주도한 전략가"
         description="체계적이고 논리적인 사고를 가진 전략가입니다. 장기적인 목표를 세우고 계획을 실행하는데 탁월하며, 독립적으로 일하는 것을 선호합니다."
         icon={PlaceholderIcon}
       />
       <MbtiCard
         mbtiType="ISFP"
-        subTitle="호기심 많은 예술가"
+        subDetail="호기심 많은 예술가"
         description="부드럽고 친절한 성격의 예술가입니다. 아름다움을 추구하고 감성적이며, 개인의 가치관을 중요하게 생각합니다."
         icon={PlaceholderIcon}
       />
