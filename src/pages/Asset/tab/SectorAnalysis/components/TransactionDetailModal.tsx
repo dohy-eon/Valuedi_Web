@@ -1,37 +1,30 @@
-import ReactDOM from 'react-dom';
 import { Typography } from '@/components/typography';
 import { cn } from '@/utils/cn';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import PenIcon from '@/assets/icons/asset/Pen.svg';
-// 💡 유틸리티에서 정의한 정석 타입들을 임포트합니다.
+import BottomSheet from '@/components/common/BottomSheet'; // 💡 공통 바텀시트 임포트
 import { TransactionWithDetails, TransactionDetail } from '../utils/sectorUtils';
 
 interface TransactionDetailModalProps {
-  // 💡 any 대신 정석 타입을 적용합니다.
   item: TransactionWithDetails;
   onClose: () => void;
 }
 
 export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModalProps) => {
-  // 렌더링 에러 방지를 위한 안전장치
+  // 💡 데이터가 없으면 렌더링하지 않음
   if (!item) return null;
 
-  return ReactDOM.createPortal(
-    <div
-      className="fixed inset-0 flex items-end justify-center animate-fade-in"
-      style={{ zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
-      onClick={onClose}
+  return (
+    <BottomSheet
+      isOpen={!!item}
+      onClose={onClose}
+      // title={} 💡 필요하다면 여기에 "상세 내역" 같은 타이틀을 넣으세요!
     >
-      <div
-        className="w-[360px] h-[479px] bg-white rounded-t-xl flex flex-col shadow-2xl relative animate-slide-up"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* 상단 핸들 바 */}
-        <div className="py-3">
-          <div className="w-10 h-1 bg-neutral-20 rounded-full mx-auto" />
-        </div>
-
-        <div className="w-80 mx-auto flex-1 flex flex-col">
+      {/* 💡 기존 모달 내부 레이아웃 유지 
+         BottomSheet 내부에 이미 패딩이 있으므로 px-5 등은 상황에 맞게 조절했습니다. ㅋ
+      */}
+      <div className="flex flex-col w-full">
+        <div className="flex flex-col">
           {/* 제목 영역 */}
           <Typography
             variant="body-1"
@@ -44,7 +37,7 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
           </Typography>
 
           {/* 메모 입력창 */}
-          <div className="relative mb-7">
+          <div className="relative mb-8">
             <input
               type="text"
               placeholder="메모를 남겨주세요 (최대 20자)"
@@ -62,8 +55,7 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
           </div>
 
           {/* 상세 정보 리스트 */}
-          <div className="flex flex-col gap-6">
-            {/* 💡 any를 제거하고 정확한 타입을 매핑합니다. */}
+          <div className="flex flex-col gap-8">
             {item.displayDetails?.map((detail: TransactionDetail, index: number) => (
               <div key={index} className="flex justify-between items-center">
                 <Typography variant="body-2" weight="regular" color="neutral-70" fontFamily="pretendard">
@@ -75,7 +67,7 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
                   weight="regular"
                   color="neutral-90"
                   fontFamily="pretendard"
-                  className={detail.isBold ? 'font-bold' : ''} // isBold 옵션 처리
+                  className={detail.isBold ? 'font-bold' : ''}
                 >
                   {detail.value}
                 </Typography>
@@ -85,7 +77,7 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
         </div>
 
         {/* 하단 확인 버튼 */}
-        <div className="px-5 pt-10 pb-10">
+        <div className="pt-10 pb-2">
           <BaseButton
             text="확인하기"
             variant="primary"
@@ -96,7 +88,6 @@ export const TransactionDetailModal = ({ item, onClose }: TransactionDetailModal
           />
         </div>
       </div>
-    </div>,
-    document.body
+    </BottomSheet>
   );
 };

@@ -11,7 +11,7 @@ import { CompareAnalysis } from './tab/CompareAnalysis/CompareAnalysisPage';
 
 export const AssetPage = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation(); // 💡 현재 주소를 가져옵니다.
+  const { pathname } = useLocation();
 
   const activeTab = pathname.includes('/sector') ? 'sector' : pathname.includes('/compare') ? 'compare' : 'details';
 

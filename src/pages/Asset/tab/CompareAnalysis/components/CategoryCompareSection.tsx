@@ -66,7 +66,7 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
         className="flex gap-2 mb-10 overflow-x-auto pb-1 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {isLoading
-          ? // 로딩 중일 땐 칩 모양 스켈레톤 5개 표시 ㅋ
+          ? // 로딩 중일 땐 칩 모양 스켈레톤 5개 표시
             Array.from({ length: 5 }).map((_, idx) => (
               <Skeleton key={idx} className="min-w-[60px] h-8 rounded-full flex-shrink-0" />
             ))

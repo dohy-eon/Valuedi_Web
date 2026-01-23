@@ -28,7 +28,6 @@ export const CompareAnalysis = () => {
         <CategoryCompareSection isLoading={isLoading} />
 
         <div className="h-2 bg-neutral-5" />
-
         {/* 3. 소비내역 비교 섹션 */}
         <HistoryCompareSection isLoading={isLoading} />
       </div>

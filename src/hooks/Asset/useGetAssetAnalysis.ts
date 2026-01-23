@@ -37,7 +37,6 @@ export const useGetAssetAnalysis = (selectedDate: Date = new Date()) => {
       const simpleType = item.sub.includes('|') ? item.sub.split('|')[1].trim() : item.sub;
       const currentBalance = tempBalance;
       tempBalance -= item.amount; // 다음 아이템을 위해 역산 (리스트가 최신순일 경우)
-
       return {
         ...item,
         displayDetails: [
