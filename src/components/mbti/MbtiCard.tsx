@@ -4,13 +4,13 @@ import { Typography } from '../typography';
 
 export interface MbtiCardProps {
   mbtiType: string;
-  subTitle: string;
-  description: string;
+  subDetail: string;
+  description?: string;
   className?: string;
   icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 }
 
-const MbtiCard: React.FC<MbtiCardProps> = ({ mbtiType, subTitle, description, className, icon: Icon }) => {
+const MbtiCard: React.FC<MbtiCardProps> = ({ mbtiType, subDetail, description, className, icon: Icon }) => {
   return (
     <div className={cn('w-[320px]', 'flex flex-col gap-[48px]', 'bg-neutral-0', className)}>
       <div className={cn('w-full flex flex-col gap-[12px]')}>
@@ -24,7 +24,7 @@ const MbtiCard: React.FC<MbtiCardProps> = ({ mbtiType, subTitle, description, cl
         </div>
 
         <Typography style="text-body-2-14-regular" fontFamily="pretendard" className={cn('text-neutral-70')}>
-          {subTitle}
+          {subDetail}
         </Typography>
       </div>
 
@@ -32,11 +32,11 @@ const MbtiCard: React.FC<MbtiCardProps> = ({ mbtiType, subTitle, description, cl
         <Icon />
       </div>
 
-      <div>
+      {description && (
         <Typography style="text-body-2-14-regular" fontFamily="pretendard" className={cn('text-neutral-70')}>
           {description}
         </Typography>
-      </div>
+      )}
     </div>
   );
 };
