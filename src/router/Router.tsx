@@ -38,7 +38,6 @@ import { SectorFullListPage } from '@/pages/Asset/tab/SectorAnalysis/SectorFullL
 import { AssetDetails } from '@/pages/Asset/tab/AssetDetails/AssetDetailsPage';
 import { SectorAnalysis } from '@/pages/Asset/tab/SectorAnalysis/SectorAnalysisPage';
 import { CompareAnalysis } from '@/pages/Asset/tab/CompareAnalysis/CompareAnalysisPage';
-import { MbtiPage } from '@/features/mbti/MbtiPage';
 import RecommendDetailPage from '@/pages/Recommend/RecommendDetailPage';
 
 export const paths = {
