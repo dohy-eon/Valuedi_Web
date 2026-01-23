@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import BackPageGNB from '@/components/gnb/BackPageGNB';
 
@@ -14,7 +13,6 @@ type ScoreType = { [key: string]: number };
 type StepType = 'intro' | 'test' | 'loading' | 'result' | 'detail';
 
 export const MbtiPage = () => {
-  const navigate = useNavigate();
   const [step, setStep] = useState<StepType>('intro');
   const [scores, setScores] = useState<ScoreType>({});
   const [testStep, setTestStep] = useState(0);
@@ -41,7 +39,7 @@ export const MbtiPage = () => {
   const getGnbConfig = () => {
     switch (step) {
       case 'intro':
-        return { title: '', text: '', onBack: () => navigate(-1) };
+        return { title: '', text: '' };
       case 'test':
         return {
           title: '',
@@ -69,7 +67,7 @@ export const MbtiPage = () => {
 
   return (
     <MobileLayout>
-      {gnbConfig && <BackPageGNB title={gnbConfig.title} text={gnbConfig.text} onBack={gnbConfig.onBack} className="bg-white" />}
+      {gnbConfig && <BackPageGNB title={gnbConfig.title} text={gnbConfig.text} onBack={gnbConfig.onBack} />}
 
       {step === 'intro' && <MbtiIntro onStart={() => setStep('test')} />}
 
