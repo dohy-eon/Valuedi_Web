@@ -38,7 +38,7 @@ import { SectorFullListPage } from '@/pages/Asset/tab/SectorAnalysis/SectorFullL
 import { AssetDetails } from '@/pages/Asset/tab/AssetDetails/AssetDetailsPage';
 import { SectorAnalysis } from '@/pages/Asset/tab/SectorAnalysis/SectorAnalysisPage';
 import { CompareAnalysis } from '@/pages/Asset/tab/CompareAnalysis/CompareAnalysisPage';
-import { MbtiPage } from '@/features/mbti/MbtiPage';
+import RecommendDetailPage from '@/pages/Recommend/RecommendDetailPage';
 
 export const paths = {
   goal: {
@@ -70,6 +70,7 @@ export const router = createBrowserRouter([
       { path: 'asset', element: <AssetPage /> },
       { path: 'asset/account/:id', element: <AssetAccountDetailPage /> },
       { path: 'recommend', element: <RecommendPage /> },
+      { path: 'recommend/detail/:id', element: <RecommendDetailPage /> },
       { path: paths.goal.current, element: <CurrentGoalPage /> },
       { path: paths.goal.past, element: <PastGoalPage /> },
       { path: paths.goal.amountAchievedRoute, element: <AmountAchievedPage /> },
