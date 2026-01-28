@@ -36,11 +36,8 @@ const BackPageGNB: React.FC<BackPageGNBProps> = ({
         </Typography>
       </div>
 
-      <div 
-        onClick={onSkip} 
-        className="flex items-center justify-end z-10 cursor-pointer min-w-[24px]"
-      >
-        {text} 
+      <div onClick={onSkip} className="flex items-center justify-end z-10 cursor-pointer min-w-[24px]">
+        {text}
       </div>
     </header>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components/typography';
 import ValuediLogo from '@/assets/icons/ValuediLogo.svg?react';
@@ -19,7 +19,7 @@ export const HomeGNB: React.FC<HomeGNBProps> = ({ className, onMenuClick, title 
     if (onMenuClick) {
       onMenuClick();
     } else {
-      navigate('/menu'); 
+      navigate('/menu');
     }
   };
 
@@ -27,15 +27,12 @@ export const HomeGNB: React.FC<HomeGNBProps> = ({ className, onMenuClick, title 
     <header
       className={cn(
         'w-full h-[50px] px-[20px] flex items-center justify-between',
-        'bg-white/65 backdrop-blur-sm sticky top-0 z-50', 
+        'bg-white/65 backdrop-blur-sm sticky top-0 z-50',
         className
       )}
     >
       {/* 왼쪽 영역: 타이틀이 있으면 타이틀을, 없으면 로고를 표시 (클릭 시 홈으로 이동) */}
-      <div 
-        className="flex items-center gap-[4px] cursor-pointer" 
-        onClick={() => navigate('/home')}
-      >
+      <div className="flex items-center gap-[4px] cursor-pointer" onClick={() => navigate('/home')}>
         {title ? (
           <Typography style="text-headline-3-18-semi-bold" className="text-neutral-90">
             {title}

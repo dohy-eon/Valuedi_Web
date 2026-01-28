@@ -26,18 +26,18 @@ export const ConnectionPage = () => {
   const getBankInfo = (label: string) => {
     // 1. 아이콘 찾기 (이름 기반)
     const bank = BANKS.find((b) => label.includes(b.name.replace('은행', '').replace('카드', '')));
-    
+
     // 2. 배경색 매핑 규칙 적용
     const colorMapping: Record<string, string> = {
-      '국민은행': 'kb',
-      'KB국민카드': 'kb',
-      '기업은행': 'ibk',
-      'IBK기업은행': 'ibk',
-      '신한은행': 'kbank',   // 신한 -> kbank 컬러칩
-      '농협은행': 'nh',
-      '우리은행': 'kbank',   // 우리 -> kbank 컬러칩
-      '수협은행': 'suhyup',
-      '하나카드': 'hana',    // 하나 -> hana 컬러칩
+      국민은행: 'kb',
+      KB국민카드: 'kb',
+      기업은행: 'ibk',
+      IBK기업은행: 'ibk',
+      신한은행: 'kbank', // 신한 -> kbank 컬러칩
+      농협은행: 'nh',
+      우리은행: 'kbank', // 우리 -> kbank 컬러칩
+      수협은행: 'suhyup',
+      하나카드: 'hana', // 하나 -> hana 컬러칩
     };
 
     // 매핑 테이블에 있으면 해당 값을, 없으면 데이터의 id를 우선 사용
@@ -45,7 +45,7 @@ export const ConnectionPage = () => {
 
     return {
       icon: bank?.icon,
-      bgColor: colorId ? `var(--color-bank-${colorId})` : 'var(--color-neutral-5)'
+      bgColor: colorId ? `var(--color-bank-${colorId})` : 'var(--color-neutral-5)',
     };
   };
 
@@ -98,7 +98,7 @@ const ConnectionSection = ({ title, children }: { title: string; children: React
 const ConnectionItem = ({ label, icon, bgColor }: { label: string; icon?: string; bgColor?: string }) => (
   <div className="w-full px-5 py-4 flex items-center justify-between active:bg-neutral-3 transition-colors cursor-pointer">
     <div className="flex items-center gap-3">
-      <div 
+      <div
         className="w-8 h-8 rounded-xl flex items-center justify-center overflow-hidden border border-neutral-10"
         style={{ backgroundColor: bgColor }} // 💡 인라인 스타일로 컬러칩 적용
       >
