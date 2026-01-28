@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
@@ -15,8 +15,15 @@ type TabType = 'mbti' | 'trophy';
 
 export const MyPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { userName, mbtiResult } = useGetProfile();
   const [activeTab, setActiveTab] = useState<'mbti' | 'trophy'>('mbti');
+
+  useEffect(() => {
+    if (location.state?.tab) {
+      setActiveTab(location.state.tab);
+    }
+  }, [location.state]);
 
   const tabOptions = [
     { label: '금융 MBTI', value: 'mbti' as const },
