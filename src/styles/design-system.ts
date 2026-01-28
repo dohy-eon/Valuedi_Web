@@ -37,7 +37,20 @@ export type ColorToken =
   | 'bank-gwangju_jeonbuk'
   | 'bank-nh'
   | 'bank-suhyup'
-  | 'bank-hana';
+  | 'bank-hana'
+  | 'bank-nh'
+  | 'bank-suhyup'
+  | 'bank-hana'
+  | 'bank-kdb'
+  | 'bank-suhyup'
+  | 'bank-nh'
+  | 'bank-woori'
+  | 'bank-sc'
+  | 'bank-busan'
+  | 'bank-shinhyup'
+  | 'bank-postbank'
+  | 'bank-hana'
+  | 'bank-shinhan';
 
 export type FontFamily = 'pretendard' | 'preahvihear';
 
