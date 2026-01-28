@@ -62,8 +62,8 @@ export const SettingsPage = () => {
           <SettingsItem label="공지사항" onClick={() => {}} />
           <SettingsItem label="1:1 문의 안내" onClick={() => {}} />
           <SettingsItem label="버전 안내" onClick={() => {}} />
-          <SettingsItem label="로그아웃" isDanger onClick={() => {}} />
-          <SettingsItem label="밸류디 탈퇴하기" isDanger onClick={() => {}} />
+          <SettingsItem label="로그아웃" isDanger onClick={() => navigate('/logout')} />
+          <SettingsItem label="밸류디 탈퇴하기" isDanger onClick={() => navigate('/withdraw')} />
         </SettingsSection>
       </div>
       <Toast message="개발중이에요" isOpen={showToast} />
