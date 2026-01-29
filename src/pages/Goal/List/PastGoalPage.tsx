@@ -4,6 +4,7 @@ import { BottomNavigation } from '@/components/gnb/BottomNavigation';
 import DropDown from '@/assets/icons/goal/Dropdown.svg';
 import GoalCard from '@/components/goal/GoalCard';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
+import { MobileLayout } from '@/components/layout/MobileLayout';
 
 /* 목데이터 */
 const mockGoals = [
@@ -17,6 +18,7 @@ export const PastGoalPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
 
   return (
+    <MobileLayout>
     <div className="flex flex-col w-full min-h-screen bg-gray-50">
       <div className="sticky top-0 z-20 w-full bg-white">
         <GoalGNB />
@@ -59,5 +61,6 @@ export const PastGoalPage = () => {
         <BottomNavigation activeItem="goal" />
       </footer>
     </div>
+    </MobileLayout>
   );
 };

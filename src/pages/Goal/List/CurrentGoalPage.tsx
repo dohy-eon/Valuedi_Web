@@ -29,7 +29,7 @@ export const CurrentGoalPage = () => {
         <div className="flex flex-col gap-5 p-5">
           {/* 목표 추가 버튼: paths.goal.create (추가 필요) 또는 직접 경로 */}
           <div
-            onClick={() => navigate('/goal/create')} // paths에 추가되어 있다면 교체 권장
+            onClick={() => navigate('/goal/create')}
             className="flex items-center gap-4 p-6 transition-colors bg-white shadow-sm cursor-pointer rounded-2xl active:bg-gray-50"
           >
             <div className="flex items-center justify-center w-12 h-12 text-gray-400 border border-gray-200 rounded-full">

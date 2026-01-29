@@ -8,10 +8,13 @@ import SplashPage from '@/pages/Splash/SplashPage';
 import OnboardingPage from '@/pages/Onboarding/OnboardingPage';
 import AssetPage from '@/pages/Asset/AssetPage';
 import RecommendPage from '@/pages/Recommend/RecommendPage';
-import { CurrentGoalPage } from '@/pages/Goal/CurrentGoalPage';
-import { PastGoalPage } from '@/pages/Goal/PastGoalPage';
-import AmountAchievedPage from '@/pages/Goal/AmountAchievedPage';
-import SavingsSimulationPage from '@/pages/Goal/SavingsSimulationPage';
+import { CurrentGoalPage } from '@/pages/Goal/List/CurrentGoalPage';
+import { PastGoalPage } from '@/pages/Goal/List/PastGoalPage';
+import AmountAchievedPage from '@/pages/Goal/Detail/AmountAchievedPage';
+import GoalCreatePage from '@/pages/Goal/Create/GoalCreatePage';
+import GoalCreateStep from '@/pages/Goal/Create/GoalCreateStep';
+import GoalCompletePage from '@/pages/Goal/Create/GoalCompletePage';
+import SavingSimulationPage from '@/pages/Goal/Detail/SavingSimulationPage';
 
 import {
   BankConnectionStartPage,
@@ -44,10 +47,15 @@ export const paths = {
   goal: {
     current: '/goal/current',
     past: '/goal/past',
+    // (옵션) id 없이 접근하는 절약 시뮬레이션 페이지
+    savingSimulation: '/goal/saving-simulation',
     amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
     savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
     amountAchievedRoute: '/goal/detail/:id/amount-achieved',
     savingsSimulationRoute: '/goal/detail/:id/savingsimulation',
+    create: '/goal/create',
+    createStep: '/goal/create/step',
+    createComplete: '/goal/create/complete',
   },
 } as const;
 
@@ -73,8 +81,12 @@ export const router = createBrowserRouter([
       { path: 'recommend/detail/:id', element: <RecommendDetailPage /> },
       { path: paths.goal.current, element: <CurrentGoalPage /> },
       { path: paths.goal.past, element: <PastGoalPage /> },
+      { path: paths.goal.savingSimulation, element: <SavingSimulationPage /> },
       { path: paths.goal.amountAchievedRoute, element: <AmountAchievedPage /> },
-      { path: paths.goal.savingsSimulationRoute, element: <SavingsSimulationPage /> },
+      { path: paths.goal.savingsSimulationRoute, element: <SavingSimulationPage /> },
+      { path: paths.goal.create, element: <GoalCreatePage /> },
+      { path: paths.goal.createStep, element: <GoalCreateStep /> },
+      { path: paths.goal.createComplete, element: <GoalCompletePage /> },
       { path: 'login', element: <DefaultLogin /> },
       { path: 'login/form', element: <LoginPage /> },
       { path: 'signup', element: <SignUpPage /> },

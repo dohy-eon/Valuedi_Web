@@ -22,8 +22,7 @@ const GoalBottomSheet = ({ isOpen, item, onClose }: GoalBottomSheetProps) => {
   if (!item) return null;
 
   return (
-    <BottomSheet isOpen={isOpen} onClose={onClose}>
-      <h2 className="mb-8 text-2xl font-bold text-gray-900">{item.type}</h2>
+    <BottomSheet isOpen={isOpen} onClose={onClose} title={item.type}>
       <div className="relative p-2 py-4 mb-3 border border-gray-200 rounded-xl">
         <input
           type="text"

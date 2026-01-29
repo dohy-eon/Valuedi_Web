@@ -387,3 +387,64 @@
   /* Typography - Paragraph Spacing */
   --paragraph-spacing-0: 0px;
 }
+
+/* SavingInputBottomSheet range slider */
+.saving-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  /* left fill uses --range-fill (0%~100%) */
+  --range-fill: 0%;
+  background: linear-gradient(
+    to right,
+    var(--color-pri-normal) 0%,
+    var(--color-pri-normal) var(--range-fill),
+    var(--color-neutral-20) var(--range-fill),
+    var(--color-neutral-20) 100%
+  );
+  outline: none;
+  cursor: pointer;
+}
+
+/* WebKit track should be transparent (use input background) */
+.saving-range::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+}
+
+/* WebKit thumb */
+.saving-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--color-pri-normal);
+  border: none;
+}
+
+/* Create some spacing so thumb isn't clipped */
+.saving-range::-webkit-slider-thumb {
+  margin-top: -7px; /* (thumb 20 - track 6) / 2 */
+}
+
+/* Firefox track should be transparent (use input background) */
+.saving-range::-moz-range-track {
+  height: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+}
+
+/* Firefox thumb */
+.saving-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--color-pri-normal);
+  border: none;
+}
