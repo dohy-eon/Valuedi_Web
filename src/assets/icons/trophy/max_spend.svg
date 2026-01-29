@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="32" height="32" rx="8" fill="#C94A00"/>
+<rect x="22.5" y="20.5" width="4" height="2" fill="#FEE300"/>
+<rect x="23.5" y="18.5" width="4" height="2" fill="#FEE300"/>
+<rect x="21.5" y="16.5" width="4" height="2" fill="#FEE300"/>
+<path d="M13.5 6.5H11.9142C11.0233 6.5 10.5771 7.57714 11.2071 8.20711L13.5 10.5L11.9223 11.2889C9.21202 12.644 7.5 15.4141 7.5 18.4443V20.5C7.5 22.7091 9.29086 24.5 11.5 24.5H16.5H20.5C22.7091 24.5 24.5 22.7091 24.5 20.5V18.4443C24.5 15.4141 22.788 12.644 20.0777 11.2889L18.5 10.5L20.7929 8.20711C21.4229 7.57714 20.9767 6.5 20.0858 6.5H18.5H13.5Z" fill="#FFA938"/>
+<path d="M18.5 15.5L17.25 19.5L16 15.5L14.75 19.5L13.5 15.5" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M18.5 17.5H17.25H16H14.75H13.5" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="5.5" y="23.5" width="4" height="2" fill="#FEE300"/>
+<rect x="4.5" y="21.5" width="4" height="2" fill="#FEE300"/>
+<rect x="5.5" y="19.5" width="4" height="2" fill="#FEE300"/>
+</svg>

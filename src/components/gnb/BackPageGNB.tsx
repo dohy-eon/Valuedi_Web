@@ -6,7 +6,7 @@ import BackPageIcon from '@/assets/icons/BackPage.svg';
 export interface BackPageGNBProps {
   className?: string;
   title?: string;
-  text?: string;
+  text?: React.ReactNode;
   titleColor?: string;
   onBack?: () => void;
   onSkip?: () => void;
@@ -36,16 +36,8 @@ const BackPageGNB: React.FC<BackPageGNBProps> = ({
         </Typography>
       </div>
 
-      <div className="flex items-center justify-end z-10">
-        <button type="button" onClick={onSkip}>
-          {text && (
-            <button type="button" onClick={onSkip}>
-              <Typography style="text-body-3-13-regular" fontFamily="pretendard" className="text-neutral-70 underline">
-                {text}
-              </Typography>
-            </button>
-          )}
-        </button>
+      <div onClick={onSkip} className="flex items-center justify-end z-10 cursor-pointer min-w-[24px]">
+        {text}
       </div>
     </header>
   );

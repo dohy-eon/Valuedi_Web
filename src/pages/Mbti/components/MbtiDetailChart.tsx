@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
 import { MoreViewButton } from '@/components/buttons';
@@ -19,6 +20,8 @@ export const MbtiDetailChart = ({
   descriptionTitle,
   description,
 }: MbtiDetailChartProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className={cn('flex flex-col w-full gap-[12px]')}>
       <Typography style="text-body-1-16-semi-bold" className="text-neutral-90">

@@ -41,7 +41,14 @@ import { SectorFullListPage } from '@/pages/Asset/tab/SectorAnalysis/SectorFullL
 import { AssetDetails } from '@/pages/Asset/tab/AssetDetails/AssetDetailsPage';
 import { SectorAnalysis } from '@/pages/Asset/tab/SectorAnalysis/SectorAnalysisPage';
 import { CompareAnalysis } from '@/pages/Asset/tab/CompareAnalysis/CompareAnalysisPage';
+import { MenuGNB } from '@/components/mypage/MenuGNB';
+import { SettingsPage } from '@/pages/MyPage/subpages/SettingsPage';
+import { ConnectionPage } from '@/pages/MyPage/subpages/ConnectionPage';
 import RecommendDetailPage from '@/pages/Recommend/RecommendDetailPage';
+import MyPage from '@/pages/MyPage/MyPage';
+import { ConnectionDetailPage } from '@/pages/MyPage/subpages/ConnectionDetailPage';
+import { LogoutPage } from '@/pages/MyPage/subpages/LogoutPage';
+import { WithdrawPage } from '@/pages/MyPage/subpages/WithdrawPage';
 
 export const paths = {
   goal: {
@@ -106,6 +113,28 @@ export const router = createBrowserRouter([
       { path: 'card/connecting', element: <CardConnectingPage /> },
       { path: 'card/connected', element: <CardConnectedPage /> },
       { path: 'card/additional', element: <CardAdditionalConnectionPage /> },
+      { path: 'menu', element: <MenuGNB /> },
+      {
+        path: 'mypage',
+        children: [
+          { index: true, element: <MyPage /> },
+          { path: 'settings', element: <SettingsPage /> },
+          { path: 'connection', element: <ConnectionPage /> },
+          { path: 'mbti', element: <MbtiPage /> },
+          {
+            path: '/mypage/connection/detail',
+            element: <ConnectionDetailPage />,
+          },
+        ],
+      },
+      {
+        path: '/logout',
+        element: <LogoutPage />, // /settings/logout
+      },
+      {
+        path: '/withdraw',
+        element: <WithdrawPage />, // /settings/withdraw
+      },
       { path: 'asset/sector-full', element: <SectorFullListPage /> },
       { path: 'asset/sector/:categoryKey', element: <SectorDetailPage /> },
     ],
