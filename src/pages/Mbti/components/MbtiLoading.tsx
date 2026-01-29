@@ -2,18 +2,16 @@ import { useEffect } from 'react';
 import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
 import MbtiIcon from '@/assets/icons/Mbti.svg?react';
+import { useMbtiActions } from '@/hooks/Mbti/useMbtiStore';
 
-interface MbtiLoadingProps {
-  onComplete: () => void;
-}
-
-export const MbtiLoading = ({ onComplete }: MbtiLoadingProps) => {
+export const MbtiLoading = () => {
+  const { setStep } = useMbtiActions();
   useEffect(() => {
     const timer = setTimeout(() => {
-      onComplete();
+      setStep('result');
     }, 2500);
     return () => clearTimeout(timer);
-  }, [onComplete]);
+  }, [setStep]);
 
   return (
     <div className={cn('flex flex-col h-full min-h-screen bg-neutral-0')}>
