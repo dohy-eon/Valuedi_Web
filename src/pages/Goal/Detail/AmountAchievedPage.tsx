@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Hamburger from '@/assets/icons/Hamburger.svg';
+import moreIcon from '@/assets/icons/goal/moreIcon.png';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
+import GoalMoreActionsBottomSheet from '@/components/goal/detail/GoalMoreActionsBottomSheet';
+import GoalIconPickerBottomSheet from '@/components/goal/detail/GoalIconPickerBottomSheet';
 import { paths } from '@/router/Router';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 interface TransactionItem {
@@ -77,6 +79,8 @@ const AmountAchievedPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
   const [selectedItem, setSelectedItem] = useState<TransactionItem | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,8 +102,8 @@ const AmountAchievedPage = () => {
         <div className="sticky top-0 z-20 bg-white">
           <div className="flex items-center justify-between px-5 py-5">
             <h1 className="text-xl font-bold text-gray-900">목표</h1>
-            <button type="button" className="p-1">
-              <img src={Hamburger} alt="menu" className="w-6 h-6" />
+            <button type="button" className="p-1" onClick={() => setIsMoreOpen(true)}>
+              <img src={moreIcon} alt="menu" className="w-6 h-6" />
             </button>
           </div>
 
@@ -180,6 +184,19 @@ const AmountAchievedPage = () => {
         </div>
 
         <GoalBottomSheet isOpen={isSheetOpen} item={selectedItem} onClose={() => setIsSheetOpen(false)} />
+        <GoalMoreActionsBottomSheet
+          isOpen={isMoreOpen}
+          onClose={() => setIsMoreOpen(false)}
+          onChangeIcon={() => setIsIconPickerOpen(true)}
+          onEditGoal={() => console.log('목표 수정')}
+          onDeleteGoal={() => console.log('목표 삭제')}
+        />
+
+        <GoalIconPickerBottomSheet
+          isOpen={isIconPickerOpen}
+          onClose={() => setIsIconPickerOpen(false)}
+          onConfirm={(payload) => console.log('아이콘/색상 선택', payload)}
+        />
       </div>
     </MobileLayout>
   );

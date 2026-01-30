@@ -1,16 +1,21 @@
 import { MobileLayout } from '@/components/layout/MobileLayout';
-import Hamburger from '@/assets/icons/Hamburger.svg';
+import { useState } from 'react';
+import moreIcon from '@/assets/icons/goal/moreIcon.png';
 import TotalSection from '@/components/goal/TotalSection';
 import { paths } from '@/router/Router';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import SavingList from '@/components/goal/detail/SavingList';
+import GoalMoreActionsBottomSheet from '@/components/goal/detail/GoalMoreActionsBottomSheet';
+import GoalIconPickerBottomSheet from '@/components/goal/detail/GoalIconPickerBottomSheet';
 
 const mockGoals = [
   { id: 1, bankIcon: ExBank, title: '테야테야유럽갈테야', progress: 32, targetAmount: 10000000, remainingDays: 91 },
 ];
 
 const SavingSimulationPage = () => {
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -26,8 +31,8 @@ const SavingSimulationPage = () => {
         <div className="sticky top-0 z-20 bg-white">
           <div className="flex items-center justify-between px-5 py-5">
             <h1 className="text-xl font-bold text-gray-900">목표</h1>
-            <button type="button" className="p-1">
-              <img src={Hamburger} alt="menu" className="w-6 h-6" />
+            <button type="button" className="p-1" onClick={() => setIsMoreOpen(true)}>
+              <img src={moreIcon} alt="menu" className="w-6 h-6" />
             </button>
           </div>
 
@@ -61,6 +66,20 @@ const SavingSimulationPage = () => {
 
         <SavingList />
       </div>
+
+      <GoalMoreActionsBottomSheet
+        isOpen={isMoreOpen}
+        onClose={() => setIsMoreOpen(false)}
+        onChangeIcon={() => setIsIconPickerOpen(true)}
+        onEditGoal={() => console.log('목표 수정')}
+        onDeleteGoal={() => console.log('목표 삭제')}
+      />
+
+      <GoalIconPickerBottomSheet
+        isOpen={isIconPickerOpen}
+        onClose={() => setIsIconPickerOpen(false)}
+        onConfirm={(payload) => console.log('아이콘/색상 선택', payload)}
+      />
     </MobileLayout>
   );
 };
