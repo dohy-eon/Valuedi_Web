@@ -7,11 +7,9 @@ function basenameNoExt(filePath: string) {
   return last.replace(/\.svg$/i, '');
 }
 
-// NOTE: import.meta.glob은 alias(@)를 안정적으로 해석하지 못하는 경우가 있어 /src 경로를 사용합니다.
 const colorModules = import.meta.glob('/src/assets/icons/goal/color/*.svg', { eager: true, import: 'default' });
 const iconModules = import.meta.glob('/src/assets/icons/goal/icon/*.svg', { eager: true, import: 'default' });
 
-// 스샷 기준 고정 노출 순서
 const COLOR_ORDER = [
   'Red',
   'Orange',
@@ -28,7 +26,6 @@ const COLOR_ORDER = [
 ] as const;
 
 const ICON_ORDER = [
-  // 스샷의 상단 아이콘 순서(좌→우)
   'Date',
   'Interest',
   'Interest2',

@@ -6,6 +6,7 @@ import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
 import GoalMoreActionsBottomSheet from '@/components/goal/detail/GoalMoreActionsBottomSheet';
 import GoalIconPickerBottomSheet from '@/components/goal/detail/GoalIconPickerBottomSheet';
+import GoalDeleteConfirmModal from '@/components/goal/detail/GoalDeleteConfirmModal';
 import { paths } from '@/router/Router';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 interface TransactionItem {
@@ -81,6 +82,7 @@ const AmountAchievedPage = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -96,7 +98,7 @@ const AmountAchievedPage = () => {
   };
 
   return (
-    <MobileLayout>
+    <MobileLayout className="max-w-none shadow-none sm:max-w-[360px] sm:shadow-lg">
       <div className="relative flex flex-col w-full min-h-screen bg-white">
         {/* 헤더 및 탭 섹션 */}
         <div className="sticky top-0 z-20 bg-white">
@@ -131,14 +133,11 @@ const AmountAchievedPage = () => {
         <div className="flex flex-col gap-4 p-5">
           <TotalSection goal={goal} />
 
-          {/* 구분선: mx-5와 w-[calc(100%+2.5rem)] 대신 간단하게 부모 패딩 상쇄 */}
           <div className="-mx-5 h-0.5 w-[calc(100%+2.5rem)] bg-gray-100" />
 
-          {/* 목록 리스트 */}
           <div className="py-2">
             <div className="mb-2 text-lg font-bold text-gray-900">저금 목록</div>
 
-            {/* 필터 버튼 */}
             <div className="mb-4 flex items-center gap-2 text-[13px] font-medium text-gray-400">
               <button
                 onClick={() => setSortBy('latest')}
@@ -155,7 +154,6 @@ const AmountAchievedPage = () => {
               </button>
             </div>
 
-            {/* 리스트 렌더링 */}
             <div className="flex flex-col">
               {mockTransactions.map((group) => (
                 <div key={group.date} className="flex flex-col mb-4">
@@ -188,14 +186,26 @@ const AmountAchievedPage = () => {
           isOpen={isMoreOpen}
           onClose={() => setIsMoreOpen(false)}
           onChangeIcon={() => setIsIconPickerOpen(true)}
-          onEditGoal={() => console.log('목표 수정')}
-          onDeleteGoal={() => console.log('목표 삭제')}
+          onEditGoal={() => {
+            if (!id) return;
+            navigate(paths.goal.edit(id));
+          }}
+          onDeleteGoal={() => setIsDeleteModalOpen(true)}
         />
 
         <GoalIconPickerBottomSheet
           isOpen={isIconPickerOpen}
           onClose={() => setIsIconPickerOpen(false)}
           onConfirm={(payload) => console.log('아이콘/색상 선택', payload)}
+        />
+
+        <GoalDeleteConfirmModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={() => {
+            setIsDeleteModalOpen(false);
+            navigate(paths.goal.current);
+          }}
         />
       </div>
     </MobileLayout>
