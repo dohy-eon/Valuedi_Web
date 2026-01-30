@@ -4,7 +4,7 @@ import { MobileLayout } from '@/components/layout/MobileLayout';
 import BackPageGNB from '@/components/gnb/BackPageGNB';
 import AuthInput from '@/components/login/AuthInput';
 import AccountLinkBottomSheet from '@/components/goal/list/AccountLinkBottomSheet';
-import GoalCreateStepFooter from '@/pages/Goal/Create/components/GoalCreateStepFooter';
+import GoalCreateStepFooter from '@/components/goal/create/GoalCreateStepFooter';
 import { paths } from '@/router/Router';
 
 type SelectedAccount = {
@@ -132,4 +132,3 @@ const GoalEditPage = () => {
 };
 
 export default GoalEditPage;
-

@@ -48,4 +48,3 @@ const GoalDeleteConfirmModal = ({ isOpen, onClose, onConfirm }: GoalDeleteConfir
 };
 
 export default GoalDeleteConfirmModal;
-

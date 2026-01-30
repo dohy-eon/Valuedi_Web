@@ -136,4 +136,3 @@ const GoalIconPickerBottomSheet = ({
 };
 
 export default GoalIconPickerBottomSheet;
-

@@ -55,4 +55,3 @@ const GoalMoreActionsBottomSheet = ({
 };
 
 export default GoalMoreActionsBottomSheet;
-
