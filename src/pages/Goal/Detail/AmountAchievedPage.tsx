@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import moreIcon from '@/assets/icons/goal/moreIcon.png';
+import moreIcon from '@/assets/icons/goal/MoreIcon.svg';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
@@ -99,8 +99,7 @@ const AmountAchievedPage = () => {
 
   return (
     <MobileLayout className="max-w-none shadow-none sm:max-w-[360px] sm:shadow-lg">
-      <div className="relative flex flex-col w-full min-h-screen bg-white">
-        {/* 헤더 및 탭 섹션 */}
+      <div className="relative flex flex-col w-full h-screen bg-white">
         <div className="sticky top-0 z-20 bg-white">
           <div className="flex items-center justify-between px-5 py-5">
             <h1 className="text-xl font-bold text-gray-900">목표</h1>
@@ -109,7 +108,6 @@ const AmountAchievedPage = () => {
             </button>
           </div>
 
-          {/* 탭 메뉴 */}
           <div className="flex w-full border-b border-gray-200">
             <button
               onClick={() => id && navigate(paths.goal.amountAchieved(id))}
@@ -130,53 +128,53 @@ const AmountAchievedPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 p-5">
-          <TotalSection goal={goal} />
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <div className="flex flex-col gap-4 p-5">
+            <TotalSection goal={goal} />
 
-          <div className="-mx-5 h-0.5 w-[calc(100%+2.5rem)] bg-gray-100" />
+            <div className="-mx-5 h-0.5 w-[calc(100%+2.5rem)] bg-gray-100" />
 
-          <div className="py-2">
-            <div className="mb-2 text-lg font-bold text-gray-900">저금 목록</div>
+            <div className="py-2">
+              <div className="mb-2 text-lg font-bold text-gray-900">저금 목록</div>
 
-            <div className="mb-4 flex items-center gap-2 text-[13px] font-medium text-gray-400">
-              <button
-                onClick={() => setSortBy('latest')}
-                className={`transition-colors ${sortBy === 'latest' ? 'text-gray-900' : ''}`}
-              >
-                최신순
-              </button>
-              <span className="text-gray-200">·</span>
-              <button
-                onClick={() => setSortBy('achieve')}
-                className={`transition-colors ${sortBy === 'achieve' ? 'text-gray-900' : ''}`}
-              >
-                달성순
-              </button>
-            </div>
+              <div className="mb-4 flex items-center gap-2 text-[13px] font-medium text-gray-400">
+                <button
+                  onClick={() => setSortBy('latest')}
+                  className={`transition-colors ${sortBy === 'latest' ? 'text-gray-900' : ''}`}
+                >
+                  최신순
+                </button>
+                <span className="text-gray-200">·</span>
+                <button
+                  onClick={() => setSortBy('achieve')}
+                  className={`transition-colors ${sortBy === 'achieve' ? 'text-gray-900' : ''}`}
+                >
+                  달성순
+                </button>
+              </div>
 
-            <div className="flex flex-col">
-              {mockTransactions.map((group) => (
-                <div key={group.date} className="flex flex-col mb-4">
-                  <div className="flex justify-between py-3 text-sm text-gray-400 border-b border-gray-50">
-                    <span>{group.date}</span>
-                    <span>{group.dailyBalance}</span>
-                  </div>
-                  {group.items.map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => handleItemClick(item)}
-                      className="flex justify-between px-1 py-5 transition-colors cursor-pointer active:bg-gray-50"
-                    >
-                      <span className="text-base font-medium text-gray-600">{item.type}</span>
-                      <span
-                        className={`text-base font-bold ${item.isPositive ? 'text-gray-900' : 'text-primary-heavy'}`}
-                      >
-                        {item.amount}
-                      </span>
+              <div className="flex flex-col">
+                {mockTransactions.map((group) => (
+                  <div key={group.date} className="flex flex-col mb-4">
+                    <div className="flex justify-between py-3 text-sm text-gray-400 border-b border-gray-50">
+                      <span>{group.date}</span>
+                      <span>{group.dailyBalance}</span>
                     </div>
-                  ))}
-                </div>
-              ))}
+                    {group.items.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => handleItemClick(item)}
+                        className="flex justify-between px-1 py-5 transition-colors cursor-pointer active:bg-gray-50"
+                      >
+                        <span className="text-base font-medium text-gray-600">{item.type}</span>
+                        <span className={`text-base font-bold ${item.isPositive ? 'text-gray-900' : 'text-primary-heavy'}`}>
+                          {item.amount}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

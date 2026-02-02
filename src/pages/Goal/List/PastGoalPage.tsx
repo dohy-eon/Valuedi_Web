@@ -18,7 +18,7 @@ export const PastGoalPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
 
   return (
-    <MobileLayout>
+    <MobileLayout className="max-w-none shadow-none sm:max-w-[360px] sm:shadow-lg">
       <div className="flex flex-col w-full min-h-screen bg-gray-50">
         <div className="sticky top-0 z-20 w-full bg-white">
           <GoalGNB />

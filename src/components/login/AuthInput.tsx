@@ -12,6 +12,7 @@ interface AuthInputProps {
   success?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
+  focusBorderClassName?: string;
   rightElement?: ReactNode;
   timer?: string;
   className?: string;
@@ -31,6 +32,7 @@ const AuthInput = ({
   success,
   onChange,
   onFocus,
+  focusBorderClassName,
   rightElement,
   timer,
   className,
@@ -43,7 +45,7 @@ const AuthInput = ({
 
   const getBorderClass = () => {
     if (error) return 'border-status-error';
-    if (isFocused) return 'border-text-title';
+    if (isFocused) return focusBorderClassName || 'border-text-title';
     return 'border-neutral-40';
   };
 

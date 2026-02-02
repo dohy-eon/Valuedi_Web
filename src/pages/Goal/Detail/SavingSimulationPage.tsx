@@ -1,6 +1,6 @@
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useState } from 'react';
-import moreIcon from '@/assets/icons/goal/moreIcon.png';
+import moreIcon from '@/assets/icons/goal/MoreIcon.svg';
 import TotalSection from '@/components/goal/TotalSection';
 import { paths } from '@/router/Router';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
