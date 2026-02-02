@@ -15,6 +15,7 @@ import GoalCreatePage from '@/pages/Goal/Create/GoalCreatePage';
 import GoalCreateStep from '@/pages/Goal/Create/GoalCreateStep';
 import GoalCompletePage from '@/pages/Goal/Create/GoalCompletePage';
 import SavingSimulationPage from '@/pages/Goal/Detail/SavingSimulationPage';
+import GoalEditPage from '@/pages/Goal/Edit/GoalEditPage';
 
 import {
   BankConnectionStartPage,
@@ -58,8 +59,10 @@ export const paths = {
     savingSimulation: '/goal/saving-simulation',
     amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
     savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
+    edit: (id: string | number) => `/goal/detail/${id}/edit`,
     amountAchievedRoute: '/goal/detail/:id/amount-achieved',
     savingsSimulationRoute: '/goal/detail/:id/savingsimulation',
+    editRoute: '/goal/detail/:id/edit',
     create: '/goal/create',
     createStep: '/goal/create/step',
     createComplete: '/goal/create/complete',
@@ -91,6 +94,7 @@ export const router = createBrowserRouter([
       { path: paths.goal.savingSimulation, element: <SavingSimulationPage /> },
       { path: paths.goal.amountAchievedRoute, element: <AmountAchievedPage /> },
       { path: paths.goal.savingsSimulationRoute, element: <SavingSimulationPage /> },
+      { path: paths.goal.editRoute, element: <GoalEditPage /> },
       { path: paths.goal.create, element: <GoalCreatePage /> },
       { path: paths.goal.createStep, element: <GoalCreateStep /> },
       { path: paths.goal.createComplete, element: <GoalCompletePage /> },

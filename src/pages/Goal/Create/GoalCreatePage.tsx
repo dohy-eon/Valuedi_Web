@@ -16,7 +16,7 @@ const GoalCreatePage = () => {
   };
 
   return (
-    <MobileLayout className="p-0 overflow-hidden bg-white">
+    <MobileLayout className="max-w-none shadow-none sm:max-w-[360px] sm:shadow-lg p-0 overflow-hidden bg-white">
       <div className="flex flex-col w-full min-h-screen">
         <header className="flex items-center w-full h-[50px] px-[20px] bg-white flex-shrink-0">
           <button

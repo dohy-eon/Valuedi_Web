@@ -2,8 +2,8 @@ import type { ChangeEvent } from 'react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import AuthInput from '@/components/login/AuthInput';
 import AccountLinkBottomSheet from '@/components/goal/list/AccountLinkBottomSheet';
-import GoalCreateStepHeader from './components/GoalCreateStepHeader';
-import GoalCreateStepFooter from './components/GoalCreateStepFooter';
+import GoalCreateStepHeader from '../../../components/goal/create/GoalCreateStepHeader';
+import GoalCreateStepFooter from '../../../components/goal/create/GoalCreateStepFooter';
 import { useGoalForm, type GoalStep, type GoalFormField } from '../../../hooks/Goal/useGoalCreateForm';
 
 type StepField =
@@ -92,7 +92,7 @@ const GoalCreateStep = () => {
 
   return (
     <>
-      <MobileLayout className="p-0 overflow-hidden bg-white">
+      <MobileLayout className="max-w-none shadow-none sm:max-w-[360px] sm:shadow-lg p-0 overflow-hidden bg-white">
         <div className="flex flex-col w-full min-h-screen">
           <GoalCreateStepHeader currentStep={currentStep} onBack={handleBack} />
 

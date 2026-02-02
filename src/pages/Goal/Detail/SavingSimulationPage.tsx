@@ -1,16 +1,23 @@
 import { MobileLayout } from '@/components/layout/MobileLayout';
-import Hamburger from '@/assets/icons/Hamburger.svg';
+import { useState } from 'react';
+import moreIcon from '@/assets/icons/goal/MoreIcon.svg';
 import TotalSection from '@/components/goal/TotalSection';
 import { paths } from '@/router/Router';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import SavingList from '@/components/goal/detail/SavingList';
+import GoalMoreActionsBottomSheet from '@/components/goal/detail/GoalMoreActionsBottomSheet';
+import GoalIconPickerBottomSheet from '@/components/goal/detail/GoalIconPickerBottomSheet';
+import GoalDeleteConfirmModal from '@/components/goal/detail/GoalDeleteConfirmModal';
 
 const mockGoals = [
   { id: 1, bankIcon: ExBank, title: '테야테야유럽갈테야', progress: 32, targetAmount: 10000000, remainingDays: 91 },
 ];
 
 const SavingSimulationPage = () => {
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -20,14 +27,14 @@ const SavingSimulationPage = () => {
   const isPastActive = location.pathname === paths.goal.savingsSimulation(id || '');
 
   return (
-    <MobileLayout>
+    <MobileLayout className="max-w-none shadow-none sm:max-w-[360px] sm:shadow-lg">
       <div className="relative flex flex-col w-full min-h-screen bg-white overflow-x-hidden">
         {/* 헤더 및 탭 섹션 */}
         <div className="sticky top-0 z-20 bg-white">
           <div className="flex items-center justify-between px-5 py-5">
             <h1 className="text-xl font-bold text-gray-900">목표</h1>
-            <button type="button" className="p-1">
-              <img src={Hamburger} alt="menu" className="w-6 h-6" />
+            <button type="button" className="p-1" onClick={() => setIsMoreOpen(true)}>
+              <img src={moreIcon} alt="menu" className="w-6 h-6" />
             </button>
           </div>
 
@@ -52,7 +59,6 @@ const SavingSimulationPage = () => {
           </div>
         </div>
 
-        {/* TotalSection 내부가 -mx(20px)로 패딩 상쇄하므로, 여기 패딩도 20px(px-5)로 맞춰야 가로 오버플로우가 안 납니다 */}
         <div className="flex flex-col gap-4 p-5">
           <TotalSection goal={goal} />
         </div>
@@ -61,6 +67,32 @@ const SavingSimulationPage = () => {
 
         <SavingList />
       </div>
+
+      <GoalMoreActionsBottomSheet
+        isOpen={isMoreOpen}
+        onClose={() => setIsMoreOpen(false)}
+        onChangeIcon={() => setIsIconPickerOpen(true)}
+        onEditGoal={() => {
+          if (!id) return;
+          navigate(paths.goal.edit(id));
+        }}
+        onDeleteGoal={() => setIsDeleteModalOpen(true)}
+      />
+
+      <GoalIconPickerBottomSheet
+        isOpen={isIconPickerOpen}
+        onClose={() => setIsIconPickerOpen(false)}
+        onConfirm={(payload) => console.log('아이콘/색상 선택', payload)}
+      />
+
+      <GoalDeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          setIsDeleteModalOpen(false);
+          navigate(paths.goal.current);
+        }}
+      />
     </MobileLayout>
   );
 };
