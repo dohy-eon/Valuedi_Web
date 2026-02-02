@@ -51,13 +51,22 @@ const PullToRefresh = ({
       const timeSinceLastRefresh = now - lastRefreshTime.current;
       const cooldownMs = cooldownMinutes * 60 * 1000;
 
+      console.log('[PullToRefresh] 새로고침 시도:', {
+        lastRefreshTime: lastRefreshTime.current,
+        timeSinceLastRefresh: `${Math.floor(timeSinceLastRefresh / 1000)}초`,
+        cooldownMs: `${cooldownMinutes}분`,
+        shouldBlock: lastRefreshTime.current > 0 && timeSinceLastRefresh < cooldownMs
+      });
+
       if (lastRefreshTime.current > 0 && timeSinceLastRefresh < cooldownMs) {
+        console.log('[PullToRefresh] 쿨다운 중 - Toast 표시');
         setPullDistance(0);
         setShowToast(true);
         setTimeout(() => setShowToast(false), 2000);
         return;
       }
 
+      console.log('[PullToRefresh] 새로고침 진행');
       setIsRefreshing(true);
       lastRefreshTime.current = now;
       try {

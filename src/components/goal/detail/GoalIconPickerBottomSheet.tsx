@@ -95,8 +95,8 @@ const GoalIconPickerBottomSheet = ({
             key={c.id}
             type="button"
             onClick={() => setSelectedColorId(c.id)}
-            className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-              selectedColorId === c.id ? 'ring-2 ring-primary-normal' : ''
+            className={`rounded-2xl flex items-center justify-center flex-shrink-0 ${
+              selectedColorId === c.id ? 'p-[3px] border-[3px] border-white' : 'p-0 border-[3px] border-transparent'
             }`}
           >
             <img src={c.src} alt="color" className="w-11 h-11" />
@@ -112,7 +112,7 @@ const GoalIconPickerBottomSheet = ({
             type="button"
             onClick={() => setSelectedIconId(i.id)}
             className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-              selectedIconId === i.id ? 'ring-2 ring-primary-normal' : ''
+              selectedIconId === i.id ? 'bg-[#D4D4D4]' : 'bg-[#F5F5F5]'
             }`}
           >
             <img src={i.src} alt="icon" />
