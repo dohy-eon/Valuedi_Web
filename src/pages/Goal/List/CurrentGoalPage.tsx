@@ -38,14 +38,14 @@ export const CurrentGoalPage = () => {
             <div className="flex flex-col gap-5 p-5 pb-24">
               <div
                 onClick={() => navigate('/goal/create')}
-                className="flex items-center gap-4 p-6 transition-colors bg-white shadow-sm cursor-pointer rounded-2xl active:bg-gray-50"
+                className="flex items-center gap-3 p-5 transition-colors bg-white shadow-sm cursor-pointer rounded-2xl active:bg-gray-50"
               >
-                <div className="flex items-center justify-center w-12 h-12 text-gray-400 border border-gray-200 rounded-full">
-                  <span className="text-3xl font-light">+</span>
+                <div className="flex items-center justify-center w-10 h-10 text-gray-400 border border-gray-200 rounded-full">
+                  <span className="text-2xl font-light">+</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm text-gray-400">또 다른 목표가 있나요?</span>
-                  <span className="text-lg font-bold text-gray-900">목표 추가하기</span>
+                  <span className="text-xs text-gray-400">또 다른 목표가 있나요?</span>
+                  <span className="text-base font-bold text-gray-900">목표 추가하기</span>
                 </div>
               </div>
 

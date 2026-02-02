@@ -24,35 +24,35 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   return (
     <div
       onClick={handleClick}
-      className={`w-full transition-colors bg-white shadow-sm cursor-pointer p-7 rounded-xl active:bg-gray-50 ${
+      className={`w-full transition-colors bg-white shadow-sm cursor-pointer p-5 rounded-2xl active:bg-gray-50 ${
         type === 'past' ? 'opacity-70' : ''
       }`}
     >
-      <div className="flex items-center gap-3 mb-8">
-        <div className="flex items-center justify-center w-[48px] h-[48px] bg-[#E8EFFF] rounded-[14px]">
-          <img src={goal.bankIcon} alt="bank" className="w-8 h-8" />
+      <div className="flex items-center gap-3 mb-5">
+        <div className="flex items-center justify-center w-10 h-10 bg-[#E8EFFF] rounded-xl">
+          <img src={goal.bankIcon} alt="bank" className="w-6 h-6" />
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[18px] font-bold text-[#171714] tracking-tight">{goal.title}</span>
-          <div className="px-3 py-1 bg-[#FFE500] rounded-full text-[13px] font-bold text-[#171714] whitespace-nowrap">
+          <span className="text-base font-bold text-[#171714]">{goal.title}</span>
+          <div className="px-2.5 py-0.5 bg-[#FFE500] rounded-full text-xs font-bold text-[#171714] whitespace-nowrap">
             {goal.progress}% 달성
           </div>
         </div>
       </div>
 
-      <div className="space-y-5">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-[#999999]">
-            <img src={MoneyIcon} alt="money" className="w-6 h-6 opacity-40" />
+          <div className="flex items-center gap-2 text-[#999999]">
+            <img src={MoneyIcon} alt="money" className="w-5 h-5 opacity-40" />
             <span className="text-sm font-medium">목표금액</span>
           </div>
           <span className="text-sm font-bold text-[#171714]">{goal.targetAmount.toLocaleString()}원</span>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-[#999999]">
-            <img src={CalendarIcon} alt="calendar" className="w-6 h-6 opacity-40" />
+          <div className="flex items-center gap-2 text-[#999999]">
+            <img src={CalendarIcon} alt="calendar" className="w-5 h-5 opacity-40" />
             <span className="text-sm font-medium">남은일자</span>
           </div>
           <span className="text-sm font-bold text-[#171714]">{goal.remainingDays}일</span>
