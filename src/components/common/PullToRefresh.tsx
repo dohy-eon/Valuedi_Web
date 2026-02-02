@@ -129,7 +129,7 @@ const PullToRefresh = ({
       >
         {children}
       </div>
-      <Toast message="방금 업데이트된 내용입니다" isOpen={showToast} />
+      <Toast message="최근에 새로고침 했어요! 잠시 후 시도해 주세요." isOpen={showToast} />
     </div>
   );
 };
