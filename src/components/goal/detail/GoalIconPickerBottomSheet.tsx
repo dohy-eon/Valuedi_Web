@@ -8,14 +8,18 @@ function basenameNoExt(filePath: string) {
 }
 
 const colorModules = import.meta.glob('/src/assets/icons/goal/color/*.svg', { eager: true, import: 'default' });
+const selectedColorModules = import.meta.glob('/src/assets/icons/goal/selected-color/*.svg', {
+  eager: true,
+  import: 'default',
+});
 const iconModules = import.meta.glob('/src/assets/icons/goal/icon/*.svg', { eager: true, import: 'default' });
 
 const COLOR_ORDER = [
   'Red',
+  'RedOrange',
   'Orange',
-  'LightOrange',
   'yellow',
-  'LightGreen',
+  'Lime',
   'Green',
   'Cyan',
   'LightBlue',
@@ -39,13 +43,42 @@ const ICON_ORDER = [
   'Saving',
 ] as const;
 
+const COLOR_TO_SELECTED: Record<string, string> = {
+  Red: 'SelectedRed',
+  Orange: 'SelectedOrange',
+  RedOrange: 'SelectedRedOrange',
+  yellow: 'SelectedYellow',
+  Lime: 'SelectedLime',
+  Green: 'SelectedGreen',
+  Cyan: 'SelectedCyan',
+  LightBlue: 'SelectedLightblue',
+  Blue: 'SeletedBlue',
+  Violet: 'SelectedViolet',
+  Purple: 'SelectedPurple',
+  Pink: 'SelectedPink',
+};
+
 function orderIndex(name: string, order: readonly string[]) {
   const idx = order.indexOf(name);
   return idx === -1 ? Number.MAX_SAFE_INTEGER : idx;
 }
 
+const selectedColorMap = Object.entries(selectedColorModules).reduce(
+  (acc, [path, src]) => {
+    const name = basenameNoExt(path);
+    acc[name] = src as string;
+    return acc;
+  },
+  {} as Record<string, string>
+);
+
 const colorOptions = Object.entries(colorModules)
-  .map(([path, src]) => ({ id: path, src: src as string, name: basenameNoExt(path) }))
+  .map(([path, src]) => {
+    const name = basenameNoExt(path);
+    const selectedName = COLOR_TO_SELECTED[name];
+    const selectedSrc = selectedName ? selectedColorMap[selectedName] : undefined;
+    return { id: path, src: src as string, selectedSrc, name };
+  })
   .sort((a, b) => orderIndex(a.name, COLOR_ORDER) - orderIndex(b.name, COLOR_ORDER));
 
 const iconOptions = Object.entries(iconModules)
@@ -90,18 +123,20 @@ const GoalIconPickerBottomSheet = ({
 
       <div className="mb-4 text-[14px] font-bold text-gray-600">색상</div>
       <div className="flex items-center gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {colorOptions.map((c) => (
-          <button
-            key={c.id}
-            type="button"
-            onClick={() => setSelectedColorId(c.id)}
-            className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-              selectedColorId === c.id ? 'ring-2 ring-primary-normal' : ''
-            }`}
-          >
-            <img src={c.src} alt="color" className="w-11 h-11" />
-          </button>
-        ))}
+        {colorOptions.map((c) => {
+          const isSelected = selectedColorId === c.id;
+          const imgSrc = isSelected && c.selectedSrc ? c.selectedSrc : c.src;
+          return (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => setSelectedColorId(c.id)}
+              className="rounded-2xl flex items-center justify-center flex-shrink-0 p-0"
+            >
+              <img src={imgSrc} alt="color" className="w-11 h-11" />
+            </button>
+          );
+        })}
       </div>
 
       <div className="mt-6 mb-4 text-[14px] font-bold text-gray-600">아이콘</div>
@@ -112,7 +147,7 @@ const GoalIconPickerBottomSheet = ({
             type="button"
             onClick={() => setSelectedIconId(i.id)}
             className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-              selectedIconId === i.id ? 'ring-2 ring-primary-normal' : ''
+              selectedIconId === i.id ? 'bg-gray-500' : 'bg-gray-200'
             }`}
           >
             <img src={i.src} alt="icon" />

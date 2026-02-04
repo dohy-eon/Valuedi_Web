@@ -1,13 +1,18 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export type GoalStep = 1 | 2 | 3 | 4 | 5 | 6;
+export type GoalStep = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type GoalFormMode = 'create' | 'edit';
 
 export interface SelectedAccount {
   id: string;
   bankName: string;
   accountNumber: string;
+}
+
+export interface SelectedIcon {
+  colorId: string;
+  iconId: string;
 }
 
 export type GoalFormField = 'goalName' | 'startDate' | 'endDate' | 'goalAmount';
@@ -36,8 +41,10 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
   const [endDate, setEndDate] = useState(options.initialValues?.endDate ?? '');
   const [goalAmount, setGoalAmount] = useState(options.initialValues?.goalAmount ?? '');
   const [selectedAccount, setSelectedAccount] = useState<SelectedAccount | null>(options.initialValues?.selectedAccount ?? null);
+  const [selectedIcon, setSelectedIcon] = useState<SelectedIcon | null>(null);
 
   const [isAccountSheetOpen, setIsAccountSheetOpen] = useState(false);
+  const [isIconSheetOpen, setIsIconSheetOpen] = useState(false);
   const [hasInputStarted, setHasInputStarted] = useState(false);
 
   const accountDisplay = useMemo(() => {
@@ -47,6 +54,9 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
 
   const openAccountSheet = useCallback(() => setIsAccountSheetOpen(true), []);
   const closeAccountSheet = useCallback(() => setIsAccountSheetOpen(false), []);
+  
+  const openIconSheet = useCallback(() => setIsIconSheetOpen(true), []);
+  const closeIconSheet = useCallback(() => setIsIconSheetOpen(false), []);
 
   const markInputStarted = useCallback(
     (nextValue: string) => {
@@ -104,6 +114,11 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
     [isEdit]
   );
 
+  const handleIconSelect = useCallback((icon: SelectedIcon) => {
+    setSelectedIcon(icon);
+    closeIconSheet();
+  }, [closeIconSheet]);
+
   const handleNext = useCallback(() => {
     if (isEdit) return;
     if (currentStep < 5) {
@@ -117,20 +132,31 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
       return;
     }
 
+    if (currentStep === 6) {
+      setCurrentStep(7);
+      setHasInputStarted(false);
+      return;
+    }
+
     navigate('/goal/create/complete');
   }, [currentStep, isEdit, navigate, openAccountSheet]);
 
-  const primaryButtonText = useMemo(() => (currentStep === 6 ? '추가하기' : '다음으로'), [currentStep]);
+  const primaryButtonText = useMemo(() => {
+    if (currentStep === 6) return '다음으로';
+    if (currentStep === 7) return '추가하기';
+    return '다음으로';
+  }, [currentStep]);
 
   const shouldShowPrimaryButton = useMemo(() => {
     if (currentStep === 5) return false;
     if (currentStep === 6) return selectedAccount !== null && goalAmount.length > 0;
+    if (currentStep === 7) return selectedIcon !== null;
 
     const currentValue =
       currentStep === 1 ? goalName : currentStep === 2 ? startDate : currentStep === 3 ? endDate : goalAmount;
 
     return hasInputStarted && currentValue.length > 0;
-  }, [currentStep, endDate, goalAmount, goalName, hasInputStarted, selectedAccount, startDate]);
+  }, [currentStep, endDate, goalAmount, goalName, hasInputStarted, selectedAccount, selectedIcon, startDate]);
 
   const canSubmit = useMemo(() => {
     if (!isEdit) return false;
@@ -157,14 +183,19 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
     endDate,
     goalAmount,
     selectedAccount,
+    selectedIcon,
     accountDisplay,
     isAccountSheetOpen,
+    isIconSheetOpen,
     openAccountSheet,
     closeAccountSheet,
+    openIconSheet,
+    closeIconSheet,
     updateField,
     handleBack,
     handleNext,
     handleAccountSelect,
+    handleIconSelect,
     shouldShowPrimaryButton,
     primaryButtonText,
     canSubmit,
