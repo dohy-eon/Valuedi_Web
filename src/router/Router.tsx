@@ -4,6 +4,7 @@ import LoginPage from '@/pages/Login/LoginPage';
 import SignUpPage from '@/pages/SignUp/SignUpPage';
 import DefaultLogin from '@/pages/Login/DefaultLogin';
 import EmailForm from '@/pages/SignUp/EmailForm';
+import KakaoCallbackPage from '@/pages/Login/KakaoCallbackPage';
 import SplashPage from '@/pages/Splash/SplashPage';
 import OnboardingPage from '@/pages/Onboarding/OnboardingPage';
 import AssetPage from '@/pages/Asset/AssetPage';
@@ -100,6 +101,7 @@ export const router = createBrowserRouter([
       { path: paths.goal.createComplete, element: <GoalCompletePage /> },
       { path: 'login', element: <DefaultLogin /> },
       { path: 'login/form', element: <LoginPage /> },
+      { path: 'login/kakao/callback', element: <KakaoCallbackPage /> },
       { path: 'signup', element: <SignUpPage /> },
       { path: '/signup/email', element: <EmailForm /> },
       { path: 'mbti', element: <MbtiPage /> },

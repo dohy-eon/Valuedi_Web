@@ -4,6 +4,8 @@ import { Typography } from '@/components';
 import LoginButton from '@/components/buttons/LoginButton';
 import KakaoIcon from '@/assets/icons/kakao.svg?react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { getKakaoLoginUrlApi } from '@/features/auth';
 interface SocialLoginContainerProps {
   className?: string;
   onKakaoClick?: () => void;
@@ -12,6 +14,27 @@ interface SocialLoginContainerProps {
 
 const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className }) => {
   const navigate = useNavigate();
+
+  const kakaoLoginMutation = useMutation({
+    mutationFn: getKakaoLoginUrlApi,
+    onSuccess: (response) => {
+      if (response.result) {
+        // 1. state를 sessionStorage에 저장 (콜백에서 originalState로 사용)
+        sessionStorage.setItem('kakao_oauth_state', response.result.state);
+        
+        // 2. 카카오 로그인 URL로 리다이렉트
+        window.location.href = response.result.url;
+      }
+    },
+    onError: (error) => {
+      console.error('카카오 로그인 URL 생성 실패:', error);
+      alert('카카오 로그인에 실패했습니다. 다시 시도해주세요.');
+    },
+  });
+
+  const handleKakaoLogin = () => {
+    kakaoLoginMutation.mutate();
+  };
 
   return (
     <div className={cn('flex flex-col items-center justify-center bg-white', className)}>
@@ -34,8 +57,14 @@ const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className }
       <div className="flex flex-col gap-3 w-full items-center mt-8">
         {/* 💡 카카오 계정 로그인 버튼 */}
         <LoginButton
-          className={cn('border-none rounded-[8px]', 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40 transition-colors')}
-          onClick={() => console.log('카카오 로그인')}
+          className={cn(
+            'border-none rounded-[8px]',
+            kakaoLoginMutation.isPending
+              ? 'bg-atomic-yellow-70 cursor-not-allowed'
+              : 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40 transition-colors'
+          )}
+          onClick={handleKakaoLogin}
+          disabled={kakaoLoginMutation.isPending}
         >
           <div className="flex items-center justify-center gap-2">
             <KakaoIcon className="w-5 h-5 text-black" />

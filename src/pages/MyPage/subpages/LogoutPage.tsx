@@ -1,20 +1,33 @@
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import BackPageGNB from '@/components/gnb/BackPageGNB';
 import { Typography } from '@/components';
 import { LoginButton } from '@/components/buttons';
 import { cn } from '@/utils/cn';
+import { logoutApi } from '@/features/auth';
+import { useAuthStore } from '@/features/auth';
 
 export const LogoutPage = () => {
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
+
+  const logoutMutation = useMutation({
+    mutationFn: logoutApi,
+    onSuccess: () => {
+      logout();
+      navigate('/login', { replace: true });
+    },
+    onError: (error) => {
+      // 에러가 발생해도 로컬에서 로그아웃 처리
+      console.error('로그아웃 API 실패:', error);
+      logout();
+      navigate('/login', { replace: true });
+    },
+  });
 
   const handleLogout = () => {
-    // 💡 실제 로그아웃 처리 로직 (예: 토큰 삭제, 스토리지 초기화 등)
-    console.log('로그아웃 완료');
-
-    // 💡 로그아웃 후 로그인 페이지(/login)로 이동
-    // replace: true를 사용하여 로그아웃 후 뒤로가기를 눌러도 다시 이 페이지로 오지 않게 합니다.
-    navigate('/login', { replace: true });
+    logoutMutation.mutate();
   };
 
   const handleCancel = () => {
