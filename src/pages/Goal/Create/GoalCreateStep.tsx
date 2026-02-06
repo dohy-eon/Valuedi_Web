@@ -163,7 +163,7 @@ const GoalCreateStep = () => {
                         ? () => {}
                         : (e: ChangeEvent<HTMLInputElement>) => updateField(item.field, e.target.value)
                     }
-                    placeholder={placeholder}
+                    placeholder={placeholder}https://github.com/Valuedi/Valuedi_Web/pull/44/conflict?name=src%252Fpages%252FGoal%252FCreate%252FGoalCreateStep.tsx&ancestor_oid=a8642a785bde780d2b155c14ee383bf8cd400d72&base_oid=eaace40370b3b35dc647542c9f1b7694d8cf24ff&head_oid=ee67ba1934ea6709374713c55c9897b77778c6d8
                     readOnly={readOnly}
                     isGrayBg={item.isGrayBg}
                     width="full"
