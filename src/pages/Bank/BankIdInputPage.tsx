@@ -23,8 +23,10 @@ const BankIdInputPage = () => {
 
   const handleNext = () => {
     if (userId.trim()) {
-      // 은행 비밀번호 입력 페이지로 이동
-      navigate(`/bank/input-password?bank=${bankId}`);
+      // 은행 비밀번호 입력 페이지로 이동 (userId를 state로 전달)
+      navigate(`/bank/input-password?bank=${bankId}`, {
+        state: { loginId: userId },
+      });
     }
   };
 

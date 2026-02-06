@@ -1,7 +1,12 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import BackPageGNB from '@/components/gnb/BackPageGNB';
 import { cn } from '@/utils/cn';
+import { getConnectionsApi, deleteConnectionApi, ApiError } from '@/features/connection/connection.api';
+import { BANKS } from '@/features/bank/constants/banks';
+import { CARDS } from '@/features/card/constants/cards';
+import { getBankIdFromOrganizationCode, getCardIdFromOrganizationCode } from '@/features/connection/constants/organizationCodes';
 
 // 분리한 컴포넌트들 불러오기
 import { ConnectionHeader } from '@/pages/MyPage/components/ConnectionHeader';
@@ -12,22 +17,76 @@ import { ConnectionFooter } from '@/pages/MyPage/components/ConnectionFooter';
 export const ConnectionDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
 
   // 이전 페이지에서 전달받은 은행/카드 이름 (기본값: 국민은행)
   const bankName = location.state?.bankName || '국민은행';
   const isCard = bankName.includes('카드');
 
+  // 연결 목록 조회
+  const { data: connectionsData } = useQuery({
+    queryKey: ['connections'],
+    queryFn: () => getConnectionsApi(),
+  });
+
+  // 현재 은행/카드에 해당하는 connectionId 찾기
+  const currentConnection = connectionsData?.result?.find((conn) => {
+    if (isCard) {
+      const card = CARDS.find((c) => c.name === bankName);
+      if (!card) return false;
+      // organization 코드를 cardId로 변환하여 비교
+      const cardId = getCardIdFromOrganizationCode(conn.organization);
+      return cardId === card.id && conn.type === 'CD';
+    } else {
+      const bank = BANKS.find((b) => b.name === bankName);
+      if (!bank) return false;
+      // organization 코드를 bankId로 변환하여 비교
+      const bankId = getBankIdFromOrganizationCode(conn.organization);
+      return bankId === bank.id && conn.type === 'BK';
+    }
+  });
+
+  // 삭제 mutation
+  const deleteMutation = useMutation({
+    mutationFn: (connectionId: number) => deleteConnectionApi(connectionId),
+    onSuccess: () => {
+      // 연결 목록 캐시 무효화하여 새로고침
+      queryClient.invalidateQueries({ queryKey: ['connections'] });
+
+      // 목록 페이지로 이동하면서 토스트 표시
+      navigate('/mypage/connection', {
+        state: {
+          shouldShowToast: true,
+        },
+      });
+    },
+    onError: (error: ApiError | Error) => {
+      console.error('연동 해제 실패:', error);
+
+      let errorMessage = '연동 해제에 실패했습니다.';
+      if (error instanceof ApiError) {
+        errorMessage = error.message || errorMessage;
+        if (error.code === 'CONNECTION404_1') {
+          errorMessage = '해당 연동 정보를 찾을 수 없습니다.';
+        }
+      }
+
+      alert(errorMessage);
+    },
+  });
+
   /**
    * 💡 삭제 버튼 클릭 시 실행될 함수
-   * 상세 페이지에서는 직접 지우지 않고, 목록 페이지로 삭제 정보를 실어서 보냅니다.
    */
   const handleDelete = () => {
-    navigate('/mypage/connection', {
-      state: {
-        deletedBankName: bankName, // 삭제할 항목의 이름
-        shouldShowToast: true, // 토스트를 띄우라는 명령
-      },
-    });
+    if (!currentConnection) {
+      alert('연동 정보를 찾을 수 없습니다.');
+      return;
+    }
+
+    if (window.confirm('정말로 이 연동을 해제하시겠습니까?')) {
+      deleteMutation.mutate(currentConnection.connectionId);
+    }
   };
 
   // 💡 데이터 설정: 은행일 때만 샘플 목표를 보여줌

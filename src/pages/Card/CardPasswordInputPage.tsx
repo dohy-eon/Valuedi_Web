@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import CardGNB from '@/components/card/CardGNB';
 import { Typography } from '@/components/typography';
@@ -8,8 +8,10 @@ import AuthInput from '@/components/login/AuthInput';
 
 const CardPasswordInputPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const cardId = searchParams.get('card');
+  const loginId = (location.state as { loginId?: string })?.loginId || '';
   const [password, setPassword] = useState('');
   const userName = '김휘주'; // TODO: 실제 사용자 이름으로 변경
 
@@ -22,9 +24,15 @@ const CardPasswordInputPage = () => {
   };
 
   const handleNext = () => {
-    if (password.trim()) {
-      // 카드 연결 중 페이지로 이동
-      navigate(`/card/connecting?card=${cardId}`);
+    if (password.trim() && loginId) {
+      // 카드 연결 중 페이지로 이동 (loginId와 password를 state로 전달)
+      navigate(`/card/connecting?card=${cardId}`, {
+        state: { loginId, loginPassword: password },
+      });
+    } else if (!loginId) {
+      // loginId가 없으면 이전 페이지로 돌아가기
+      alert('카드 아이디를 입력해주세요.');
+      navigate(-1);
     }
   };
 

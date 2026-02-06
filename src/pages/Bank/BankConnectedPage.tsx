@@ -1,24 +1,38 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import BankGNB from '@/components/bank/BankGNB';
 import { Typography } from '@/components/typography';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import ConnectedBankItem from '@/components/bank/ConnectedBankItem';
-import kbIcon from '@/assets/icons/bank/kb.svg';
-import suhyupIcon from '@/assets/icons/bank/suhyup.svg';
-import saemaulIcon from '@/assets/icons/bank/saemaul.svg';
-import ibkIcon from '@/assets/icons/bank/ibk.svg';
+import { getConnectionsApi } from '@/features/connection/connection.api';
+import { BANKS } from '@/features/bank/constants/banks';
+import { getBankIdFromOrganizationCode } from '@/features/connection/constants/organizationCodes';
 
 const BankConnectedPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const connectedBankId = searchParams.get('bank');
 
-  // TODO: 실제 연결된 은행 목록으로 변경
-  const connectedBanks = [
-    { name: '국민은행', icon: kbIcon },
-    { name: '수협은행', icon: suhyupIcon },
-    { name: '새마을금고', icon: saemaulIcon },
-    { name: '산업은행', icon: ibkIcon },
-  ];
+  // 연결된 은행 목록 조회
+  const { data: connectionsData, isLoading } = useQuery({
+    queryKey: ['connections'],
+    queryFn: () => getConnectionsApi(),
+  });
+
+  // 연결된 은행만 필터링 (type이 'BK'인 것만)
+  const connectedBanks =
+    connectionsData?.result
+      ?.filter((conn) => conn.type === 'BK')
+      .map((conn) => {
+        // organization 코드를 bankId로 변환하여 은행 정보 찾기
+        const bankId = getBankIdFromOrganizationCode(conn.organization);
+        const bank = bankId ? BANKS.find((b) => b.id === bankId) : null;
+        return bank
+          ? { name: bank.name, icon: bank.icon }
+          : { name: conn.organization, icon: undefined };
+      }) || [];
 
   const handleBack = () => {
     navigate(-1);
@@ -46,9 +60,19 @@ const BankConnectedPage = () => {
 
       {/* Connected Banks List */}
       <div className="flex flex-col items-start w-[320px] mx-auto mt-[80px]">
-        {connectedBanks.map((bank) => (
-          <ConnectedBankItem key={bank.name} bankName={bank.name} bankIcon={bank.icon} />
-        ))}
+        {isLoading ? (
+          <Typography variant="body-2" className="text-neutral-60">
+            로딩 중...
+          </Typography>
+        ) : connectedBanks.length > 0 ? (
+          connectedBanks.map((bank) => (
+            <ConnectedBankItem key={bank.name} bankName={bank.name} bankIcon={bank.icon} />
+          ))
+        ) : (
+          <Typography variant="body-2" className="text-neutral-60">
+            연결된 은행이 없습니다.
+          </Typography>
+        )}
       </div>
 
       {/* Button */}

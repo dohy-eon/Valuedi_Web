@@ -1,22 +1,38 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import CardGNB from '@/components/card/CardGNB';
 import { Typography } from '@/components/typography';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import ConnectedCardItem from '@/components/card/ConnectedCardItem';
-import kbIcon from '@/assets/icons/bank/kb.svg';
-import shinhanIcon from '@/assets/icons/bank/jeju_shinhan.svg';
-import wooriIcon from '@/assets/icons/bank/woori.svg';
+import { getConnectionsApi } from '@/features/connection/connection.api';
+import { CARDS } from '@/features/card/constants/cards';
+import { getCardIdFromOrganizationCode } from '@/features/connection/constants/organizationCodes';
 
 const CardConnectedPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const connectedCardId = searchParams.get('card');
 
-  // TODO: 실제 연결된 카드 목록으로 변경
-  const connectedCards = [
-    { name: 'KB국민카드', icon: kbIcon },
-    { name: '신한카드', icon: shinhanIcon },
-    { name: '우리카드', icon: wooriIcon },
-  ];
+  // 연결된 카드 목록 조회
+  const { data: connectionsData, isLoading } = useQuery({
+    queryKey: ['connections'],
+    queryFn: () => getConnectionsApi(),
+  });
+
+  // 연결된 카드만 필터링 (type이 'CD'인 것만)
+  const connectedCards =
+    connectionsData?.result
+      ?.filter((conn) => conn.type === 'CD')
+      .map((conn) => {
+        // organization 코드를 cardId로 변환하여 카드 정보 찾기
+        const cardId = getCardIdFromOrganizationCode(conn.organization);
+        const card = cardId ? CARDS.find((c) => c.id === cardId) : null;
+        return card
+          ? { name: card.name, icon: card.icon }
+          : { name: conn.organization, icon: undefined };
+      }) || [];
 
   const handleBack = () => {
     navigate(-1);
@@ -44,9 +60,19 @@ const CardConnectedPage = () => {
 
       {/* Connected Cards List */}
       <div className="flex flex-col items-start w-[320px] mx-auto mt-[80px]">
-        {connectedCards.map((card) => (
-          <ConnectedCardItem key={card.name} cardName={card.name} cardIcon={card.icon} />
-        ))}
+        {isLoading ? (
+          <Typography variant="body-2" className="text-neutral-60">
+            로딩 중...
+          </Typography>
+        ) : connectedCards.length > 0 ? (
+          connectedCards.map((card) => (
+            <ConnectedCardItem key={card.name} cardName={card.name} cardIcon={card.icon} />
+          ))
+        ) : (
+          <Typography variant="body-2" className="text-neutral-60">
+            연결된 카드가 없습니다.
+          </Typography>
+        )}
       </div>
 
       {/* Button */}

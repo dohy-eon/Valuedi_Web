@@ -1,27 +1,71 @@
-import { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import CardGNB from '@/components/card/CardGNB';
 import { Typography } from '@/components/typography';
+import { createConnectionApi, ApiError } from '@/features/connection/connection.api';
+import { getCardOrganizationCode } from '@/features/connection/constants/organizationCodes';
 
 const CardConnectingPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const cardId = searchParams.get('card');
   const userName = '김휘주'; // TODO: 실제 사용자 이름으로 변경
 
-  useEffect(() => {
-    // 3초 후 연결 완료 페이지로 이동
-    const timer = setTimeout(() => {
-      if (cardId) {
-        navigate(`/card/connected?card=${cardId}`);
-      } else {
-        navigate('/card/connected');
-      }
-    }, 3000);
+  const loginId = (location.state as { loginId?: string })?.loginId || '';
+  const loginPassword = (location.state as { loginPassword?: string })?.loginPassword || '';
 
-    return () => clearTimeout(timer);
-  }, [navigate, cardId]);
+  const [hasCalledApi, setHasCalledApi] = useState(false);
+
+  const connectionMutation = useMutation({
+    mutationFn: () => {
+      if (!cardId || !loginId || !loginPassword) {
+        throw new Error('필수 정보가 누락되었습니다.');
+      }
+
+      // cardId를 기관 코드로 변환
+      const organizationCode = getCardOrganizationCode(cardId);
+      if (!organizationCode) {
+        throw new Error('지원하지 않는 카드사입니다.');
+      }
+
+      return createConnectionApi({
+        organization: organizationCode,
+        businessType: 'CD',
+        loginId,
+        loginPassword,
+      });
+    },
+    onSuccess: () => {
+      // 연결 성공 시 연결 완료 페이지로 이동
+      navigate(`/card/connected?card=${cardId}`, { replace: true });
+    },
+    onError: (error: ApiError | Error) => {
+      console.error('카드 연결 실패:', error);
+
+      let errorMessage = '카드 연결에 실패했습니다.';
+      if (error instanceof ApiError) {
+        errorMessage = error.message || errorMessage;
+        if (error.code === 'CODEF400_1') {
+          errorMessage = '잘못된 비밀번호이거나 인증 정보가 올바르지 않습니다.';
+        }
+      }
+
+      alert(errorMessage);
+      navigate(-1); // 이전 페이지로 돌아가기
+    },
+  });
+
+  useEffect(() => {
+    // API 호출은 한 번만 실행
+    if (!hasCalledApi && cardId && loginId && loginPassword) {
+      setHasCalledApi(true);
+      connectionMutation.mutate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cardId, loginId, loginPassword, hasCalledApi]);
 
   const handleBack = () => {
     navigate(-1);

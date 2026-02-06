@@ -23,8 +23,10 @@ const CardIdInputPage = () => {
 
   const handleNext = () => {
     if (userId.trim()) {
-      // 카드사 비밀번호 입력 페이지로 이동
-      navigate(`/card/input-password?card=${cardId}`);
+      // 카드사 비밀번호 입력 페이지로 이동 (userId를 state로 전달)
+      navigate(`/card/input-password?card=${cardId}`, {
+        state: { loginId: userId },
+      });
     }
   };
 
