@@ -59,6 +59,11 @@ export interface AuthStatusResponse {
   memberId: number | null;
 }
 
+export interface UserInfoResponse {
+  memberId: number;
+  name: string;
+}
+
 export interface KakaoLoginUrlResponse {
   // URL 문자열 반환
 }
@@ -159,4 +164,12 @@ export const kakaoCallbackApi = async (
   });
 
   return apiGet<LoginResponse>(url, { skipAuth: true });
+};
+
+/**
+ * 사용자 기본 정보 조회 (이름)
+ * GET /api/users/me
+ */
+export const getUserInfoApi = async (): Promise<ApiResponse<UserInfoResponse>> => {
+  return apiGet<UserInfoResponse>('/api/users/me');
 };

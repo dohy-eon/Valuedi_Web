@@ -15,24 +15,49 @@ const BankConnectedPage = () => {
   const [searchParams] = useSearchParams();
   const connectedBankId = searchParams.get('bank');
 
-  // 연결된 은행 목록 조회
-  const { data: connectionsData, isLoading } = useQuery({
+  // 연결된 은행 목록 조회 (캐시 무효화 후 즉시 새로고침)
+  const { data: connectionsData, isLoading, refetch } = useQuery({
     queryKey: ['connections'],
     queryFn: () => getConnectionsApi(),
+    staleTime: 0, // 항상 최신 데이터 가져오기
+    cacheTime: 0, // 캐시 사용 안 함
   });
+
+  // 페이지 진입 시 데이터 새로고침
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  // 디버깅: API 응답 확인
+  useEffect(() => {
+    if (connectionsData) {
+      console.log('연결 목록 API 응답:', connectionsData);
+      console.log('연결 목록 result:', connectionsData.result);
+    }
+  }, [connectionsData]);
 
   // 연결된 은행만 필터링 (type이 'BK'인 것만)
   const connectedBanks =
     connectionsData?.result
-      ?.filter((conn) => conn.type === 'BK')
+      ?.filter((conn) => {
+        console.log('연결 항목:', conn, 'type:', conn.type, 'organization:', conn.organization);
+        return conn.type === 'BK';
+      })
       .map((conn) => {
         // organization 코드를 bankId로 변환하여 은행 정보 찾기
         const bankId = getBankIdFromOrganizationCode(conn.organization);
+        console.log('기관 코드:', conn.organization, '-> bankId:', bankId);
         const bank = bankId ? BANKS.find((b) => b.id === bankId) : null;
+        console.log('찾은 은행:', bank);
         return bank
           ? { name: bank.name, icon: bank.icon }
           : { name: conn.organization, icon: undefined };
       }) || [];
+  
+  // 디버깅: 최종 결과 확인
+  useEffect(() => {
+    console.log('연결된 은행 목록:', connectedBanks);
+  }, [connectedBanks]);
 
   const handleBack = () => {
     navigate(-1);

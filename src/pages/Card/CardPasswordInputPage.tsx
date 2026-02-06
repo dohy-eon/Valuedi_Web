@@ -5,6 +5,7 @@ import CardGNB from '@/components/card/CardGNB';
 import { Typography } from '@/components/typography';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import AuthInput from '@/components/login/AuthInput';
+import { useUserName } from '@/hooks/useUserName';
 
 const CardPasswordInputPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const CardPasswordInputPage = () => {
   const cardId = searchParams.get('card');
   const loginId = (location.state as { loginId?: string })?.loginId || '';
   const [password, setPassword] = useState('');
-  const userName = '김휘주'; // TODO: 실제 사용자 이름으로 변경
+  const userName = useUserName();
 
   const handleBack = () => {
     navigate(-1);

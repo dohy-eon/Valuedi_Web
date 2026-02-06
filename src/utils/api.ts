@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하기 위한 공통 함수들
  */
 
-const API_BASE_URL = 'http://13.209.152.239';
+const API_BASE_URL = 'https://api.valuedi.site';
 
 // 공통 응답 타입
 export interface ApiResponse<T = unknown> {

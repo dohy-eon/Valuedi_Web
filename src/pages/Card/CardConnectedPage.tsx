@@ -15,11 +15,18 @@ const CardConnectedPage = () => {
   const [searchParams] = useSearchParams();
   const connectedCardId = searchParams.get('card');
 
-  // 연결된 카드 목록 조회
-  const { data: connectionsData, isLoading } = useQuery({
+  // 연결된 카드 목록 조회 (캐시 무효화 후 즉시 새로고침)
+  const { data: connectionsData, isLoading, refetch } = useQuery({
     queryKey: ['connections'],
     queryFn: () => getConnectionsApi(),
+    staleTime: 0, // 항상 최신 데이터 가져오기
+    cacheTime: 0, // 캐시 사용 안 함
   });
+
+  // 페이지 진입 시 데이터 새로고침
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   // 연결된 카드만 필터링 (type이 'CD'인 것만)
   const connectedCards =
