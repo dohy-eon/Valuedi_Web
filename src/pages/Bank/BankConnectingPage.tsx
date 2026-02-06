@@ -44,7 +44,7 @@ const BankConnectingPage = () => {
     onSuccess: () => {
       // 연결 목록 캐시 무효화하여 새로고침
       queryClient.invalidateQueries({ queryKey: ['connections'] });
-      
+
       // 연결 성공 시 체크마크 표시 후 연결 완료 페이지로 이동
       setIsSuccess(true);
       setTimeout(() => {
@@ -111,11 +111,7 @@ const BankConnectingPage = () => {
           </Typography>
         </div>
         <Typography variant="body-2" weight="regular" className="text-neutral-70 w-full">
-          {isSuccess
-            ? '연결이 완료되었습니다!'
-            : isLoading
-            ? '잠시만 기다려주세요...'
-            : '최대 1분정도 걸릴 수 있어요'}
+          {isSuccess ? '연결이 완료되었습니다!' : isLoading ? '잠시만 기다려주세요...' : '최대 1분정도 걸릴 수 있어요'}
         </Typography>
       </div>
 
@@ -140,18 +136,8 @@ const BankConnectingPage = () => {
                   animation: 'scaleIn 0.3s ease-out',
                 }}
               >
-                <svg
-                  className="w-5 h-5 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             ) : isLoading ? (

@@ -110,12 +110,9 @@ const BankAdditionalConnectionPage = () => {
           const rowBanks = createInfiniteBanks(startIndex);
           // 애니메이션 지연 시간 (행마다 다르게)
           const animationDelay = rowIndex * 4; // 총 12초를 3개 행으로 나눔
-          
+
           return (
-            <div
-              key={rowIndex}
-              className="flex gap-[12px] items-center overflow-hidden w-full relative"
-            >
+            <div key={rowIndex} className="flex gap-[12px] items-center overflow-hidden w-full relative">
               <div
                 className="flex gap-[12px] items-center infinite-scroll-row"
                 style={{
@@ -125,16 +122,8 @@ const BankAdditionalConnectionPage = () => {
               >
                 {/* 무한 스크롤을 위한 복제된 은행 목록 */}
                 {rowBanks.map((bank, index) => (
-                  <div
-                    key={`${bank.id}-${rowIndex}-${index}`}
-                    className="flex-shrink-0"
-                  >
-                    <BankCard
-                      bankName={bank.name}
-                      bankIcon={bank.icon}
-                      isSelected={false}
-                      onClick={() => {}}
-                    />
+                  <div key={`${bank.id}-${rowIndex}-${index}`} className="flex-shrink-0">
+                    <BankCard bankName={bank.name} bankIcon={bank.icon} isSelected={false} onClick={() => {}} />
                   </div>
                 ))}
               </div>
@@ -154,13 +143,7 @@ const BankAdditionalConnectionPage = () => {
 
       {/* Add Button */}
       <div className="absolute bottom-[41px] left-1/2 transform -translate-x-1/2 w-[320px]">
-        <BaseButton
-          variant="primary"
-          size="medium"
-          text="추가할래요"
-          fullWidth
-          onClick={handleAddMore}
-        />
+        <BaseButton variant="primary" size="medium" text="추가할래요" fullWidth onClick={handleAddMore} />
       </div>
     </MobileLayout>
   );

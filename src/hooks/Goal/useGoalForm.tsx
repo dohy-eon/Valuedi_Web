@@ -56,7 +56,7 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
 
   const openAccountSheet = useCallback(() => setIsAccountSheetOpen(true), []);
   const closeAccountSheet = useCallback(() => setIsAccountSheetOpen(false), []);
-  
+
   const openIconSheet = useCallback(() => setIsIconSheetOpen(true), []);
   const closeIconSheet = useCallback(() => setIsIconSheetOpen(false), []);
 

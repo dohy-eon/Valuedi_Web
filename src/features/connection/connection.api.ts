@@ -48,9 +48,7 @@ export const getConnectionsApi = async (): Promise<ApiResponse<Connection[]>> =>
  * 금융사 계정 연동
  * POST /api/connections
  */
-export const createConnectionApi = async (
-  data: CreateConnectionRequest
-): Promise<ApiResponse<null>> => {
+export const createConnectionApi = async (data: CreateConnectionRequest): Promise<ApiResponse<null>> => {
   // 기본값 설정
   const requestData: CreateConnectionRequest = {
     ...data,

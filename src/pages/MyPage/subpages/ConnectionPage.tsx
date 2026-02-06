@@ -8,7 +8,10 @@ import { MoreViewButton } from '@/components/buttons/MoreViewButton';
 import { BANKS } from '@/features/bank/constants/banks';
 import { CARDS } from '@/features/card/constants/cards';
 import { getConnectionsApi } from '@/features/connection/connection.api';
-import { getBankIdFromOrganizationCode, getCardIdFromOrganizationCode } from '@/features/connection/constants/organizationCodes';
+import {
+  getBankIdFromOrganizationCode,
+  getCardIdFromOrganizationCode,
+} from '@/features/connection/constants/organizationCodes';
 import { cn } from '@/utils/cn';
 import { Toast } from '@/components/common/Toast';
 
@@ -20,7 +23,11 @@ export const ConnectionPage = () => {
   const [showToast, setShowToast] = useState(false);
 
   // 연결 목록 조회
-  const { data: connectionsData, isLoading, refetch } = useQuery({
+  const {
+    data: connectionsData,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['connections'],
     queryFn: () => getConnectionsApi(),
   });

@@ -6,7 +6,10 @@ import { cn } from '@/utils/cn';
 import { getConnectionsApi, deleteConnectionApi, ApiError } from '@/features/connection/connection.api';
 import { BANKS } from '@/features/bank/constants/banks';
 import { CARDS } from '@/features/card/constants/cards';
-import { getBankIdFromOrganizationCode, getCardIdFromOrganizationCode } from '@/features/connection/constants/organizationCodes';
+import {
+  getBankIdFromOrganizationCode,
+  getCardIdFromOrganizationCode,
+} from '@/features/connection/constants/organizationCodes';
 
 // 분리한 컴포넌트들 불러오기
 import { ConnectionHeader } from '@/pages/MyPage/components/ConnectionHeader';
@@ -33,7 +36,7 @@ export const ConnectionDetailPage = () => {
   const currentConnection = connectionsData?.result?.find((conn) => {
     const businessType = conn.businessType || conn.type; // API 응답 필드명 대응
     const organizationCode = conn.organizationCode || conn.organization; // API 응답 필드명 대응
-    
+
     if (isCard) {
       const card = CARDS.find((c) => c.name === bankName);
       if (!card) return false;
