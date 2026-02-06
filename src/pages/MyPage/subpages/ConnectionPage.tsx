@@ -28,22 +28,30 @@ export const ConnectionPage = () => {
   // 연결된 은행과 카드 분리
   const banks =
     connectionsData?.result
-      ?.filter((conn) => conn.type === 'BK')
+      ?.filter((conn) => {
+        const businessType = conn.businessType || conn.type; // API 응답 필드명 대응
+        return businessType === 'BK';
+      })
       .map((conn) => {
-        // organization 코드를 bankId로 변환하여 은행 정보 찾기
-        const bankId = getBankIdFromOrganizationCode(conn.organization);
+        // organizationCode를 bankId로 변환하여 은행 정보 찾기
+        const organizationCode = conn.organizationCode || conn.organization; // API 응답 필드명 대응
+        const bankId = organizationCode ? getBankIdFromOrganizationCode(organizationCode) : null;
         const bank = bankId ? BANKS.find((b) => b.id === bankId) : null;
-        return bank ? bank.name : conn.organization;
+        return bank ? bank.name : conn.organizationName || organizationCode || '알 수 없음';
       }) || [];
 
   const cards =
     connectionsData?.result
-      ?.filter((conn) => conn.type === 'CD')
+      ?.filter((conn) => {
+        const businessType = conn.businessType || conn.type; // API 응답 필드명 대응
+        return businessType === 'CD';
+      })
       .map((conn) => {
-        // organization 코드를 cardId로 변환하여 카드 정보 찾기
-        const cardId = getCardIdFromOrganizationCode(conn.organization);
+        // organizationCode를 cardId로 변환하여 카드 정보 찾기
+        const organizationCode = conn.organizationCode || conn.organization; // API 응답 필드명 대응
+        const cardId = organizationCode ? getCardIdFromOrganizationCode(organizationCode) : null;
         const card = cardId ? CARDS.find((c) => c.id === cardId) : null;
-        return card ? card.name : conn.organization;
+        return card ? card.name : conn.organizationName || organizationCode || '알 수 없음';
       }) || [];
 
   useEffect(() => {

@@ -11,9 +11,13 @@ export { ApiError };
 
 export interface Connection {
   connectionId: number;
-  organization: string;
-  type: 'BK' | 'CD'; // BK: 은행, CD: 카드
+  organizationCode: string; // API 응답 필드명
+  organizationName?: string; // API 응답 필드명 (선택적)
+  businessType: 'BK' | 'CD'; // API 응답 필드명 (BK: 은행, CD: 카드)
   connectedAt: string;
+  // 하위 호환성을 위한 별칭
+  organization?: string; // organizationCode의 별칭
+  type?: 'BK' | 'CD'; // businessType의 별칭
 }
 
 export interface ConnectionListResponse {

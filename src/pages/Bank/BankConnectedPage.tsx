@@ -28,36 +28,22 @@ const BankConnectedPage = () => {
     refetch();
   }, [refetch]);
 
-  // 디버깅: API 응답 확인
-  useEffect(() => {
-    if (connectionsData) {
-      console.log('연결 목록 API 응답:', connectionsData);
-      console.log('연결 목록 result:', connectionsData.result);
-    }
-  }, [connectionsData]);
-
-  // 연결된 은행만 필터링 (type이 'BK'인 것만)
+  // 연결된 은행만 필터링 (businessType이 'BK'인 것만)
   const connectedBanks =
     connectionsData?.result
       ?.filter((conn) => {
-        console.log('연결 항목:', conn, 'type:', conn.type, 'organization:', conn.organization);
-        return conn.type === 'BK';
+        const businessType = conn.businessType || conn.type; // API 응답 필드명 대응
+        return businessType === 'BK';
       })
       .map((conn) => {
-        // organization 코드를 bankId로 변환하여 은행 정보 찾기
-        const bankId = getBankIdFromOrganizationCode(conn.organization);
-        console.log('기관 코드:', conn.organization, '-> bankId:', bankId);
+        // organizationCode를 bankId로 변환하여 은행 정보 찾기
+        const organizationCode = conn.organizationCode || conn.organization; // API 응답 필드명 대응
+        const bankId = organizationCode ? getBankIdFromOrganizationCode(organizationCode) : null;
         const bank = bankId ? BANKS.find((b) => b.id === bankId) : null;
-        console.log('찾은 은행:', bank);
         return bank
           ? { name: bank.name, icon: bank.icon }
-          : { name: conn.organization, icon: undefined };
+          : { name: conn.organizationName || organizationCode || '알 수 없음', icon: undefined };
       }) || [];
-  
-  // 디버깅: 최종 결과 확인
-  useEffect(() => {
-    console.log('연결된 은행 목록:', connectedBanks);
-  }, [connectedBanks]);
 
   const handleBack = () => {
     navigate(-1);

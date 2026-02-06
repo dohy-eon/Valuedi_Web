@@ -31,18 +31,21 @@ export const ConnectionDetailPage = () => {
 
   // 현재 은행/카드에 해당하는 connectionId 찾기
   const currentConnection = connectionsData?.result?.find((conn) => {
+    const businessType = conn.businessType || conn.type; // API 응답 필드명 대응
+    const organizationCode = conn.organizationCode || conn.organization; // API 응답 필드명 대응
+    
     if (isCard) {
       const card = CARDS.find((c) => c.name === bankName);
       if (!card) return false;
-      // organization 코드를 cardId로 변환하여 비교
-      const cardId = getCardIdFromOrganizationCode(conn.organization);
-      return cardId === card.id && conn.type === 'CD';
+      // organizationCode를 cardId로 변환하여 비교
+      const cardId = organizationCode ? getCardIdFromOrganizationCode(organizationCode) : null;
+      return cardId === card.id && businessType === 'CD';
     } else {
       const bank = BANKS.find((b) => b.name === bankName);
       if (!bank) return false;
-      // organization 코드를 bankId로 변환하여 비교
-      const bankId = getBankIdFromOrganizationCode(conn.organization);
-      return bankId === bank.id && conn.type === 'BK';
+      // organizationCode를 bankId로 변환하여 비교
+      const bankId = organizationCode ? getBankIdFromOrganizationCode(organizationCode) : null;
+      return bankId === bank.id && businessType === 'BK';
     }
   });
 

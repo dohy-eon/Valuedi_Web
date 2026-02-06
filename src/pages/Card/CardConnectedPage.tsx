@@ -28,17 +28,21 @@ const CardConnectedPage = () => {
     refetch();
   }, [refetch]);
 
-  // 연결된 카드만 필터링 (type이 'CD'인 것만)
+  // 연결된 카드만 필터링 (businessType이 'CD'인 것만)
   const connectedCards =
     connectionsData?.result
-      ?.filter((conn) => conn.type === 'CD')
+      ?.filter((conn) => {
+        const businessType = conn.businessType || conn.type; // API 응답 필드명 대응
+        return businessType === 'CD';
+      })
       .map((conn) => {
-        // organization 코드를 cardId로 변환하여 카드 정보 찾기
-        const cardId = getCardIdFromOrganizationCode(conn.organization);
+        // organizationCode를 cardId로 변환하여 카드 정보 찾기
+        const organizationCode = conn.organizationCode || conn.organization; // API 응답 필드명 대응
+        const cardId = organizationCode ? getCardIdFromOrganizationCode(organizationCode) : null;
         const card = cardId ? CARDS.find((c) => c.id === cardId) : null;
         return card
           ? { name: card.name, icon: card.icon }
-          : { name: conn.organization, icon: undefined };
+          : { name: conn.organizationName || organizationCode || '알 수 없음', icon: undefined };
       }) || [];
 
   const handleBack = () => {
