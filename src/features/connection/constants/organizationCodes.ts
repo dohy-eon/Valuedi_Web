@@ -25,26 +25,22 @@ export const BANK_ORGANIZATION_CODES: Record<string, string> = {
   kbank: '0089', // K뱅크
 };
 
-// 카드 ID -> 기관 코드 매핑 (카드사도 동일한 기관 코드 사용)
+// 카드 ID -> 기관 코드 매핑 (CODEF 카드사 코드)
 export const CARD_ORGANIZATION_CODES: Record<string, string> = {
-  ibk: '0002', // IBK카드
-  kdb: '0003', // 기업카드
-  kb: '0004', // KB국민카드
-  suhyup: '0007', // 수협카드
-  nh: '0011', // NH농협카드
-  woori: '0020', // 우리카드
-  sc: '0023', // SC카드
-  citi: '0027', // 씨티카드
-  busan: '0032', // 부산카드
-  gwangju: '0034', // 광주카드
-  jeju: '0035', // 제주카드
-  dgb: '0037', // 전북카드 (전북은행 코드)
-  gyeongnam: '0039', // 경남카드
-  saemaul: '0045', // 새마을카드
-  shinhyup: '0048', // 신협카드
-  postbank: '0071', // 우체국카드
-  hana: '0081', // 하나카드
-  shinhan: '0088', // 신한카드
+  kb: '0301', // KB카드
+  hyundai: '0302', // 현대카드
+  samsung: '0303', // 삼성카드
+  nh: '0304', // NH카드
+  bc: '0305', // BC카드
+  shinhan: '0306', // 신한카드
+  citi: '0307', // 씨티카드
+  woori: '0309', // 우리카드
+  lotte: '0311', // 롯데카드
+  hana: '0313', // 하나카드
+  dgb: '0315', // 전북카드
+  gwangju: '0316', // 광주카드
+  suhyup: '0320', // 수협카드
+  jeju: '0321', // 제주카드
 };
 
 /**
