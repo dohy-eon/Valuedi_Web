@@ -96,9 +96,7 @@ export const refreshTokenApi = async (): Promise<ApiResponse<LoginResponse>> => 
 /**
  * 이메일 인증번호 발송
  */
-export const sendEmailVerificationApi = async (
-  data: EmailSendRequest
-): Promise<ApiResponse<null>> => {
+export const sendEmailVerificationApi = async (data: EmailSendRequest): Promise<ApiResponse<null>> => {
   return apiPost<null>('/auth/email/send', data, { skipAuth: true });
 };
 
@@ -112,9 +110,7 @@ export const verifyEmailApi = async (data: EmailVerifyRequest): Promise<ApiRespo
 /**
  * 아이디 중복 확인
  */
-export const checkUsernameApi = async (
-  username: string
-): Promise<ApiResponse<null>> => {
+export const checkUsernameApi = async (username: string): Promise<ApiResponse<null>> => {
   return apiGet<null>(`/auth/check-username?username=${encodeURIComponent(username)}`, {
     skipAuth: true,
   });
@@ -149,9 +145,9 @@ export const kakaoCallbackApi = async (
     state: state,
     originalState: originalState,
   });
-  
+
   const url = `/auth/oauth/kakao/callback?${params.toString()}`;
-  
+
   // 디버깅: 전달할 파라미터 확인
   console.log('카카오 콜백 API 요청:', {
     code: code.substring(0, 30) + '...',
@@ -161,6 +157,6 @@ export const kakaoCallbackApi = async (
     stateMatch: state === originalState,
     url: url.substring(0, 100) + '...',
   });
-  
+
   return apiGet<LoginResponse>(url, { skipAuth: true });
 };

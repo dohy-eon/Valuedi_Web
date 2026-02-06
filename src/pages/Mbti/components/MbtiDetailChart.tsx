@@ -19,7 +19,6 @@ export const MbtiDetailChart = ({
   descriptionTitle,
   description,
 }: MbtiDetailChartProps) => {
-  
   return (
     <div className={cn('flex flex-col w-full gap-[12px]')}>
       <Typography style="text-body-1-16-semi-bold" className="text-neutral-90">

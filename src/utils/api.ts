@@ -143,13 +143,13 @@ async function apiFetch<T = unknown>(
         result: errorResult,
         url: url,
       });
-      
+
       // 카카오 API 에러(KOE320 등)가 포함된 경우 메시지에 추가
       let errorMessage = data.message;
       if (errorResult && errorResult.includes('KOE320')) {
         errorMessage += '\n\n카카오 API 에러가 발생했습니다. 백엔드 개발자에게 문의해주세요.';
       }
-      
+
       throw new ApiError(data.code, errorMessage, response.status);
     }
 
@@ -166,10 +166,7 @@ async function apiFetch<T = unknown>(
 /**
  * GET 요청
  */
-export async function apiGet<T = unknown>(
-  endpoint: string,
-  options: RequestOptions = {}
-): Promise<ApiResponse<T>> {
+export async function apiGet<T = unknown>(endpoint: string, options: RequestOptions = {}): Promise<ApiResponse<T>> {
   return apiFetch<T>(endpoint, {
     ...options,
     method: 'GET',
@@ -209,10 +206,7 @@ export async function apiPut<T = unknown>(
 /**
  * DELETE 요청
  */
-export async function apiDelete<T = unknown>(
-  endpoint: string,
-  options: RequestOptions = {}
-): Promise<ApiResponse<T>> {
+export async function apiDelete<T = unknown>(endpoint: string, options: RequestOptions = {}): Promise<ApiResponse<T>> {
   return apiFetch<T>(endpoint, {
     ...options,
     method: 'DELETE',

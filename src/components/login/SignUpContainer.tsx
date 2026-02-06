@@ -18,7 +18,6 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ className }) => {
   const rrnFrontRef = React.useRef<HTMLInputElement>(null);
   const rrnBackRef = React.useRef<HTMLInputElement>(null);
 
-
   const isFormValid = !!(
     auth.id &&
     !auth.idError &&

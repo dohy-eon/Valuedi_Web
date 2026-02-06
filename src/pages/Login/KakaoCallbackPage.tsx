@@ -25,7 +25,7 @@ const KakaoCallbackPage = () => {
       if (!originalState) {
         throw new Error('저장된 state 정보가 없습니다. 다시 로그인해주세요.');
       }
-      
+
       // GET /auth/oauth/kakao/callback?code=...&state=...&originalState=... 호출
       return kakaoCallbackApi(code, state, originalState);
     },
@@ -33,27 +33,27 @@ const KakaoCallbackPage = () => {
       if (response.result) {
         // 성공 시 state 제거
         sessionStorage.removeItem('kakao_oauth_state');
-        
+
         // accessToken 저장 및 로그인 상태 유지
         login(response.result.memberId, response.result.accessToken);
-        
+
         // refreshToken은 백엔드가 쿠키에 저장하므로 별도 처리 불필요
         // (필요시 localStorage에 저장할 수도 있음)
-        
+
         // 홈 페이지로 이동
         navigate('/home', { replace: true });
       }
     },
     onError: (error: ApiError | Error) => {
       console.error('카카오 로그인 실패:', error);
-      
+
       if (error instanceof ApiError) {
         // 400 에러인 경우 입력값 문제이므로 state 제거
         // 500 에러인 경우 서버 문제이므로 state 유지 (재시도 가능)
         if (error.status === 400) {
           sessionStorage.removeItem('kakao_oauth_state');
         }
-        
+
         // 에러 코드별 메시지 처리
         if (error.code === 'AUTH401_5') {
           alert('보안 인증에 실패했습니다. 다시 시도해주세요.');
@@ -69,7 +69,7 @@ const KakaoCallbackPage = () => {
       } else {
         alert('카카오 로그인에 실패했습니다.');
       }
-      
+
       navigate('/login', { replace: true });
     },
   });
@@ -88,10 +88,10 @@ const KakaoCallbackPage = () => {
         navigate('/login', { replace: true });
         return;
       }
-      
+
       // 중복 호출 방지 플래그 설정
       hasProcessedRef.current = true;
-      
+
       // 백엔드 콜백 API 호출하여 JWT 토큰 발급 받기
       kakaoCallbackMutation.mutate();
     } else {

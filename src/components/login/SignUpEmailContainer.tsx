@@ -55,7 +55,7 @@ const SignUpEmailContainer = () => {
     }
 
     const signupData = JSON.parse(signupDataStr);
-    
+
     // 약관 동의 정보 변환
     const agreements = Object.entries(termsAgreements).map(([key, isAgreed]) => ({
       termsId: TERMS_ID_MAP[key] || 0,
