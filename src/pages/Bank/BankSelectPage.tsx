@@ -6,11 +6,12 @@ import { Typography } from '@/components/typography';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import BankCard from '@/components/bank/BankCard';
 import { BANKS } from '@/features/bank/constants/banks';
+import { useUserName } from '@/hooks/useUserName';
 
 const BankSelectPage = () => {
   const navigate = useNavigate();
   const [selectedBank, setSelectedBank] = useState<string | null>(null);
-  const userName = '김휘주'; // TODO: 실제 사용자 이름으로 변경
+  const userName = useUserName();
 
   const handleBack = () => {
     navigate(-1);

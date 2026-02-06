@@ -1,10 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import BackPageGNB from '@/components/gnb/BackPageGNB';
 import { Typography } from '@/components/typography';
 import { MoreViewButton } from '@/components/buttons/MoreViewButton';
 import { BANKS } from '@/features/bank/constants/banks';
+import { CARDS } from '@/features/card/constants/cards';
+import { getConnectionsApi } from '@/features/connection/connection.api';
+import {
+  getBankIdFromOrganizationCode,
+  getCardIdFromOrganizationCode,
+} from '@/features/connection/constants/organizationCodes';
 import { cn } from '@/utils/cn';
 import { Toast } from '@/components/common/Toast';
 
@@ -13,19 +20,52 @@ export const ConnectionPage = () => {
   const location = useLocation();
   const cardSectionRef = useRef<HTMLDivElement>(null);
 
-  // 💡 1. 목록 데이터를 상태(state)로 관리 (실제 삭제 반영을 위함)
-  const [banks, setBanks] = useState(['국민은행', '기업은행', '신한은행', '농협은행', '우리은행', '수협은행']);
-  const [cards, setCards] = useState(['KB국민카드', 'IBK기업은행', '하나카드', '농협은행']);
   const [showToast, setShowToast] = useState(false);
+
+  // 연결 목록 조회
+  const {
+    data: connectionsData,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['connections'],
+    queryFn: () => getConnectionsApi(),
+  });
+
+  // 연결된 은행과 카드 분리
+  const banks =
+    connectionsData?.result
+      ?.filter((conn) => {
+        const businessType = conn.businessType || conn.type; // API 응답 필드명 대응
+        return businessType === 'BK';
+      })
+      .map((conn) => {
+        // organizationCode를 bankId로 변환하여 은행 정보 찾기
+        const organizationCode = conn.organizationCode || conn.organization; // API 응답 필드명 대응
+        const bankId = organizationCode ? getBankIdFromOrganizationCode(organizationCode) : null;
+        const bank = bankId ? BANKS.find((b) => b.id === bankId) : null;
+        return bank ? bank.name : conn.organizationName || organizationCode || '알 수 없음';
+      }) || [];
+
+  const cards =
+    connectionsData?.result
+      ?.filter((conn) => {
+        const businessType = conn.businessType || conn.type; // API 응답 필드명 대응
+        return businessType === 'CD';
+      })
+      .map((conn) => {
+        // organizationCode를 cardId로 변환하여 카드 정보 찾기
+        const organizationCode = conn.organizationCode || conn.organization; // API 응답 필드명 대응
+        const cardId = organizationCode ? getCardIdFromOrganizationCode(organizationCode) : null;
+        const card = cardId ? CARDS.find((c) => c.id === cardId) : null;
+        return card ? card.name : conn.organizationName || organizationCode || '알 수 없음';
+      }) || [];
 
   useEffect(() => {
     // 💡 2. 상세 페이지에서 '해제' 후 넘어왔는지 확인
-    if (location.state?.shouldShowToast && location.state?.deletedBankName) {
-      const targetName = location.state.deletedBankName;
-
-      // 데이터 삭제 반영
-      setBanks((prev) => prev.filter((name) => name !== targetName));
-      setCards((prev) => prev.filter((name) => name !== targetName));
+    if (location.state?.shouldShowToast) {
+      // 데이터 새로고침
+      refetch();
 
       // 토스트 띄우기
       setShowToast(true);
@@ -46,7 +86,7 @@ export const ConnectionPage = () => {
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [location, navigate]);
+  }, [location, navigate, refetch]);
 
   const handleItemClick = (name: string) => {
     navigate('/mypage/connection/detail', { state: { bankName: name } });
@@ -89,25 +129,14 @@ export const ConnectionPage = () => {
       <div className="flex-1 pb-10">
         {/* 💡 banks 상태 사용 */}
         <ConnectionSection title="연결된 은행">
-          {banks.map((name) => {
-            const { icon, bgColor } = getBankInfo(name);
-            return (
-              <ConnectionItem
-                key={name}
-                label={name}
-                icon={icon}
-                bgColor={bgColor}
-                onClick={() => handleItemClick(name)}
-              />
-            );
-          })}
-        </ConnectionSection>
-
-        <div ref={cardSectionRef}>
-          <div className="h-2 bg-neutral-10 w-full" />
-          {/* 💡 cards 상태 사용 */}
-          <ConnectionSection title="연결된 카드">
-            {cards.map((name) => {
+          {isLoading ? (
+            <div className="px-5 py-4">
+              <Typography variant="body-2" className="text-neutral-60">
+                로딩 중...
+              </Typography>
+            </div>
+          ) : banks.length > 0 ? (
+            banks.map((name) => {
               const { icon, bgColor } = getBankInfo(name);
               return (
                 <ConnectionItem
@@ -118,7 +147,46 @@ export const ConnectionPage = () => {
                   onClick={() => handleItemClick(name)}
                 />
               );
-            })}
+            })
+          ) : (
+            <div className="px-5 py-4">
+              <Typography variant="body-2" className="text-neutral-60">
+                연결된 은행이 없습니다.
+              </Typography>
+            </div>
+          )}
+        </ConnectionSection>
+
+        <div ref={cardSectionRef}>
+          <div className="h-2 bg-neutral-10 w-full" />
+          {/* 💡 cards 상태 사용 */}
+          <ConnectionSection title="연결된 카드">
+            {isLoading ? (
+              <div className="px-5 py-4">
+                <Typography variant="body-2" className="text-neutral-60">
+                  로딩 중...
+                </Typography>
+              </div>
+            ) : cards.length > 0 ? (
+              cards.map((name) => {
+                const { icon, bgColor } = getBankInfo(name);
+                return (
+                  <ConnectionItem
+                    key={name}
+                    label={name}
+                    icon={icon}
+                    bgColor={bgColor}
+                    onClick={() => handleItemClick(name)}
+                  />
+                );
+              })
+            ) : (
+              <div className="px-5 py-4">
+                <Typography variant="body-2" className="text-neutral-60">
+                  연결된 카드가 없습니다.
+                </Typography>
+              </div>
+            )}
           </ConnectionSection>
         </div>
       </div>

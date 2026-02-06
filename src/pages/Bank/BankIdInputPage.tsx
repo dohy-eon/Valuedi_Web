@@ -5,13 +5,14 @@ import BankGNB from '@/components/bank/BankGNB';
 import { Typography } from '@/components/typography';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import AuthInput from '@/components/login/AuthInput';
+import { useUserName } from '@/hooks/useUserName';
 
 const BankIdInputPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const bankId = searchParams.get('bank');
   const [userId, setUserId] = useState('');
-  const userName = '김휘주'; // TODO: 실제 사용자 이름으로 변경
+  const userName = useUserName();
 
   const handleBack = () => {
     navigate(-1);
@@ -23,8 +24,10 @@ const BankIdInputPage = () => {
 
   const handleNext = () => {
     if (userId.trim()) {
-      // 은행 비밀번호 입력 페이지로 이동
-      navigate(`/bank/input-password?bank=${bankId}`);
+      // 은행 비밀번호 입력 페이지로 이동 (userId를 state로 전달)
+      navigate(`/bank/input-password?bank=${bankId}`, {
+        state: { loginId: userId },
+      });
     }
   };
 

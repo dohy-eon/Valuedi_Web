@@ -5,11 +5,12 @@ import BankGNB from '@/components/bank/BankGNB';
 import { Typography } from '@/components/typography';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import BankInfoModal from '@/components/bank/BankInfoModal';
+import { useUserName } from '@/hooks/useUserName';
 
 const BankConnectionStartPage = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const userName = '김휘주'; // TODO: 실제 사용자 이름으로 변경
+  const userName = useUserName();
 
   const handleBack = () => {
     navigate(-1);

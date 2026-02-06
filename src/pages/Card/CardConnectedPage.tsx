@@ -1,30 +1,60 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import CardGNB from '@/components/card/CardGNB';
 import { Typography } from '@/components/typography';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import ConnectedCardItem from '@/components/card/ConnectedCardItem';
-import kbIcon from '@/assets/icons/bank/kb.svg';
-import shinhanIcon from '@/assets/icons/bank/jeju_shinhan.svg';
-import wooriIcon from '@/assets/icons/bank/woori.svg';
+import { getConnectionsApi, Connection } from '@/features/connection/connection.api';
+import { ApiResponse } from '@/utils/api';
+import { CARDS } from '@/features/card/constants/cards';
+import { getCardIdFromOrganizationCode } from '@/features/connection/constants/organizationCodes';
 
 const CardConnectedPage = () => {
   const navigate = useNavigate();
 
-  // TODO: 실제 연결된 카드 목록으로 변경
-  const connectedCards = [
-    { name: 'KB국민카드', icon: kbIcon },
-    { name: '신한카드', icon: shinhanIcon },
-    { name: '우리카드', icon: wooriIcon },
-  ];
+  // 연결된 카드 목록 조회 (캐시 무효화 후 즉시 새로고침)
+  const {
+    data: connectionsData,
+    isLoading,
+    refetch,
+  } = useQuery<ApiResponse<Connection[]>>({
+    queryKey: ['connections'],
+    queryFn: () => getConnectionsApi(),
+    staleTime: 0, // 항상 최신 데이터 가져오기
+    gcTime: 0, // 캐시 사용 안 함 (React Query v5에서는 gcTime 사용)
+  });
+
+  // 페이지 진입 시 데이터 새로고침
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  // 연결된 카드만 필터링 (businessType이 'CD'인 것만)
+  const connectedCards =
+    connectionsData?.result
+      ?.filter((conn: Connection) => {
+        const businessType = conn.businessType || conn.type; // API 응답 필드명 대응
+        return businessType === 'CD';
+      })
+      .map((conn: Connection) => {
+        // organizationCode를 cardId로 변환하여 카드 정보 찾기
+        const organizationCode = conn.organizationCode || conn.organization; // API 응답 필드명 대응
+        const cardId = organizationCode ? getCardIdFromOrganizationCode(organizationCode) : null;
+        const card = cardId ? CARDS.find((c) => c.id === cardId) : null;
+        return card
+          ? { name: card.name, icon: card.icon }
+          : { name: conn.organizationName || organizationCode || '알 수 없음', icon: undefined };
+      }) || [];
 
   const handleBack = () => {
     navigate(-1);
   };
 
   const handleNext = () => {
-    // 추가 카드 연결 확인 페이지로 이동
-    navigate('/card/additional');
+    // 메인 페이지로 이동
+    navigate('/home');
   };
 
   return (
@@ -44,9 +74,19 @@ const CardConnectedPage = () => {
 
       {/* Connected Cards List */}
       <div className="flex flex-col items-start w-[320px] mx-auto mt-[80px]">
-        {connectedCards.map((card) => (
-          <ConnectedCardItem key={card.name} cardName={card.name} cardIcon={card.icon} />
-        ))}
+        {isLoading ? (
+          <Typography variant="body-2" className="text-neutral-60">
+            로딩 중...
+          </Typography>
+        ) : connectedCards.length > 0 ? (
+          connectedCards.map((card: { name: string; icon?: string }) => (
+            <ConnectedCardItem key={card.name} cardName={card.name} cardIcon={card.icon || ''} />
+          ))
+        ) : (
+          <Typography variant="body-2" className="text-neutral-60">
+            연결된 카드가 없습니다.
+          </Typography>
+        )}
       </div>
 
       {/* Button */}
