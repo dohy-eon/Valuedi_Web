@@ -40,8 +40,8 @@ const KakaoCallbackPage = () => {
         // refreshToken은 백엔드가 쿠키에 저장하므로 별도 처리 불필요
         // (필요시 localStorage에 저장할 수도 있음)
 
-        // 홈 페이지로 이동
-        navigate('/home', { replace: true });
+        // 은행 연결 페이지로 이동
+        navigate('/bank/start', { replace: true });
       }
     },
     onError: (error: ApiError | Error) => {

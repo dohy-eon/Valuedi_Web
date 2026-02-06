@@ -25,8 +25,8 @@ const BankConnectedPage = () => {
   };
 
   const handleNext = () => {
-    // 추가 은행 연결 확인 페이지로 이동
-    navigate('/bank/additional');
+    // 카드 연결 페이지로 이동
+    navigate('/card/start');
   };
 
   return (
