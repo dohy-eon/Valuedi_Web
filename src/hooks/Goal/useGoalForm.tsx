@@ -40,7 +40,9 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
   const [startDate, setStartDate] = useState(options.initialValues?.startDate ?? '');
   const [endDate, setEndDate] = useState(options.initialValues?.endDate ?? '');
   const [goalAmount, setGoalAmount] = useState(options.initialValues?.goalAmount ?? '');
-  const [selectedAccount, setSelectedAccount] = useState<SelectedAccount | null>(options.initialValues?.selectedAccount ?? null);
+  const [selectedAccount, setSelectedAccount] = useState<SelectedAccount | null>(
+    options.initialValues?.selectedAccount ?? null
+  );
   const [selectedIcon, setSelectedIcon] = useState<SelectedIcon | null>(null);
 
   const [isAccountSheetOpen, setIsAccountSheetOpen] = useState(false);
@@ -55,6 +57,9 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
   const openAccountSheet = useCallback(() => setIsAccountSheetOpen(true), []);
   const closeAccountSheet = useCallback(() => setIsAccountSheetOpen(false), []);
   
+  const openIconSheet = useCallback(() => setIsIconSheetOpen(true), []);
+  const closeIconSheet = useCallback(() => setIsIconSheetOpen(false), []);
+
   const openIconSheet = useCallback(() => setIsIconSheetOpen(true), []);
   const closeIconSheet = useCallback(() => setIsIconSheetOpen(false), []);
 
@@ -114,10 +119,13 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
     [isEdit]
   );
 
-  const handleIconSelect = useCallback((icon: SelectedIcon) => {
-    setSelectedIcon(icon);
-    closeIconSheet();
-  }, [closeIconSheet]);
+  const handleIconSelect = useCallback(
+    (icon: SelectedIcon) => {
+      setSelectedIcon(icon);
+      closeIconSheet();
+    },
+    [closeIconSheet]
+  );
 
   const handleNext = useCallback(() => {
     if (isEdit) return;
@@ -203,4 +211,3 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
     handleSubmit,
   };
 }
-

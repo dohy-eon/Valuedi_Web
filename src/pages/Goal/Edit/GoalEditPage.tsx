@@ -23,8 +23,11 @@ const GoalEditPage = () => {
 
   const state = (location.state as GoalEditLocationState | null) ?? null;
 
-  const initialSelectedAccount: SelectedAccount =
-    state?.selectedAccount ?? { id: 'linked', bankName: '국민은행', accountNumber: '592802-04-****25' };
+  const initialSelectedAccount: SelectedAccount = state?.selectedAccount ?? {
+    id: 'linked',
+    bankName: '국민은행',
+    accountNumber: '592802-04-****25',
+  };
 
   const {
     goalName,
@@ -136,11 +139,7 @@ const GoalEditPage = () => {
         </div>
       </MobileLayout>
 
-      <AccountLinkBottomSheet
-        isOpen={isAccountSheetOpen}
-        onClose={closeAccountSheet}
-        onSelect={handleAccountSelect}
-      />
+      <AccountLinkBottomSheet isOpen={isAccountSheetOpen} onClose={closeAccountSheet} onSelect={handleAccountSelect} />
     </>
   );
 };

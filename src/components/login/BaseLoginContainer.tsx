@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components/typography';
 import AuthInput from '@/components/login/AuthInput';
 import LoginButton from '@/components/buttons/LoginButton';
 import { useAuthForm } from '@/hooks/SignUp/useAuthForm';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { loginApi, ApiError } from '@/features/auth';
+import { useAuthStore } from '@/features/auth';
+
 interface BaseLoginContainerProps {
   className?: string;
   onLogin?: (id: string, pw: string) => void;
@@ -13,7 +17,38 @@ interface BaseLoginContainerProps {
 const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLogin }) => {
   const auth = useAuthForm();
   const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const [loginError, setLoginError] = useState<string>('');
   const isFormValid = auth.id.length > 0 && auth.pw.length > 0 && !auth.idError && !auth.pwError;
+
+  const loginMutation = useMutation({
+    mutationFn: loginApi,
+    onSuccess: (response) => {
+      if (response.result) {
+        login(response.result.memberId, response.result.accessToken);
+        navigate('/home');
+      }
+    },
+    onError: (error: ApiError) => {
+      if (error.status === 401) {
+        setLoginError('아이디 또는 비밀번호가 일치하지 않습니다.');
+      } else if (error.status === 403) {
+        setLoginError(error.message || '휴면 상태의 회원입니다.');
+      } else {
+        setLoginError(error.message || '로그인에 실패했습니다.');
+      }
+    },
+  });
+
+  const handleLogin = () => {
+    if (!isFormValid) return;
+    setLoginError('');
+    loginMutation.mutate({
+      username: auth.id.toLowerCase(),
+      password: auth.pw,
+    });
+    onLogin?.(auth.id.toLowerCase(), auth.pw);
+  };
 
   return (
     <div className={cn('flex flex-col items-center bg-white ', className)}>
@@ -50,7 +85,7 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
           value={auth.pw}
           onChange={auth.handlePwChange}
           placeholder="비밀번호를 입력해주세요."
-          error={auth.pwError}
+          error={auth.pwError || loginError}
           width="full"
         />
       </div>
@@ -58,13 +93,15 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
       {/* 3. 로그인 버튼 영역 */}
       <div className="w-full">
         <LoginButton
-          text="로그인"
+          text={loginMutation.isPending ? '로그인 중...' : '로그인'}
           className={cn(
             'border-none rounded-[8px]',
-            !isFormValid ? 'bg-atomic-yellow-70 cursor-not-allowed' : 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40'
+            !isFormValid || loginMutation.isPending
+              ? 'bg-atomic-yellow-70 cursor-not-allowed'
+              : 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40'
           )}
-          disabled={!isFormValid}
-          onClick={() => onLogin?.(auth.id.toLowerCase(), auth.pw)}
+          disabled={!isFormValid || loginMutation.isPending}
+          onClick={handleLogin}
         />
       </div>
 

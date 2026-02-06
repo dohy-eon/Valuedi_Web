@@ -98,9 +98,7 @@ const GoalCreateStep = () => {
       { kind: 'input', field: 'startDate', label: '시작일', readOnly: true, isGrayBg: true },
       { kind: 'input', field: 'goalName', label: '목표 이름', readOnly: true, isGrayBg: true },
     ],
-    7: [
-      { kind: 'icon', title: '거의 다 왔어요!', subtitle: '마지막으로 목표의 대표 이미지를 선택해 주세요' },
-    ],
+    7: [{ kind: 'icon', title: '거의 다 왔어요!', subtitle: '마지막으로 목표의 대표 이미지를 선택해 주세요' }],
   };
 
   const valuesByField: Record<GoalFormField, string> = {

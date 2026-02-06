@@ -176,7 +176,17 @@ const SignUpContainer: React.FC<SignUpContainerProps> = ({ className }) => {
               : 'bg-atomic-yellow-50 hover:bg-atomic-yellow-40 text-neutral-100'
           )}
           disabled={!isFormValid}
-          onClick={() => navigate('/signup/email')}
+          onClick={() => {
+            // 회원가입 정보를 sessionStorage에 저장
+            const signupData = {
+              username: auth.id,
+              realName: auth.userName,
+              rrnPrefix: auth.rrnFront + auth.rrnBack,
+              password: auth.pw,
+            };
+            sessionStorage.setItem('signupData', JSON.stringify(signupData));
+            navigate('/signup/email');
+          }}
         />
       </div>
     </div>

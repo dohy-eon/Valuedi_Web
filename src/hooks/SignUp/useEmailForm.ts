@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, ChangeEvent } from 'react';
+import { sendEmailVerificationApi, verifyEmailApi, ApiError } from '@/features/auth';
 
 const DEFAULT_SECONDS = 180;
 
@@ -52,41 +53,73 @@ export const useEmailForm = () => {
     return !!email && !emailError && !isVerified;
   }, [email, emailError, isVerified]);
 
-  const startVerification = () => {
+  const startVerification = async () => {
     if (!canResend) return;
 
-    setIsRequested(true);
-    setIsVerified(false);
-    setVerifyCode('');
-    setVerifyError('');
-    setVerifySuccess('');
-    setSecondsLeft(DEFAULT_SECONDS);
+    try {
+      const response = await sendEmailVerificationApi({ email });
+      if (response.isSuccess) {
+        setIsRequested(true);
+        setIsVerified(false);
+        setVerifyCode('');
+        setVerifyError('');
+        setVerifySuccess('');
+        setSecondsLeft(DEFAULT_SECONDS);
 
-    if (timerRef.current) window.clearInterval(timerRef.current);
+        if (timerRef.current) window.clearInterval(timerRef.current);
 
-    timerRef.current = window.setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          if (timerRef.current) window.clearInterval(timerRef.current);
-          timerRef.current = null;
-          return 0;
+        timerRef.current = window.setInterval(() => {
+          setSecondsLeft((prev) => {
+            if (prev <= 1) {
+              if (timerRef.current) window.clearInterval(timerRef.current);
+              timerRef.current = null;
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.code === 'AUTH429_1') {
+          setEmailError('이미 인증번호가 발송되었습니다. 1분 후 다시 시도해 주세요.');
+        } else {
+          setEmailError('인증번호 발송에 실패했습니다.');
         }
-        return prev - 1;
-      });
-    }, 1000);
+      } else {
+        setEmailError('인증번호 발송에 실패했습니다.');
+      }
+    }
   };
 
-  const confirmVerification = () => {
-    // 목업: 123456
-    if (verifyCode === '123456') {
-      setIsVerified(true);
-      setVerifyError('');
-      setVerifySuccess('인증되었습니다.');
-      if (timerRef.current) window.clearInterval(timerRef.current);
-      timerRef.current = null;
-    } else {
+  const confirmVerification = async () => {
+    if (verifyCode.length !== 6) {
+      setVerifyError('인증번호 6자리를 입력해주세요.');
+      return;
+    }
+
+    try {
+      const response = await verifyEmailApi({ email, code: verifyCode });
+      if (response.isSuccess) {
+        setIsVerified(true);
+        setVerifyError('');
+        setVerifySuccess('인증되었습니다.');
+        if (timerRef.current) window.clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.code === 'AUTH400_2') {
+          setVerifyError('인증번호가 일치하지 않습니다.');
+        } else if (error.code === 'AUTH404_1') {
+          setVerifyError('인증번호가 만료되었거나 존재하지 않습니다.');
+        } else {
+          setVerifyError('인증번호 확인에 실패했습니다.');
+        }
+      } else {
+        setVerifyError('인증번호 확인에 실패했습니다.');
+      }
       setIsVerified(false);
-      setVerifyError('올바르지 않은 인증번호입니다.');
       setVerifySuccess('');
     }
   };

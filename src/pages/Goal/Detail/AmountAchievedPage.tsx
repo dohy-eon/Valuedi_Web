@@ -167,7 +167,9 @@ const AmountAchievedPage = () => {
                         className="flex justify-between px-1 py-5 transition-colors cursor-pointer active:bg-gray-50"
                       >
                         <span className="text-base font-medium text-gray-600">{item.type}</span>
-                        <span className={`text-base font-bold ${item.isPositive ? 'text-gray-900' : 'text-primary-heavy'}`}>
+                        <span
+                          className={`text-base font-bold ${item.isPositive ? 'text-gray-900' : 'text-primary-heavy'}`}
+                        >
                           {item.amount}
                         </span>
                       </div>

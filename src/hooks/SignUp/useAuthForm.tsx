@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, useEffect } from 'react';
 import { validatePassword, validateName, validatePhone, validateId, validateRRNFront7 } from '@/utils/AuthValidator';
+import { checkUsernameApi, ApiError } from '@/features/auth';
 
 export const useAuthForm = () => {
   // 아이디 관련
@@ -83,21 +84,35 @@ export const useAuthForm = () => {
     setIdCheckError('');
   };
   // 아이디 중복 확인
-  const handleDuplicateCheck = () => {
+  const handleDuplicateCheck = async () => {
     setIsTyping(false);
     if (!validateId(id)) {
       setIdCheckError('사용할 수 없는 아이디 형식입니다.');
       setIdCheckSuccess('');
       return;
     }
-    // 테스트용 목업 로직
-    if (id === 'user') {
-      setIdCheckError('이미 사용 중인 아이디입니다.');
-      setIdCheckSuccess('');
-    } else {
-      setIdCheckError('');
-      setIdCheckSuccess('');
-      setIdCheckSuccess('사용 가능한 아이디입니다.');
+    try {
+      const response = await checkUsernameApi(id);
+      if (response.isSuccess) {
+        setIdCheckError('');
+        setIdCheckSuccess('사용 가능한 아이디입니다.');
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.code === 'AUTH409_1') {
+          setIdCheckError('이미 사용 중인 아이디입니다.');
+          setIdCheckSuccess('');
+        } else if (error.code === 'VALID400_1') {
+          setIdCheckError('아이디를 입력해주세요.');
+          setIdCheckSuccess('');
+        } else {
+          setIdCheckError('아이디 중복 확인에 실패했습니다.');
+          setIdCheckSuccess('');
+        }
+      } else {
+        setIdCheckError('아이디 중복 확인에 실패했습니다.');
+        setIdCheckSuccess('');
+      }
     }
   };
   // 비밀번호 핸들러
