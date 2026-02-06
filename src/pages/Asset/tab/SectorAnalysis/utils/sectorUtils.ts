@@ -78,14 +78,27 @@ export const transformToDateGroups = (items: TransactionWithDetails[]): SectorTr
     let group = acc.find((g) => g.date === dateStr);
 
     if (!group) {
-      group = { date: dateStr, dailyTotal: 0, items: [] };
+      // TransactionGroup의 필수 필드 포함
+      const day = new Date(dateStr).getDate() || 1;
+      group = {
+        date: dateStr,
+        day: day,
+        dailyTotal: 0,
+        totalIncome: 0,
+        totalExpense: 0,
+        items: [],
+      };
       acc.push(group);
     }
 
     group.items.push(item);
 
+    // 수입/지출 분류하여 합산
     if (item.type === 'expense') {
       group.dailyTotal += Math.abs(item.amount);
+      group.totalExpense += Math.abs(item.amount);
+    } else if (item.type === 'income') {
+      group.totalIncome += Math.abs(item.amount);
     }
 
     return acc;
