@@ -60,9 +60,6 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
   const openIconSheet = useCallback(() => setIsIconSheetOpen(true), []);
   const closeIconSheet = useCallback(() => setIsIconSheetOpen(false), []);
 
-  const openIconSheet = useCallback(() => setIsIconSheetOpen(true), []);
-  const closeIconSheet = useCallback(() => setIsIconSheetOpen(false), []);
-
   const markInputStarted = useCallback(
     (nextValue: string) => {
       if (!hasInputStarted && nextValue.length > 0) setHasInputStarted(true);
