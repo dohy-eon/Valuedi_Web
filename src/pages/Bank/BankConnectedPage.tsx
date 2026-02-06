@@ -50,8 +50,8 @@ const BankConnectedPage = () => {
   };
 
   const handleNext = () => {
-    // 카드 연결 페이지로 이동
-    navigate('/card/start');
+    // 추가 은행 연결 페이지로 이동
+    navigate('/bank/additional');
   };
 
   return (
