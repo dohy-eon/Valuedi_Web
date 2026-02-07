@@ -38,8 +38,8 @@ export const HomeGNB: React.FC<HomeGNBProps> = ({ className, onMenuClick, title 
             {title}
           </Typography>
         ) : (
-          <div className="w-[107px] h-[24px] flex items-center justify-center">
-            <ValuediLogo className="w-full h-full" />
+          <div className="flex items-center justify-center">
+            <ValuediLogo className="w-[31px] h-auto" />
           </div>
         )}
       </div>
