@@ -34,12 +34,7 @@ const GoalCompletePage = () => {
 
         <main className="flex-1 flex flex-col px-[20px] pt-[40px] pb-[32px] overflow-y-auto">
           <div className="flex flex-col gap-[8px] mb-[40px]">
-            <Typography
-              style="text-headline-1-22-bold"
-              fontFamily="pretendard"
-              className="text-neutral-90"
-              as="h1"
-            >
+            <Typography style="text-headline-1-22-bold" fontFamily="pretendard" className="text-neutral-90" as="h1">
               목표를 완성했어요
             </Typography>
             <Typography
@@ -65,15 +60,8 @@ const GoalCompletePage = () => {
         </main>
 
         <footer className="w-full px-[20px] pb-[32px] flex-shrink-0 flex flex-col gap-4">
-          <button
-            onClick={handleGoHome}
-            className="text-center text-neutral-60 underline"
-          >
-            <Typography
-              style="text-body-2-14-regular"
-              fontFamily="pretendard"
-              color="neutral-60"
-            >
+          <button onClick={handleGoHome} className="text-center text-neutral-60 underline">
+            <Typography style="text-body-2-14-regular" fontFamily="pretendard" color="neutral-60">
               홈으로 이동
             </Typography>
           </button>

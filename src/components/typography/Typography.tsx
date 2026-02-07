@@ -158,7 +158,17 @@ const colorTokenToClass: Record<ColorToken, string> = {
   'bank-kbank': '',
   'bank-saemaul': '',
   'bank-ibk': '',
-  'bank-gwangju_jeonbuk': ''
+  'bank-gwangju_jeonbuk': '',
+  'bank-kdb': '',
+  'bank-suhyup': '',
+  'bank-nh': '',
+  'bank-woori': '',
+  'bank-sc': '',
+  'bank-busan': '',
+  'bank-shinhyup': '',
+  'bank-postbank': '',
+  'bank-hana': '',
+  'bank-shinhan': '',
 };
 
 /**

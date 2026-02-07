@@ -31,9 +31,9 @@ export const MbtiPage = () => {
       case 'loading':
         return { title: '', text: '' };
       case 'result':
-        return { title: '', text: '결과 공유하기', onBack: reset };
+        return { title: '', text: '', onBack: reset };
       case 'detail':
-        return { title: '', text: '결과 공유하기', onBack: handleBack };
+        return { title: '', text: '', onBack: handleBack };
       default:
         return null;
     }

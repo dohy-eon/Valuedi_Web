@@ -52,4 +52,3 @@ const GoalSummaryCard = ({ title, targetAmount, remainingDays }: GoalSummaryCard
 );
 
 export default GoalSummaryCard;
-

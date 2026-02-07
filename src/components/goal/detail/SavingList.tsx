@@ -20,10 +20,7 @@ const SavingList = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const selectedItem = useMemo(
-    () => items.find((x) => x.id === selectedId) ?? null,
-    [items, selectedId]
-  );
+  const selectedItem = useMemo(() => items.find((x) => x.id === selectedId) ?? null, [items, selectedId]);
 
   const handleOpen = (id: number) => {
     setSelectedId(id);
@@ -50,9 +47,7 @@ const SavingList = () => {
             className="flex items-center justify-between p-4 bg-gray-100 rounded-2xl"
           >
             <div className="flex items-center gap-2 ">
-              <div
-                className={`w-9 h-8 rounded-2xl bg-neutral-10 flex items-center justify-center flex-shrink-0`}
-              >
+              <div className={`w-9 h-8 rounded-2xl bg-neutral-10 flex items-center justify-center flex-shrink-0`}>
                 <img src={item.icon} alt={item.title} />
               </div>
               <span className="text-lg font-bold text-black">{item.title}</span>

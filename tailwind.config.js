@@ -283,6 +283,9 @@ export default {
           900: 'var(--color-line-900)',
         },
       },
+      boxShadow: {
+        'trophy-card': '0 16px 16px 0 rgba(25, 25, 20, 0.04)',
+      },
       fontFamily: {
         pretendard: ['var(--font-family-pretendard)', 'sans-serif'],
         preahvihear: ['var(--font-family-preahvihear)', 'sans-serif'],

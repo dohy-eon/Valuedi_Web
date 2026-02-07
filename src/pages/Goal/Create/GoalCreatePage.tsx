@@ -30,12 +30,7 @@ const GoalCreatePage = () => {
 
         <main className="flex-1 flex flex-col px-[20px] pt-[40px] pb-[32px] overflow-y-auto">
           <div className="flex flex-col gap-[8px] mb-[40px]">
-            <Typography
-              style="text-headline-1-22-bold"
-              fontFamily="pretendard"
-              className="text-neutral-90"
-              as="h1"
-            >
+            <Typography style="text-headline-1-22-bold" fontFamily="pretendard" className="text-neutral-90" as="h1">
               나의 목표를 작성 해볼까요?
             </Typography>
             <Typography

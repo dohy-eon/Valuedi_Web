@@ -24,4 +24,3 @@ const GoalProgressGauge = ({ progress }: GoalProgressGaugeProps) => (
 );
 
 export default GoalProgressGauge;
-

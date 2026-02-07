@@ -11,7 +11,6 @@ const mockGoals = [
 ];
 
 const SavingSimulationPage = () => {
-
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -19,7 +18,6 @@ const SavingSimulationPage = () => {
   const goal = mockGoals.find((g) => g.id === Number(id)) || mockGoals[0];
   const isCurrentActive = location.pathname === paths.goal.amountAchieved(id || '');
   const isPastActive = location.pathname === paths.goal.savingsSimulation(id || '');
-
 
   return (
     <MobileLayout>

@@ -4,6 +4,7 @@ import LoginPage from '@/pages/Login/LoginPage';
 import SignUpPage from '@/pages/SignUp/SignUpPage';
 import DefaultLogin from '@/pages/Login/DefaultLogin';
 import EmailForm from '@/pages/SignUp/EmailForm';
+import KakaoCallbackPage from '@/pages/Login/KakaoCallbackPage';
 import SplashPage from '@/pages/Splash/SplashPage';
 import OnboardingPage from '@/pages/Onboarding/OnboardingPage';
 import AssetPage from '@/pages/Asset/AssetPage';
@@ -15,7 +16,6 @@ import GoalCreatePage from '@/pages/Goal/Create/GoalCreatePage';
 import GoalCreateStep from '@/pages/Goal/Create/GoalCreateStep';
 import GoalCompletePage from '@/pages/Goal/Create/GoalCompletePage';
 import SavingSimulationPage from '@/pages/Goal/Detail/SavingSimulationPage';
-
 
 import {
   BankConnectionStartPage,
@@ -42,7 +42,14 @@ import { SectorFullListPage } from '@/pages/Asset/tab/SectorAnalysis/SectorFullL
 import { AssetDetails } from '@/pages/Asset/tab/AssetDetails/AssetDetailsPage';
 import { SectorAnalysis } from '@/pages/Asset/tab/SectorAnalysis/SectorAnalysisPage';
 import { CompareAnalysis } from '@/pages/Asset/tab/CompareAnalysis/CompareAnalysisPage';
+import { MenuGNB } from '@/components/mypage/MenuGNB';
+import { SettingsPage } from '@/pages/MyPage/subpages/SettingsPage';
+import { ConnectionPage } from '@/pages/MyPage/subpages/ConnectionPage';
 import RecommendDetailPage from '@/pages/Recommend/RecommendDetailPage';
+import MyPage from '@/pages/MyPage/MyPage';
+import { ConnectionDetailPage } from '@/pages/MyPage/subpages/ConnectionDetailPage';
+import { LogoutPage } from '@/pages/MyPage/subpages/LogoutPage';
+import { WithdrawPage } from '@/pages/MyPage/subpages/WithdrawPage';
 
 export const paths = {
   goal: {
@@ -52,6 +59,7 @@ export const paths = {
     savingSimulation: '/goal/saving-simulation',
     amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
     savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
+    edit: (id: string | number) => `/goal/detail/${id}/edit`,
     amountAchievedRoute: '/goal/detail/:id/amount-achieved',
     savingsSimulationRoute: '/goal/detail/:id/savingsimulation',
     create: '/goal/create',
@@ -90,6 +98,7 @@ export const router = createBrowserRouter([
       { path: paths.goal.createComplete, element: <GoalCompletePage /> },
       { path: 'login', element: <DefaultLogin /> },
       { path: 'login/form', element: <LoginPage /> },
+      { path: 'login/kakao/callback', element: <KakaoCallbackPage /> },
       { path: 'signup', element: <SignUpPage /> },
       { path: '/signup/email', element: <EmailForm /> },
       { path: 'mbti', element: <MbtiPage /> },
@@ -107,6 +116,28 @@ export const router = createBrowserRouter([
       { path: 'card/connecting', element: <CardConnectingPage /> },
       { path: 'card/connected', element: <CardConnectedPage /> },
       { path: 'card/additional', element: <CardAdditionalConnectionPage /> },
+      { path: 'menu', element: <MenuGNB /> },
+      {
+        path: 'mypage',
+        children: [
+          { index: true, element: <MyPage /> },
+          { path: 'settings', element: <SettingsPage /> },
+          { path: 'connection', element: <ConnectionPage /> },
+          { path: 'mbti', element: <MbtiPage /> },
+          {
+            path: '/mypage/connection/detail',
+            element: <ConnectionDetailPage />,
+          },
+        ],
+      },
+      {
+        path: '/logout',
+        element: <LogoutPage />, // /settings/logout
+      },
+      {
+        path: '/withdraw',
+        element: <WithdrawPage />, // /settings/withdraw
+      },
       { path: 'asset/sector-full', element: <SectorFullListPage /> },
       { path: 'asset/sector/:categoryKey', element: <SectorDetailPage /> },
     ],

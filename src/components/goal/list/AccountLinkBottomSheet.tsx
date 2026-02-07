@@ -45,17 +45,8 @@ const AccountLinkBottomSheet = ({
     <BottomSheet isOpen={isOpen} onClose={onClose} title="연결 계좌 연동">
       <div className="flex items-center justify-between mb-6">
         <div />
-        <button
-          onClick={handleManualAdd}
-          className="flex items-center gap-1 text-sm text-neutral-70"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+        <button onClick={handleManualAdd} className="flex items-center gap-1 text-sm text-neutral-70">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M8 2.66667V13.3333M2.66667 8H13.3333"
               stroke="currentColor"
@@ -83,18 +74,10 @@ const AccountLinkBottomSheet = ({
           >
             <div className="w-10 h-10 bg-primary-normal rounded-lg flex-shrink-0" />
             <div className="flex-1">
-              <Typography
-                style="text-body-1-16-medium"
-                fontFamily="pretendard"
-                className="text-neutral-90"
-              >
+              <Typography style="text-body-1-16-medium" fontFamily="pretendard" className="text-neutral-90">
                 {account.bankName}
               </Typography>
-              <Typography
-                style="text-body-3-13-regular"
-                fontFamily="pretendard"
-                color="neutral-60"
-              >
+              <Typography style="text-body-3-13-regular" fontFamily="pretendard" color="neutral-60">
                 {account.accountNumber}
               </Typography>
             </div>

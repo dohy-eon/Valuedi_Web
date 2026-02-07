@@ -2,8 +2,8 @@ import type { ChangeEvent } from 'react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import AuthInput from '@/components/login/AuthInput';
 import AccountLinkBottomSheet from '@/components/goal/list/AccountLinkBottomSheet';
-import GoalCreateStepHeader from './components/GoalCreateStepHeader';
-import GoalCreateStepFooter from './components/GoalCreateStepFooter';
+import GoalCreateStepHeader from '../../../components/goal/create/GoalCreateStepHeader';
+import GoalCreateStepFooter from '../../../components/goal/create/GoalCreateStepFooter';
 import { useGoalForm, type GoalStep, type GoalFormField } from '../../../hooks/Goal/useGoalCreateForm';
 
 type StepField =
@@ -105,11 +105,7 @@ const GoalCreateStep = () => {
                   const isGrayBg = item.isGrayBg ?? false;
 
                   return (
-                    <div
-                      key={`account-${idx}`}
-                      onClick={openAccountSheet}
-                      className="cursor-pointer"
-                    >
+                    <div key={`account-${idx}`} onClick={openAccountSheet} className="cursor-pointer">
                       <AuthInput
                         label={item.label}
                         name="linkedAccount"
@@ -154,11 +150,7 @@ const GoalCreateStep = () => {
         </div>
       </MobileLayout>
 
-      <AccountLinkBottomSheet
-        isOpen={isAccountSheetOpen}
-        onClose={closeAccountSheet}
-        onSelect={handleAccountSelect}
-      />
+      <AccountLinkBottomSheet isOpen={isAccountSheetOpen} onClose={closeAccountSheet} onSelect={handleAccountSelect} />
     </>
   );
 };

@@ -8,11 +8,8 @@ const GoalLinkedAccountHeader = ({ bankIcon }: GoalLinkedAccountHeaderProps) => 
       <img src={bankIcon} alt="bank icon" className="w- h-9" />
     </div>
 
-    <div className="text-sm text-gray-500 font-semibold whitespace-nowrap">
-      하나카드 | 1213190120-42-12233
-    </div>
+    <div className="text-sm text-gray-500 font-semibold whitespace-nowrap">하나카드 | 1213190120-42-12233</div>
   </div>
 );
 
 export default GoalLinkedAccountHeader;
-
