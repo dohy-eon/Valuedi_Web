@@ -29,7 +29,7 @@ const COLOR_ORDER = [
   'Pink',
 ] as const;
 
-const ICON_ORDER = [
+export const ICON_ORDER = [
   'Date',
   'Interest',
   'Interest2',

@@ -6,7 +6,7 @@ import ExBank from '@/assets/icons/goal/ExBank.svg';
 import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
 import GoalMoreActionsBottomSheet from '@/components/goal/detail/GoalMoreActionsBottomSheet';
-import { paths } from '@/router/Router';
+import { paths } from '@/router/paths';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useGoalDetail, useGoalLedgers, useDeleteGoal } from '@/features/goal';
 import type { LedgerItem } from '@/features/goal';

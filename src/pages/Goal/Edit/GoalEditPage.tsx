@@ -5,7 +5,7 @@ import BackPageGNB from '@/components/gnb/BackPageGNB';
 import AuthInput from '@/components/login/AuthInput';
 import AccountLinkBottomSheet from '@/components/goal/list/AccountLinkBottomSheet';
 import GoalCreateStepFooter from '@/components/goal/create/GoalCreateStepFooter';
-import { paths } from '@/router/Router';
+import { paths } from '@/router/paths';
 import { useGoalForm, type SelectedAccount } from '@/hooks/Goal/useGoalForm';
 
 type GoalEditLocationState = {

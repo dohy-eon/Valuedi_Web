@@ -38,7 +38,6 @@ export const accountApi = {
     });
 
     if (!response.ok) {
-      // 에러 응답 본문 읽기
       let errorData;
       try {
         errorData = await response.json();

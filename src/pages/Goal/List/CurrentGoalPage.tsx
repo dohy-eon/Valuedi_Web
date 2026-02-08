@@ -6,6 +6,7 @@ import DropDown from '@/assets/icons/goal/Dropdown.svg';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import GoalCard from '@/components/goal/GoalCard';
 import { useActiveGoals } from '@/features/goal';
+import { MobileLayout } from '@/components/layout/MobileLayout';
 
 export const CurrentGoalPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
@@ -17,24 +18,25 @@ export const CurrentGoalPage = () => {
   const goals = data?.result.goals || [];
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-gray-50">
+    <MobileLayout>
+    <div className="flex flex-col w-full min-h-screen bg-gray-100">
       <div className="sticky top-0 z-20 w-full bg-white">
         <GoalGNB />
       </div>
 
       <main className="flex-1 pb-24">
         <div className="flex flex-col gap-5 p-5">
-          {/* 목표 추가 버튼: paths.goal.create (추가 필요) 또는 직접 경로 */}
+          {/* 목표 추가 버튼 */}
           <div
             onClick={() => navigate('/goal/create')}
-            className="flex items-center gap-4 p-6 transition-colors bg-white shadow-sm cursor-pointer rounded-2xl active:bg-gray-50"
+            className="flex items-center gap-4 p-3 transition-colors bg-white shadow-sm cursor-pointer rounded-xl active:bg-gray-50"
           >
-            <div className="flex items-center justify-center w-12 h-12 text-gray-400 border border-gray-200 rounded-full">
-              <span className="text-3xl font-light">+</span>
+            <div className="flex items-center justify-center w-8 h-8 text-gray-400 border border-gray-200 rounded-full">
+              <span className="text-xl font-light">+</span>
             </div>
             <div className="flex flex-col">
               <span className="text-sm text-gray-400">또 다른 목표가 있나요?</span>
-              <span className="text-lg font-bold text-gray-900">목표 추가하기</span>
+              <span className="text-sm font-bold text-gray-900">목표 추가하기</span>
             </div>
           </div>
 
@@ -69,10 +71,10 @@ export const CurrentGoalPage = () => {
                   key={goal.goalId}
                   goal={{
                     id: goal.goalId,
-                    bankIcon: ExBank, // TODO: iconId에 따라 매핑
+                    bankIcon: ExBank,
                     title: goal.title,
                     progress: goal.achievementRate,
-                    targetAmount: goal.savedAmount, // TODO: targetAmount 추가 필요
+                    targetAmount: goal.savedAmount,
                     remainingDays: goal.remainingDays,
                   }}
                   type="current"
@@ -92,5 +94,6 @@ export const CurrentGoalPage = () => {
         <BottomNavigation activeItem="goal" />
       </footer>
     </div>
+    </MobileLayout>
   );
 };

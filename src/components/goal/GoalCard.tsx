@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { paths } from '@/router/Router';
+import { paths } from '@/router/paths';
 import MoneyIcon from '@/assets/icons/goal/MoneyIcon.svg';
 import CalendarIcon from '@/assets/icons/goal/CalendarIcon.svg';
 
@@ -24,7 +24,7 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   return (
     <div
       onClick={handleClick}
-      className={`w-full transition-colors bg-white shadow-sm cursor-pointer p-5 rounded-2xl active:bg-gray-50 ${
+      className={`w-full transition-colors bg-white shadow-sm cursor-pointer p-5 rounded-xl active:bg-gray-50 ${
         type === 'past' ? 'opacity-70' : ''
       }`}
     >

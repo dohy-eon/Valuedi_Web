@@ -3,7 +3,7 @@ import { MobileLayout } from '@/components/layout/MobileLayout';
 import BackPageIcon from '@/assets/icons/BackPage.svg';
 import MoreIcon from '@/assets/icons/goal/MoreIcon.svg';
 import TotalSection from '@/components/goal/TotalSection';
-import { paths } from '@/router/Router';
+import { paths } from '@/router/paths';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import SavingList from '@/components/goal/detail/SavingList';

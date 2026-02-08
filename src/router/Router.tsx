@@ -16,6 +16,7 @@ import GoalCreatePage from '@/pages/Goal/Create/GoalCreatePage';
 import GoalCreateStep from '@/pages/Goal/Create/GoalCreateStep';
 import GoalCompletePage from '@/pages/Goal/Create/GoalCompletePage';
 import SavingSimulationPage from '@/pages/Goal/Detail/SavingSimulationPage';
+import GoalAlmostDonePage from '@/pages/Goal/Edit/GoalAlmostDonePage';
 
 import {
   BankConnectionStartPage,
@@ -50,22 +51,7 @@ import MyPage from '@/pages/MyPage/MyPage';
 import { ConnectionDetailPage } from '@/pages/MyPage/subpages/ConnectionDetailPage';
 import { LogoutPage } from '@/pages/MyPage/subpages/LogoutPage';
 import { WithdrawPage } from '@/pages/MyPage/subpages/WithdrawPage';
-
-export const paths = {
-  goal: {
-    current: '/goal/current',
-    past: '/goal/past',
-    savingSimulation: '/goal/saving-simulation',
-    amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
-    savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
-    edit: (id: string | number) => `/goal/detail/${id}/edit`,
-    amountAchievedRoute: '/goal/detail/:id/amount-achieved',
-    savingsSimulationRoute: '/goal/detail/:id/savingsimulation',
-    create: '/goal/create',
-    createStep: '/goal/create/step',
-    createComplete: '/goal/create/complete',
-  },
-} as const;
+import { paths } from './paths';
 
 export const router = createBrowserRouter([
   {
@@ -95,6 +81,7 @@ export const router = createBrowserRouter([
       { path: paths.goal.savingsSimulationRoute, element: <SavingSimulationPage /> },
       { path: paths.goal.create, element: <GoalCreatePage /> },
       { path: paths.goal.createStep, element: <GoalCreateStep /> },
+      { path: paths.goal.almostDone, element: <GoalAlmostDonePage /> },
       { path: paths.goal.createComplete, element: <GoalCompletePage /> },
       { path: 'login', element: <DefaultLogin /> },
       { path: 'login/form', element: <LoginPage /> },
