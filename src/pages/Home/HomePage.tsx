@@ -42,10 +42,12 @@ export const HomePage = () => {
     diffFromLastMonth: number;
   } | null>(null);
   const [mbtiResult, setMbtiResult] = useState<string>('');
-  const [recommendedProducts, setRecommendedProducts] = useState<Array<{
-    korCoNm: string;
-    finPrdtNm: string;
-  }>>([]);
+  const [recommendedProducts, setRecommendedProducts] = useState<
+    Array<{
+      korCoNm: string;
+      finPrdtNm: string;
+    }>
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalGoalCount, setTotalGoalCount] = useState(0);
   const [totalAccountCount, setTotalAccountCount] = useState(0);
@@ -228,10 +230,18 @@ export const HomePage = () => {
                       <div className="flex gap-[8px] items-center">
                         <GoalAccountIcon bgColor={goal.iconBg} />
                         <div className="flex flex-col gap-[2px]">
-                          <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
+                          <Typography
+                            style="text-body-2-14-semi-bold"
+                            className="text-neutral-90"
+                            fontFamily="pretendard"
+                          >
                             {goal.name}
                           </Typography>
-                          <Typography style="text-caption-1-12-regular" className="text-neutral-70" fontFamily="pretendard">
+                          <Typography
+                            style="text-caption-1-12-regular"
+                            className="text-neutral-70"
+                            fontFamily="pretendard"
+                          >
                             {formatCurrency(goal.amount)}
                           </Typography>
                         </div>
@@ -285,10 +295,18 @@ export const HomePage = () => {
                       <div className="flex gap-[8px] items-center">
                         <GoalAccountIcon bgColor={GOAL_COLORS[index % GOAL_COLORS.length]} />
                         <div className="flex flex-col gap-[2px]">
-                          <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
+                          <Typography
+                            style="text-body-2-14-semi-bold"
+                            className="text-neutral-90"
+                            fontFamily="pretendard"
+                          >
                             {formatCurrency(account.balanceAmount)}
                           </Typography>
-                          <Typography style="text-caption-1-12-regular" className="text-neutral-70" fontFamily="pretendard">
+                          <Typography
+                            style="text-caption-1-12-regular"
+                            className="text-neutral-70"
+                            fontFamily="pretendard"
+                          >
                             {account.accountName}
                           </Typography>
                         </div>
@@ -438,7 +456,10 @@ export const HomePage = () => {
             ) : (
               <div className="flex gap-[12px] overflow-x-auto px-[12px] -mx-[12px]">
                 {recommendedProducts.map((product, index) => (
-                  <div key={index} className="bg-neutral-10 rounded-[16px] p-[16px] min-w-[221px] flex flex-col gap-[4px]">
+                  <div
+                    key={index}
+                    className="bg-neutral-10 rounded-[16px] p-[16px] min-w-[221px] flex flex-col gap-[4px]"
+                  >
                     <Typography
                       style="text-body-1-16-semi-bold"
                       className="text-neutral-90 leading-[1.3]"
