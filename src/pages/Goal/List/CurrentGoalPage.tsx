@@ -5,19 +5,16 @@ import { BottomNavigation } from '@/components/gnb/BottomNavigation';
 import DropDown from '@/assets/icons/goal/Dropdown.svg';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import GoalCard from '@/components/goal/GoalCard';
-
-/* 목데이터 */
-const mockGoals = [
-  { id: 1, bankIcon: ExBank, title: '목표진행입니다', progress: 32, targetAmount: 10000000, remainingDays: 91 },
-  { id: 2, bankIcon: ExBank, title: '목표진행입니다', progress: 32, targetAmount: 10000000, remainingDays: 91 },
-  { id: 3, bankIcon: ExBank, title: '목표진행입니다', progress: 32, targetAmount: 10000000, remainingDays: 91 },
-  { id: 4, bankIcon: ExBank, title: '목표진행입니다', progress: 32, targetAmount: 10000000, remainingDays: 91 },
-  { id: 5, bankIcon: ExBank, title: '목표진행입니다', progress: 32, targetAmount: 10000000, remainingDays: 91 },
-];
+import { useActiveGoals } from '@/features/goal';
 
 export const CurrentGoalPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
   const navigate = useNavigate();
+
+  // API 연결
+  const sortParam = sortBy === 'latest' ? 'TIME_DESC' : 'PROGRESS_DESC';
+  const { data, isLoading, error } = useActiveGoals(sortParam);
+  const goals = data?.result.goals || [];
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-gray-50">
@@ -60,9 +57,28 @@ export const CurrentGoalPage = () => {
 
           {/* Goal 리스트 */}
           <div className="flex flex-col gap-4">
-            {mockGoals.map((goal) => (
-              <GoalCard key={goal.id} goal={goal} type="current" />
-            ))}
+            {isLoading ? (
+              <div className="text-center text-gray-400">로딩 중...</div>
+            ) : error ? (
+              <div className="text-center text-red-500">목표를 불러오는데 실패했습니다.</div>
+            ) : goals.length === 0 ? (
+              <div className="text-center text-gray-400">목표가 없습니다.</div>
+            ) : (
+              goals.map((goal) => (
+                <GoalCard
+                  key={goal.goalId}
+                  goal={{
+                    id: goal.goalId,
+                    bankIcon: ExBank, // TODO: iconId에 따라 매핑
+                    title: goal.title,
+                    progress: goal.achievementRate,
+                    targetAmount: goal.savedAmount, // TODO: targetAmount 추가 필요
+                    remainingDays: goal.remainingDays,
+                  }}
+                  type="current"
+                />
+              ))
+            )}
           </div>
 
           <button className="flex items-center justify-center gap-1 py-6 text-sm font-medium text-gray-400 transition-opacity active:opacity-50">

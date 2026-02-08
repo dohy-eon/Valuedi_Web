@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { HomePage } from '@/pages';
 import LoginPage from '@/pages/Login/LoginPage';
 import SignUpPage from '@/pages/SignUp/SignUpPage';
@@ -88,6 +88,7 @@ export const router = createBrowserRouter([
       { path: 'asset/account/:id', element: <AssetAccountDetailPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'recommend/detail/:id', element: <RecommendDetailPage /> },
+      { path: 'goal', element: <Navigate to="/goal/current" replace /> },
       { path: paths.goal.current, element: <CurrentGoalPage /> },
       { path: paths.goal.past, element: <PastGoalPage /> },
       { path: paths.goal.savingSimulation, element: <SavingSimulationPage /> },
