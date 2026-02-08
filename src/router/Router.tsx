@@ -55,7 +55,6 @@ export const paths = {
   goal: {
     current: '/goal/current',
     past: '/goal/past',
-    // (옵션) id 없이 접근하는 절약 시뮬레이션 페이지
     savingSimulation: '/goal/saving-simulation',
     amountAchieved: (id: string | number) => `/goal/detail/${id}/amount-achieved`,
     savingsSimulation: (id: string | number) => `/goal/detail/${id}/savingsimulation`,
@@ -77,11 +76,11 @@ export const router = createBrowserRouter([
       { path: 'home', element: <HomePage /> },
       {
         path: 'asset',
-        element: <AssetPage />, // 여기에 탭 버튼과 레이아웃이 있음
+        element: <AssetPage />,
         children: [
-          { index: true, element: <AssetDetails /> }, // /asset (기본탭)
-          { path: 'sector', element: <SectorAnalysis /> }, // /asset/sector (분야별)
-          { path: 'compare', element: <CompareAnalysis /> }, // /asset/compare (비교)
+          { index: true, element: <AssetDetails /> },
+          { path: 'sector', element: <SectorAnalysis /> },
+          { path: 'compare', element: <CompareAnalysis /> },
         ],
       },
       { path: 'asset', element: <AssetPage /> },

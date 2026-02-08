@@ -1,10 +1,7 @@
-// Goal 상태
 export type GoalStatus = 'ACTIVE' | 'COMPLETE' | 'FAILED';
-
-// Goal 정렬
+// 정렬
 export type GoalSort = 'TIME_DESC' | 'PROGRESS_DESC';
-
-// Goal 기본 정보
+//기본 정보
 export interface Goal {
   goalId: number;
   title: string;
@@ -14,9 +11,7 @@ export interface Goal {
   status: GoalStatus;
   colorCode: string;
   iconId: number;
-}
-
-// API 응답 - 목표 목록
+} //목표 목록
 export interface GoalsResponse {
   isSuccess: boolean;
   code: string;
@@ -24,16 +19,13 @@ export interface GoalsResponse {
   result: {
     goals: Goal[];
   };
-}
-
-// API 요청 - 목표 목록 조회
+} // 목표 목록 조회
 export interface GetGoalsParams {
   status?: GoalStatus;
   sort?: GoalSort;
   limit?: number;
 }
-
-// API 요청 - 목표 추가
+// 목표 추가
 export interface CreateGoalRequest {
   bankAccountId: number;
   title: string;
@@ -44,7 +36,7 @@ export interface CreateGoalRequest {
   iconId: number;
 }
 
-// API 응답 - 목표 추가
+// 목표 추가
 export interface CreateGoalResponse {
   isSuccess: boolean;
   code: string;
@@ -65,7 +57,7 @@ export interface CreateGoalResponse {
   };
 }
 
-// Goal 상세 정보
+// 성세 정보
 export interface GoalDetail {
   goalId: number;
   title: string;
@@ -82,7 +74,7 @@ export interface GoalDetail {
   iconId: number;
 }
 
-// API 응답 - 목표 상세 조회
+// 목표 상세 조회
 export interface GoalDetailResponse {
   isSuccess: boolean;
   code: string;
@@ -90,15 +82,73 @@ export interface GoalDetailResponse {
   result: GoalDetail;
 }
 
-// API 요청 - 목표-계좌 연결
+//  목표-계좌 연결
 export interface LinkAccountRequest {
   accountId: number;
 }
 
-// API 응답 - 목표-계좌 연결
+// 목표-계좌 연결
 export interface LinkAccountResponse {
   isSuccess: boolean;
   code: string;
   message: string;
   result: string;
+}
+
+//  목표 수정
+export interface UpdateGoalRequest {
+  title?: string;
+  startDate?: string;
+  endDate?: string;
+  targetAmount?: number;
+  colorCode?: string;
+  iconId?: number;
+}
+
+// 목표 수정
+export interface UpdateGoalResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: GoalDetail;
+}
+
+//목표 삭제
+export interface DeleteGoalResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: string;
+}
+
+// 거래내역 항목
+export interface LedgerItem {
+  id: number;
+  title: string;
+  amount: number;
+  type: 'INCOME' | 'EXPENSE';
+  categoryCode: string;
+  categoryName: string;
+  transactionAt: string;
+  memo: string;
+}
+
+//목표 거래내역 조회
+export interface GoalLedgersResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    content: LedgerItem[];
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+}
+
+// 목표 거래내역 조회
+export interface GetGoalLedgersParams {
+  page?: number;
+  size?: number;
 }

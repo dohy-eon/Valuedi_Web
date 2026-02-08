@@ -1,14 +1,20 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { goalApi } from './goal.api';
-import type { GetGoalsParams, CreateGoalRequest, GoalSort, LinkAccountRequest } from './goal.types';
-
-// Query Keys
+import type {
+  GetGoalsParams,
+  CreateGoalRequest,
+  GoalSort,
+  LinkAccountRequest,
+  UpdateGoalRequest,
+  GetGoalLedgersParams,
+} from './goal.types';
 export const goalKeys = {
   all: ['goals'] as const,
   lists: () => [...goalKeys.all, 'list'] as const,
   list: (params?: GetGoalsParams) => [...goalKeys.lists(), params] as const,
   details: () => [...goalKeys.all, 'detail'] as const,
   detail: (id: number) => [...goalKeys.details(), id] as const,
+  ledgers: (goalId: number, params?: GetGoalLedgersParams) => [...goalKeys.all, 'ledgers', goalId, params] as const,
 };
 
 /**
@@ -77,9 +83,49 @@ export function useLinkAccount() {
   return useMutation({
     mutationFn: ({ goalId, data }: { goalId: number; data: LinkAccountRequest }) => goalApi.linkAccount(goalId, data),
     onSuccess: () => {
-      // 목표 목록 및 상세 정보 다시 불러오기
       queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
       queryClient.invalidateQueries({ queryKey: goalKeys.details() });
     },
+  });
+}
+
+/**
+ * 목표 수정
+ */
+export function useUpdateGoal() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ goalId, data }: { goalId: number; data: UpdateGoalRequest }) => goalApi.updateGoal(goalId, data),
+    onSuccess: (_, { goalId }) => {
+      queryClient.invalidateQueries({ queryKey: goalKeys.detail(goalId) });
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+    },
+  });
+}
+
+/**
+ * 목표 삭제
+ */
+export function useDeleteGoal() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (goalId: number) => goalApi.deleteGoal(goalId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: goalKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: goalKeys.details() });
+    },
+  });
+}
+
+/**
+ * 목표 거래내역 조회
+ */
+export function useGoalLedgers(goalId: number | undefined, params?: GetGoalLedgersParams) {
+  return useQuery({
+    queryKey: goalKeys.ledgers(goalId ?? 0, params),
+    queryFn: () => goalApi.getGoalLedgers(goalId!, params),
+    enabled: !!goalId,
   });
 }

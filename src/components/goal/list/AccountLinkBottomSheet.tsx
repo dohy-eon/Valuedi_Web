@@ -21,10 +21,8 @@ const formatBalance = (amount: number) => amount.toLocaleString('ko-KR') + '원'
 const AccountLinkBottomSheet = ({ isOpen, onClose, onSelect }: AccountLinkBottomSheetProps) => {
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
 
-  // 연동된 모든 은행의 계좌 목록 조회 (GET /api/assets/banks → GET /api/assets/banks/{bankCode})
+  // 연동된 모든 은행의 계좌 목록 조회
   const { data: accountsData, isLoading, error } = useAllBankAccounts(isOpen);
-
-  // AccountOption → Account (id는 accountId로, 목표 생성 시 bankAccountId로 사용됨)
   const accounts: Account[] =
     accountsData?.map((acc) => ({
       id: acc.accountId.toString(),

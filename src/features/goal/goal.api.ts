@@ -6,9 +6,22 @@ import type {
   GoalDetailResponse,
   LinkAccountRequest,
   LinkAccountResponse,
+  UpdateGoalRequest,
+  UpdateGoalResponse,
+  DeleteGoalResponse,
+  GoalLedgersResponse,
+  GetGoalLedgersParams,
 } from './goal.types';
 
 const API_BASE_URL = 'https://api.valuedi.site';
+
+// API 에러 타입 정의
+interface ApiError extends Error {
+  response?: {
+    status: number;
+    data: unknown;
+  };
+}
 
 // 인증 헤더 생성 함수
 const getAuthHeaders = () => {
@@ -25,9 +38,8 @@ const getAuthHeaders = () => {
 };
 
 export const goalApi = {
-  /**
-   * 목표 목록 조회
-   */
+  // 목표 목록 조회
+
   async getGoals(params?: GetGoalsParams): Promise<GoalsResponse> {
     const queryParams = new URLSearchParams();
 
@@ -56,9 +68,8 @@ export const goalApi = {
     return response.json();
   },
 
-  /**
-   * 목표 추가
-   */
+  // 목표 추가
+
   async createGoal(data: CreateGoalRequest): Promise<CreateGoalResponse> {
     const url = `${API_BASE_URL}/api/goals`;
 
@@ -85,7 +96,7 @@ export const goalApi = {
         errorData = { message: response.statusText };
       }
 
-      const error: any = new Error(`Failed to create goal: ${response.statusText}`);
+      const error: ApiError = new Error(`Failed to create goal: ${response.statusText}`);
       error.response = {
         status: response.status,
         data: errorData,
@@ -98,9 +109,8 @@ export const goalApi = {
     return result;
   },
 
-  /**
-   * 목표 상세 조회
-   */
+  // 목표 상세 조회
+
   async getGoalDetail(goalId: number): Promise<GoalDetailResponse> {
     const url = `${API_BASE_URL}/api/goals/${goalId}`;
 
@@ -120,9 +130,8 @@ export const goalApi = {
     return response.json();
   },
 
-  /**
-   * 목표-계좌 연결
-   */
+  // 목표-계좌 연결
+
   async linkAccount(goalId: number, data: LinkAccountRequest): Promise<LinkAccountResponse> {
     const url = `${API_BASE_URL}/api/goals/${goalId}/linked-accounts`;
 
@@ -150,7 +159,7 @@ export const goalApi = {
         errorData = { message: response.statusText };
       }
 
-      const error: any = new Error(`Failed to link account: ${response.statusText}`);
+      const error: ApiError = new Error(`Failed to link account: ${response.statusText}`);
       error.response = {
         status: response.status,
         data: errorData,
@@ -161,5 +170,77 @@ export const goalApi = {
     const result = await response.json();
     console.log('계좌 연결 성공:', result);
     return result;
+  },
+
+  // 목표 수정
+
+  async updateGoal(goalId: number, data: UpdateGoalRequest): Promise<UpdateGoalResponse> {
+    const url = `${API_BASE_URL}/api/goals/${goalId}`;
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { message: response.statusText };
+      }
+      const err: ApiError = new Error(`Failed to update goal: ${response.statusText}`);
+      err.response = { status: response.status, data: errorData };
+      throw err;
+    }
+    return response.json();
+  },
+
+  // 목표 삭제
+
+  async deleteGoal(goalId: number): Promise<DeleteGoalResponse> {
+    const url = `${API_BASE_URL}/api/goals/${goalId}`;
+
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { message: response.statusText };
+      }
+      const err: ApiError = new Error(`Failed to delete goal: ${response.statusText}`);
+      err.response = { status: response.status, data: errorData };
+      throw err;
+    }
+    return response.json();
+  },
+
+  // 목표 거래내역 조회
+
+  async getGoalLedgers(goalId: number, params?: GetGoalLedgersParams): Promise<GoalLedgersResponse> {
+    const queryParams = new URLSearchParams();
+    if (params?.page !== undefined) queryParams.append('page', params.page.toString());
+    if (params?.size !== undefined) queryParams.append('size', params.size.toString());
+
+    const url = `${API_BASE_URL}/api/goals/${goalId}/ledgers${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch goal ledgers: ${response.statusText}`);
+    }
+    return response.json();
   },
 };

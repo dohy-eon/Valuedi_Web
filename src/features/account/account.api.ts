@@ -2,6 +2,14 @@ import type { AccountsResponse } from './account.types';
 
 const API_BASE_URL = 'https://api.valuedi.site';
 
+// API 에러 타입 정의
+interface ApiError extends Error {
+  response?: {
+    status: number;
+    data: unknown;
+  };
+}
+
 // 인증 헤더 생성 함수
 const getAuthHeaders = () => {
   const token = localStorage.getItem('accessToken');
@@ -17,9 +25,7 @@ const getAuthHeaders = () => {
 };
 
 export const accountApi = {
-  /**
-   * 연결된 계좌 목록 조회
-   */
+  // 연결된 계좌 목록 조회
   async getAccounts(): Promise<AccountsResponse> {
     const url = `${API_BASE_URL}/api/accounts`;
 
@@ -41,7 +47,7 @@ export const accountApi = {
         errorData = { message: response.statusText };
       }
 
-      const error: any = new Error(`Failed to fetch accounts: ${response.statusText}`);
+      const error: ApiError = new Error(`Failed to fetch accounts: ${response.statusText}`);
       error.response = {
         status: response.status,
         data: errorData,

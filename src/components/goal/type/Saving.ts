@@ -1,7 +1,7 @@
 export interface SavingCategory {
   id: 'FOOD' | 'ENTERTAINMENT' | 'TRANSPORT' | 'SHOPPING';
   label: string;
-  icon: string; // SVG 경로 또는 이미지 URL
+  icon: string;
 }
 
 import FoodIcon from '@/assets/icons/goal/FoodIcon.svg';
