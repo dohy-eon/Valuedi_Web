@@ -2,8 +2,8 @@ import type { ChangeEvent } from 'react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import AuthInput from '@/components/login/AuthInput';
 import AccountLinkBottomSheet from '@/components/goal/list/AccountLinkBottomSheet';
-import GoalCreateStepHeader from './components/GoalCreateStepHeader';
-import GoalCreateStepFooter from './components/GoalCreateStepFooter';
+import GoalCreateStepHeader from '../../../components/goal/create/GoalCreateStepHeader';
+import GoalCreateStepFooter from '../../../components/goal/create/GoalCreateStepFooter';
 import { useGoalForm, type GoalStep, type GoalFormField } from '../../../hooks/Goal/useGoalCreateForm';
 
 type StepField =

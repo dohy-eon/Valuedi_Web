@@ -14,9 +14,10 @@ const TERMS_LIST = [
 
 interface TermsAgreementProps {
   onRequirementChange?: (isValid: boolean) => void; // 💡 부모에게 필수 동의 여부 전달
+  onTermsChange?: (terms: Record<string, boolean>) => void; // 💡 약관 동의 상태 전달
 }
 
-export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementChange }) => {
+export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementChange, onTermsChange }) => {
   const [terms, setTerms] = React.useState<Record<string, boolean>>({
     age: false,
     service: false,
@@ -46,7 +47,9 @@ export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementCha
 
     // 필수 항목이 다 채워졌는지 부모(SignUpContainer)에 알림
     onRequirementChange?.(isRequiredFilled);
-  }, [terms, onRequirementChange]);
+    // 약관 동의 상태 전달
+    onTermsChange?.(terms);
+  }, [terms, onRequirementChange, onTermsChange]);
 
   return (
     <div className="w-[320px] flex flex-col">

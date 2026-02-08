@@ -168,7 +168,7 @@ const colorTokenToClass: Record<ColorToken, string> = {
   'bank-shinhyup': '',
   'bank-postbank': '',
   'bank-hana': '',
-  'bank-shinhan': ''
+  'bank-shinhan': '',
 };
 
 /**
