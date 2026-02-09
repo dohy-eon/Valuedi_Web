@@ -11,6 +11,7 @@ export const assetKeys = {
   summary: () => [...assetKeys.all, 'summary'] as const,
   accounts: () => [...assetKeys.all, 'accounts'] as const,
   cards: () => [...assetKeys.all, 'cards'] as const,
+  cardIssuers: () => [...assetKeys.all, 'cardIssuers'] as const,
   cardIssuerCards: (issuerCode: string) => [...assetKeys.all, 'cardIssuers', issuerCode, 'cards'] as const,
 };
 
@@ -123,6 +124,17 @@ export function useCards() {
   return useQuery({
     queryKey: assetKeys.cards(),
     queryFn: () => assetApi.getCards(),
+  });
+}
+
+/**
+ * 연동된 카드사 목록 조회
+ * GET /api/assets/cardIssuers
+ */
+export function useCardIssuers() {
+  return useQuery({
+    queryKey: assetKeys.cardIssuers(),
+    queryFn: () => assetApi.getCardIssuers(),
   });
 }
 

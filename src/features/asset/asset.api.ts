@@ -12,6 +12,7 @@ import type {
   AccountsListResponse,
   CardsListResponse,
   CardIssuerCardsResponse,
+  CardIssuersListResponse,
 } from './asset.types';
 
 export type { Account };
@@ -331,6 +332,41 @@ export const assetApi = {
    */
   async getCards(): Promise<ApiResponse<CardsListResponse['result']>> {
     return apiGet<CardsListResponse['result']>('/api/assets/cards');
+  },
+
+  /**
+   * 연동된 카드사 목록 조회
+   * GET /api/assets/cardIssuers
+   */
+  async getCardIssuers(): Promise<CardIssuersListResponse> {
+    const url = `${API_BASE_URL}/api/assets/cardIssuers`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { message: response.statusText };
+      }
+
+      const error = new Error(`Failed to fetch card issuers: ${response.statusText}`) as Error & {
+        response?: { status: number; data: typeof errorData };
+      };
+      error.response = {
+        status: response.status,
+        data: errorData,
+      };
+      throw error;
+    }
+
+    const result = await response.json();
+    return result;
   },
 
   /**

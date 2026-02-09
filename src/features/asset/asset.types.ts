@@ -58,7 +58,7 @@ export interface BankAccountsResponse {
 export interface AssetSummary {
   totalAccountCount: number; // 연동된 계좌 개수
   totalCardCount: number; // 연동된 카드 개수
-  totalBalance?: number; // 총 잔액 (선택적)
+  totalAssetCount: number; // 전체 자산 개수 (계좌 + 카드)
 }
 
 // API 응답 - 자산 요약
@@ -73,12 +73,13 @@ export interface AssetSummaryResponse {
 export interface AccountDetail {
   accountId: number;
   accountName: string;
-  accountNumber?: string;
   balanceAmount: number;
-  bankCode: string;
-  bankName: string;
-  connectedGoalId: number | null;
-  status?: string; // ACTIVE, INACTIVE 등
+  organization: string; // 은행 코드 (예: "0004")
+  createdAt: string; // 등록일시
+  goalInfo: {
+    goalId: number;
+    title: string;
+  } | null; // 연동된 목표 정보
 }
 
 // API 응답 - 전체 계좌 목록
@@ -86,17 +87,19 @@ export interface AccountsListResponse {
   isSuccess: boolean;
   code: string;
   message: string;
-  result: AccountDetail[];
+  result: {
+    accountList: AccountDetail[];
+    totalCount: number;
+  };
 }
 
 // 카드 상세 정보 (전체 카드 목록 조회용)
 export interface CardDetail {
-  cardId: number;
-  cardName: string;
-  cardNumber?: string;
-  issuerCode: string;
-  issuerName: string;
-  status?: string; // ACTIVE, INACTIVE 등
+  cardName: string; // 카드명
+  cardNoMasked: string; // 마스킹된 카드번호 (예: "4321-****-****-1234")
+  cardType: 'CREDIT' | 'CHECK' | 'DEBIT'; // 카드 타입 (신용카드, 체크카드, 직불카드)
+  organization: string; // 카드사 코드 (예: "0302")
+  createdAt: string; // 등록일시
 }
 
 // API 응답 - 전체 카드 목록
@@ -104,15 +107,19 @@ export interface CardsListResponse {
   isSuccess: boolean;
   code: string;
   message: string;
-  result: CardDetail[];
+  result: {
+    cardList: CardDetail[];
+    totalCount: number;
+  };
 }
 
 // 카드사별 카드 상세 정보
 export interface CardIssuerCardDetail {
-  cardId: number;
-  cardName: string;
-  cardNumber?: string;
-  status?: string; // ACTIVE, INACTIVE 등
+  cardName: string; // 카드명
+  cardNoMasked: string; // 마스킹된 카드번호
+  cardType: 'CREDIT' | 'CHECK' | 'DEBIT'; // 카드 타입
+  organization: string; // 카드사 코드
+  createdAt: string; // 등록일시
 }
 
 // API 응답 - 카드사별 카드 목록
@@ -121,8 +128,24 @@ export interface CardIssuerCardsResponse {
   code: string;
   message: string;
   result: {
-    issuerName: string;
-    totalCardCount: number;
     cardList: CardIssuerCardDetail[];
+    totalCount: number;
   };
+}
+
+// 연동된 카드사 정보
+export interface ConnectedCardIssuer {
+  id: number;
+  organizationCode: string;
+  organizationName: string;
+  connectedAt: string;
+  status: 'ACTIVE' | 'INACTIVE';
+}
+
+// API 응답 - 연동된 카드사 목록
+export interface CardIssuersListResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: ConnectedCardIssuer[];
 }
