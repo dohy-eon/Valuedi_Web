@@ -6,7 +6,7 @@ import { calculateMbtiScores } from '@/utils/calculateMbtiScore';
 import { formatMbtiDescription } from '@/utils/formatMbtiText';
 
 const MyMbti = () => {
-  const { mbtiResult, userName, isLoading } = useGetProfile();
+  const { mbtiResult, isLoading } = useGetProfile();
 
   if (isLoading || !mbtiResult) return null;
 
@@ -14,26 +14,36 @@ const MyMbti = () => {
 
   return (
     <div>
-      <div className={cn('w-[320px] flex flex-col gap-[12px] px-[12px] py-[16px]')}>
-        <div className={cn('w-full flex flex-col gap-[12px]')}>
-          <div className={cn('flex flex-col gap-[4px]')}>
-            <Typography style="text-caption-1-12-regular" className={cn('text-neutral-70')}>
-              {userName}님의 MBTI 결과예요
-            </Typography>
-            <Typography style="text-headline-3-18-semi-bold" className={cn('text-neutral-90')}>
-              {mbtiResult?.title}
-            </Typography>
+      <div className={cn('flex flex-col gap-[12px] items-center p-[24px] rounded-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)] bg-white')}>
+        {/* 상단 제목 */}
+        <Typography style="text-body-1-16-semi-bold" className={cn('text-neutral-90')}>
+          {mbtiResult?.title}
+        </Typography>
+
+        {/* 이미지 영역 */}
+        <div className={cn('flex flex-col gap-[24px] items-center w-full')}>
+          <div className={cn('w-full flex items-center justify-center')}>
+            <div className={cn('h-[125px] w-[140px]')}>
+              <mbtiResult.icon />
+            </div>
           </div>
-        </div>
 
-        <div className="w-full h-[146px] rounded-[4px] flex items-center justify-center overflow-hidden">
-          <mbtiResult.icon />
-        </div>
-
-        <div>
-          <Typography style="text-body-2-14-regular" className={cn('text-neutral-70')}>
-            {mbtiResult.tagline}
-          </Typography>
+          {/* 하단 설명 텍스트 */}
+          <div className={cn('flex flex-col gap-[12px] items-center text-center')}>
+            <Typography style="text-body-2-14-semi-bold" className={cn('text-neutral-70')}>
+              {mbtiResult.tagline}
+            </Typography>
+            <div className={cn('flex flex-col')}>
+              <Typography style="text-body-2-14-regular" className={cn('text-neutral-70 whitespace-nowrap')}>
+                {formatMbtiDescription(mbtiResult.detail).split('\n')[0]}
+              </Typography>
+              {formatMbtiDescription(mbtiResult.detail).split('\n').slice(1).map((line, index) => (
+                <Typography key={index} style="text-body-2-14-regular" className={cn('text-neutral-70')}>
+                  {line}
+                </Typography>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
