@@ -18,12 +18,16 @@ export const recommendKeys = {
 /**
  * 최신 추천 15개 조회
  * @param rsrvType 적립유형 필터 (S=정기적금, F=자유적금). 미입력 시 전체
+ * @param refetchInterval 폴링 간격 (ms). undefined면 폴링 안함
  */
-export function useSavingsRecommendations(rsrvType?: 'S' | 'F') {
+export function useSavingsRecommendations(rsrvType?: 'S' | 'F', refetchInterval?: number) {
   return useQuery({
     queryKey: recommendKeys.savingsList(rsrvType),
     queryFn: () => getSavingsRecommendationsApi(rsrvType),
     select: (data) => data.result,
+    refetchInterval: refetchInterval,
+    // 폴링 중일 때는 결과가 있으면 자동으로 중단
+    refetchIntervalInBackground: false,
   });
 }
 

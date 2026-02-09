@@ -20,6 +20,8 @@ export interface RecommendationsResponse {
   maxPageNo: number;
   nowPageNo: number;
   products: RecommendedProduct[];
+  status?: string;
+  message?: string;
 }
 
 export interface Top3RecommendationsResponse {

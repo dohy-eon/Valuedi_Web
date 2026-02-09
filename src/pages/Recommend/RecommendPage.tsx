@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { BottomNavigation } from '@/components/gnb/BottomNavigation';
@@ -41,6 +41,9 @@ export const RecommendPage = () => {
 
   const [filter, setFilter] = useState<ProductType>('all');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isPolling, setIsPolling] = useState(false); // 폴링 상태 관리
+  const [pollingStartTime, setPollingStartTime] = useState<number | null>(null); // 폴링 시작 시간
+  const [refetchInterval, setRefetchInterval] = useState<number | undefined>(undefined); // 폴링 간격
 
   // 필터에 따라 rsrvType 결정: 'free' -> 'F', 'fixed' -> 'S', 'all' -> undefined
   const rsrvType = useMemo(() => {
@@ -49,16 +52,61 @@ export const RecommendPage = () => {
     return undefined;
   }, [filter]);
 
-  const { data: recommendationsData, isLoading, isError } = useSavingsRecommendations(rsrvType);
+  // 훅 호출
+  const {
+    data: recommendationsData,
+    isLoading,
+    isError,
+    refetch,
+  } = useSavingsRecommendations(rsrvType, refetchInterval);
   const createRecommendationsMutation = useCreateSavingsRecommendations();
 
   // API 응답에서 products 추출
   const products = recommendationsData?.products || [];
+  // 빈 결과인지 확인 (status가 SUCCESS이고 products가 빈 배열인 경우)
+  const isEmptyResult = !isLoading && !isError && recommendationsData?.status === 'SUCCESS' && products.length === 0;
 
-  // 필터링 (API에서 이미 필터링되지만, 안전을 위해 클라이언트에서도 필터링)
+  // 추천 생성 성공 시 폴링 시작, 실패 시 폴링 중지
+  useEffect(() => {
+    if (createRecommendationsMutation.isSuccess) {
+      setIsPolling(true);
+      setPollingStartTime(Date.now());
+      setRefetchInterval(2000); // 2초마다 폴링 시작
+      // 폴링을 위해 refetch 시작
+      refetch();
+    } else if (createRecommendationsMutation.isError) {
+      setIsPolling(false);
+      setPollingStartTime(null);
+      setRefetchInterval(undefined);
+    }
+  }, [createRecommendationsMutation.isSuccess, createRecommendationsMutation.isError, refetch]);
+
+  // 결과가 나오면 폴링 중지
+  useEffect(() => {
+    if (isPolling && products.length > 0) {
+      setIsPolling(false);
+      setPollingStartTime(null);
+      setRefetchInterval(undefined);
+    }
+  }, [isPolling, products.length]);
+
+  // 타임아웃 시 폴링 중지
+  useEffect(() => {
+    if (pollingStartTime !== null && Date.now() - pollingStartTime >= 30000) {
+      setIsPolling(false);
+      setPollingStartTime(null);
+      setRefetchInterval(undefined);
+    }
+  }, [pollingStartTime]);
+
+  // 필터링 및 중복 제거 (API에서 이미 필터링되지만, 혹시 몰라서 클라이언트에서도 필터링)
   const filteredList = useMemo(() => {
-    if (filter === 'all') return products;
-    return products.filter((item) => {
+    // 먼저 중복 제거 (finPrdtCd 기준)
+    const uniqueProducts = Array.from(new Map(products.map((item) => [item.finPrdtCd, item])).values());
+
+    // 필터 적용
+    if (filter === 'all') return uniqueProducts;
+    return uniqueProducts.filter((item) => {
       if (filter === 'free') return item.rsrvType === 'F';
       if (filter === 'fixed') return item.rsrvType === 'S';
       return true;
@@ -93,10 +141,17 @@ export const RecommendPage = () => {
           </div>
 
           <div className={cn('flex flex-col gap-[12px]')}>
-            {isLoading && (
-              <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center py-[20px]">
-                추천 상품을 불러오는 중...
-              </Typography>
+            {(isLoading || isPolling) && (
+              <div className="flex flex-col gap-[8px] py-[20px]">
+                <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center">
+                  {isPolling ? '추천 상품을 생성하고 있습니다...' : '추천 상품을 불러오는 중...'}
+                </Typography>
+                {isPolling && (
+                  <Typography style="text-caption-1-12-regular" className="text-neutral-50 text-center">
+                    잠시만 기다려주세요
+                  </Typography>
+                )}
+              </div>
             )}
             {isError && (
               <div className="flex flex-col gap-[8px] py-[20px]">
@@ -115,7 +170,14 @@ export const RecommendPage = () => {
                 </button>
               </div>
             )}
-            {!isLoading && !isError && filteredList.length === 0 && (
+            {isEmptyResult && (
+              <div className="flex flex-col gap-[8px] py-[20px]">
+                <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center">
+                  {recommendationsData?.message || '해당 적립 유형의 추천 결과가 없습니다.'}
+                </Typography>
+              </div>
+            )}
+            {!isLoading && !isError && !isEmptyResult && filteredList.length === 0 && (
               <div className="flex flex-col gap-[8px] py-[20px]">
                 <Typography style="text-body-2-14-regular" className="text-neutral-70 text-center">
                   추천 상품이 없습니다.
