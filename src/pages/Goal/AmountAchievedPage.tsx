@@ -132,7 +132,6 @@ const AmountAchievedPage = () => {
         <div className="py-2">
           <div className="mb-2 text-lg font-bold text-gray-900">저금 목록</div>
 
-          
           {/* 리스트 렌더링 */}
           <div className="flex flex-col">
             {mockTransactions.map((group) => (

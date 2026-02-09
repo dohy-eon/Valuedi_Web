@@ -21,11 +21,7 @@ interface SectorListSectionProps {
   selectedDate: Date;
 }
 
-export const SectorListSection = ({
-  data,
-  isLoading = false,
-  selectedDate,
-}: SectorListSectionProps) => {
+export const SectorListSection = ({ data, isLoading = false, selectedDate }: SectorListSectionProps) => {
   const navigate = useNavigate();
 
   const topSectors = data.slice(0, 5);

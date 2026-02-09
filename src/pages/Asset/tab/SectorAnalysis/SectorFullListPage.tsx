@@ -12,9 +12,7 @@ export const SectorFullListPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const selectedDate = location.state?.selectedDate
-    ? new Date(location.state.selectedDate)
-    : new Date();
+  const selectedDate = location.state?.selectedDate ? new Date(location.state.selectedDate) : new Date();
 
   const { allSectors, isLoading } = useGetAssetAnalysis(selectedDate);
 
@@ -38,36 +36,34 @@ export const SectorFullListPage = () => {
 
         {/* 분야별 리스트 영역 */}
         <div className={cn('flex-1 flex flex-col px-[20px] gap-[12px] mt-[20px] no-scrollbar pb-10')}>
-          {isLoading ? (
-            Array.from({ length: 5 }).map((_, idx) => (
-              <div key={idx} className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-3">
-                  <Skeleton className="w-10 h-10 rounded-full" />
-                  <div className="flex flex-col gap-2">
-                    <Skeleton className="w-24 h-4 rounded" />
-                    <Skeleton className="w-12 h-3 rounded" />
+          {isLoading
+            ? Array.from({ length: 5 }).map((_, idx) => (
+                <div key={idx} className="flex items-center justify-between py-2">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="w-10 h-10 rounded-full" />
+                    <div className="flex flex-col gap-2">
+                      <Skeleton className="w-24 h-4 rounded" />
+                      <Skeleton className="w-12 h-3 rounded" />
+                    </div>
                   </div>
+                  <Skeleton className="w-20 h-5 rounded" />
                 </div>
-                <Skeleton className="w-20 h-5 rounded" />
-              </div>
-            ))
-          ) : (
-            displayItems.map((item: SectorData) => {
-              const categoryKey = item.key || 'default';
-              return (
-                <SectorListItem
-                  key={categoryKey}
-                  data={item}
-                  label={CATEGORY_LABELS[categoryKey] || item.category || CATEGORY_LABELS.default}
-                  onClick={() => {
-                    navigate(`/asset/sector/${categoryKey}`, {
-                      state: { sectorData: item, selectedDate: selectedDate.toISOString() },
-                    });
-                  }}
-                />
-              );
-            })
-          )}
+              ))
+            : displayItems.map((item: SectorData) => {
+                const categoryKey = item.key || 'default';
+                return (
+                  <SectorListItem
+                    key={categoryKey}
+                    data={item}
+                    label={CATEGORY_LABELS[categoryKey] || item.category || CATEGORY_LABELS.default}
+                    onClick={() => {
+                      navigate(`/asset/sector/${categoryKey}`, {
+                        state: { sectorData: item, selectedDate: selectedDate.toISOString() },
+                      });
+                    }}
+                  />
+                );
+              })}
         </div>
       </div>
     </MobileLayout>

@@ -26,10 +26,8 @@ export const SectorAnalysis = () => {
   const isMore = diff > 0;
   const diffAmountText = Math.abs(diff).toLocaleString();
 
-  const handlePrevMonth = () =>
-    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1));
-  const handleNextMonth = () =>
-    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1));
+  const handlePrevMonth = () => setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1));
+  const handleNextMonth = () => setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1));
 
   return (
     <MobileLayout className="overflow-hidden shadow-none">
@@ -45,11 +43,7 @@ export const SectorAnalysis = () => {
           isLoading={isLoading}
         />
 
-        <SectorListSection
-          data={allSectors}
-          isLoading={isLoading}
-          selectedDate={selectedDate}
-        />
+        <SectorListSection data={allSectors} isLoading={isLoading} selectedDate={selectedDate} />
       </div>
     </MobileLayout>
   );
