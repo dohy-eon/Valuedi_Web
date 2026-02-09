@@ -10,7 +10,7 @@ export const MbtiResult = () => {
   const navigate = useNavigate();
   const { setStep } = useMbtiActions();
 
-  const { data: result } = useGetMbtiTestResult();
+  const { data: result, isFetching } = useGetMbtiTestResult();
 
   const handleDetail = () => {
     setStep('detail');
@@ -23,15 +23,21 @@ export const MbtiResult = () => {
   return (
     <div className={cn('flex flex-col h-full min-h-screen bg-neutral-0 overflow-y-auto')}>
       <div className={cn('flex-1 flex flex-col px-[20px] pb-[40px]')}>
-        <MbtiCard
-          mbtiType={result.title}
-          subDetail={result.subDetail}
-          description={result.description}
-          icon={result.icon}
-          className="mt-[20px]"
-        />
+        {isFetching || !result ? (
+          <div className={cn('flex items-center justify-center')}>
+            <div className="mt-[20px] w-[272px] h-[272px] bg-neutral-10 rounded-[8px]" />
+          </div>
+        ) : (
+          <MbtiCard
+            mbtiType={result?.title}
+            subDetail={result?.tagline}
+            description={result?.extraDescription}
+            icon={result?.icon}
+            className="mt-[20px]"
+          />
+        )}
 
-        <div className={cn('flex flex-col mt-[81px]')}>
+        <div className={cn('flex flex-col mt-[49px]')}>
           <button type="button" onClick={handleDetail} className={cn('cursor-pointer px-[10px] py-[8px]')}>
             <Typography style="text-body-2-14-regular" className={cn('text-neutral-50')}>
               자세히 보고싶어요
