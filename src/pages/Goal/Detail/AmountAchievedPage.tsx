@@ -1,88 +1,41 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Hamburger from '@/assets/icons/Hamburger.svg';
-import ExBank from '@/assets/icons/goal/ExBank.svg';
-import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
 import { paths } from '@/router/paths';
 import { MobileLayout } from '@/components/layout/MobileLayout';
-interface TransactionItem {
-  id: number;
-  type: string;
-  amount: string;
-  time: string;
-  category: string;
-  balanceAfter: string;
-  account: string;
-  isPositive: boolean;
-}
-
-interface TransactionGroup {
-  date: string;
-  dailyBalance: string;
-  items: TransactionItem[];
-}
-
-// --- 목데이터 ---
-const mockTransactions: TransactionGroup[] = [
-  {
-    date: '19일 오늘',
-    dailyBalance: '23,000 원',
-    items: [
-      {
-        id: 101,
-        type: '입금',
-        amount: '3,000 원',
-        time: '2025.12.03 18:44:44',
-        category: '일반이체',
-        balanceAfter: '23,000원',
-        account: '국민은행 592802-04-170725',
-        isPositive: true,
-      },
-      {
-        id: 102,
-        type: '출금',
-        amount: '- 13,000 원',
-        time: '2025.12.03 15:20:10',
-        category: '카드결제',
-        balanceAfter: '10,000원',
-        account: '우리은행 1002-123-456789',
-        isPositive: false,
-      },
-    ],
-  },
-  {
-    date: '18일 어제',
-    dailyBalance: '230,000 원',
-    items: [
-      {
-        id: 201,
-        type: '입금',
-        amount: '3,000 원',
-        time: '2025.12.02 10:00:00',
-        category: '일반이체',
-        balanceAfter: '230,000원',
-        account: '국민은행 592802-04-170725',
-        isPositive: true,
-      },
-    ],
-  },
-];
-
-const mockGoals = [
-  { id: 1, bankIcon: ExBank, title: '테야테야유럽갈테야', progress: 32, targetAmount: 10000000, remainingDays: 91 },
-];
+import GoalProgressGauge from '@/components/goal/detail/GoalProgressGauge';
+import GoalSummaryCard from '@/components/goal/detail/GoalSummaryCard';
+import AmountAchievedLedgerList from '@/components/goal/detail/AmountAchievedLedgerList';
+import { useGoalDetail, useGoalLedgers } from '@/features/goal';
+import { getBankDisplayName } from '@/features/connection/constants/organizationCodes';
+import { ledgerToTransactionItem, type TransactionItem } from '@/utils/goal/ledgerHelpers';
 
 const AmountAchievedPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams();
+  const goalId = id ? Number(id) : 0;
+
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
   const [selectedItem, setSelectedItem] = useState<TransactionItem | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { id } = useParams();
+  // 목표 상세 + 계좌 정보 (계좌 라벨 생성용)
+  const { data: goalDetailData } = useGoalDetail(goalId);
+  const accountLabel =
+    goalDetailData?.result?.account != null
+      ? `${getBankDisplayName(goalDetailData.result.account.bankName)} ${goalDetailData.result.account.accountNumber}`
+      : '';
 
-  const goal = mockGoals.find((g) => g.id === Number(id)) || mockGoals[0];
+  // 목표 거래내역 API 연동
+  const { data: ledgersData, isLoading: ledgersLoading } = useGoalLedgers(goalId, {
+    page: 0,
+    size: 20,
+  });
+
+  const transactions: TransactionItem[] =
+    ledgersData?.result?.content?.map((ledger) => ledgerToTransactionItem(ledger, accountLabel)) ?? [];
   const isCurrentActive = location.pathname === paths.goal.amountAchieved(id || '');
   const isPastActive = location.pathname === paths.goal.savingsSimulation(id || '');
 
@@ -124,59 +77,22 @@ const AmountAchievedPage = () => {
           </div>
         </div>
 
+        <GoalProgressGauge goalId={Number(id)} />
+        <div className="px-5">
+          <GoalSummaryCard goalId={Number(id)} />
+        </div>
+
+        {/* 구분선 */}
+        <div className="h-0.5 bg-gray-100" />
+
         <div className="flex flex-col gap-4 p-5">
-          <TotalSection goal={goal} />
-
-          {/* 구분선: mx-5와 w-[calc(100%+2.5rem)] 대신 간단하게 부모 패딩 상쇄 */}
-          <div className="-mx-5 h-0.5 w-[calc(100%+2.5rem)] bg-gray-100" />
-
-          {/* 목록 리스트 */}
-          <div className="py-2">
-            <div className="mb-2 text-lg font-bold text-gray-900">저금 목록</div>
-
-            {/* 필터 버튼 */}
-            <div className="mb-4 flex items-center gap-2 text-[13px] font-medium text-gray-400">
-              <button
-                onClick={() => setSortBy('latest')}
-                className={`transition-colors ${sortBy === 'latest' ? 'text-gray-900' : ''}`}
-              >
-                최신순
-              </button>
-              <span className="text-gray-200">·</span>
-              <button
-                onClick={() => setSortBy('achieve')}
-                className={`transition-colors ${sortBy === 'achieve' ? 'text-gray-900' : ''}`}
-              >
-                달성순
-              </button>
-            </div>
-
-            {/* 리스트 렌더링 */}
-            <div className="flex flex-col">
-              {mockTransactions.map((group) => (
-                <div key={group.date} className="flex flex-col mb-4">
-                  <div className="flex justify-between py-3 text-sm text-gray-400 border-b border-gray-50">
-                    <span>{group.date}</span>
-                    <span>{group.dailyBalance}</span>
-                  </div>
-                  {group.items.map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => handleItemClick(item)}
-                      className="flex justify-between px-1 py-5 transition-colors cursor-pointer active:bg-gray-50"
-                    >
-                      <span className="text-base font-medium text-gray-600">{item.type}</span>
-                      <span
-                        className={`text-base font-bold ${item.isPositive ? 'text-gray-900' : 'text-primary-heavy'}`}
-                      >
-                        {item.amount}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
+          <AmountAchievedLedgerList
+            transactions={transactions}
+            isLoading={ledgersLoading}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            onItemClick={handleItemClick}
+          />
         </div>
 
         <GoalBottomSheet isOpen={isSheetOpen} item={selectedItem} onClose={() => setIsSheetOpen(false)} />
