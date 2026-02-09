@@ -3,8 +3,8 @@ import { cn } from '@/utils/cn';
 import { Typography } from '../typography';
 
 export interface MbtiCardProps {
-  mbtiType: string;
-  subDetail: string;
+  mbtiType?: string;
+  subDetail?: string;
   description?: string;
   className?: string;
   icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
@@ -28,9 +28,7 @@ const MbtiCard: React.FC<MbtiCardProps> = ({ mbtiType, subDetail, description, c
         </Typography>
       </div>
 
-      <div className={cn('flex justify-center')}>
-        <Icon />
-      </div>
+      <div className={cn('flex justify-center')}>{Icon && <Icon />}</div>
 
       {description && (
         <Typography style="text-body-2-14-regular" fontFamily="pretendard" className={cn('text-neutral-70')}>
