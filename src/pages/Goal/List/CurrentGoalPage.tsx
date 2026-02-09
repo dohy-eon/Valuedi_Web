@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import GoalGNB from '@/components/goal/GoalGNB';
+import { HomeGNB } from '@/components/gnb/HomeGNB';
 import { BottomNavigation } from '@/components/gnb/BottomNavigation';
 import DropDown from '@/assets/icons/goal/Dropdown.svg';
 import GoalCard from '@/components/goal/GoalCard';
 import { useActiveGoals } from '@/features/goal';
 import { MobileLayout } from '@/components/layout/MobileLayout';
+import { paths } from '@/router/paths';
 
 export const CurrentGoalPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
@@ -20,7 +21,13 @@ export const CurrentGoalPage = () => {
     <MobileLayout>
       <div className="flex flex-col w-full min-h-screen bg-gray-100">
         <div className="sticky top-0 z-20 w-full bg-white">
-          <GoalGNB />
+          <HomeGNB
+            title="목표"
+            tabs={[
+              { label: '현재 목표', path: paths.goal.current },
+              { label: '지난 목표', path: paths.goal.past },
+            ]}
+          />
         </div>
 
         <main className="flex-1 pb-24">
