@@ -313,7 +313,7 @@ export const assetApi = {
    * 연동 자산 개수 및 요약 조회
    * GET /api/assets/summary
    */
-  async getAssetSummary(): Promise<AssetSummaryResponse> {
+  async getAssetSummary(): Promise<ApiResponse<AssetSummaryResponse['result']>> {
     return apiGet<AssetSummaryResponse['result']>('/api/assets/summary');
   },
 
@@ -321,7 +321,7 @@ export const assetApi = {
    * 전체 계좌 목록 조회
    * GET /api/assets/accounts
    */
-  async getAccounts(): Promise<AccountsListResponse> {
+  async getAccounts(): Promise<ApiResponse<AccountsListResponse['result']>> {
     return apiGet<AccountsListResponse['result']>('/api/assets/accounts');
   },
 
@@ -329,7 +329,7 @@ export const assetApi = {
    * 전체 카드 목록 조회
    * GET /api/assets/cards
    */
-  async getCards(): Promise<CardsListResponse> {
+  async getCards(): Promise<ApiResponse<CardsListResponse['result']>> {
     return apiGet<CardsListResponse['result']>('/api/assets/cards');
   },
 
@@ -337,7 +337,7 @@ export const assetApi = {
    * 카드사별 카드 목록 조회
    * GET /api/assets/cardIssuers/{issuerCode}/cards
    */
-  async getCardIssuerCards(issuerCode: string): Promise<CardIssuerCardsResponse> {
+  async getCardIssuerCards(issuerCode: string): Promise<ApiResponse<CardIssuerCardsResponse['result']>> {
     return apiGet<CardIssuerCardsResponse['result']>(
       `/api/assets/cardIssuers/${encodeURIComponent(issuerCode)}/cards`
     );

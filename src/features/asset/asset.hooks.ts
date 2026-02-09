@@ -1,7 +1,7 @@
 import { useQuery, useQueries } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { assetApi } from './asset.api';
-import type { BankAccountItem, AccountDetail, CardDetail } from './asset.types';
+import type { BankAccountItem } from './asset.types';
 
 // Query Keys
 export const assetKeys = {
