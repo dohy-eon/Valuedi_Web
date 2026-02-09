@@ -1,9 +1,20 @@
 import { useNavigate } from 'react-router-dom';
+import { Typography } from '@/components/typography';
 import { SectorListItem, SectorData } from '../components/SectorListItem';
 import { CATEGORY_LABELS } from '@/features/asset/constants/category';
-import { Skeleton } from '@/components/skeleton/Skeleton'; // 💡 1. 스켈레톤 임포트
+import { Skeleton } from '@/components/skeleton/Skeleton';
 
-// 💡 2. interface에 isLoading 추가
+/** 카테고리 key → 한글 라벨 (key 대소문자 무관, API 한글명 fallback) */
+function getCategoryLabel(item: SectorData): string {
+  const k = item.key;
+  return (
+    CATEGORY_LABELS[k ?? ''] ??
+    CATEGORY_LABELS[(k ?? '').toLowerCase()] ??
+    (typeof item.category === 'string' ? item.category : '') ??
+    CATEGORY_LABELS.default
+  );
+}
+
 interface SectorListSectionProps {
   data: SectorData[];
   isLoading?: boolean;
@@ -12,7 +23,7 @@ interface SectorListSectionProps {
 
 export const SectorListSection = ({
   data,
-  isLoading = false, // 💡 3. props에서 꺼내기
+  isLoading = false,
   selectedDate,
 }: SectorListSectionProps) => {
   const navigate = useNavigate();
@@ -22,32 +33,38 @@ export const SectorListSection = ({
 
   const otherCount = otherSectors.length;
   const otherTotalAmount = otherSectors.reduce((sum, item) => sum + item.amount, 0);
+  const top5PctSum = topSectors.reduce((sum, item) => sum + (item.displayPct ?? Math.floor(item.percentage)), 0);
+  const othersDisplayPct = Math.max(0, 100 - top5PctSum);
 
   return (
     <section className="px-5 bg-white pb-10">
       <div className="flex flex-col">
-        {/* 💡 4. 로딩 중일 때 보여줄 리스트 스켈레톤 (5개) */}
         {isLoading ? (
           Array.from({ length: 5 }).map((_, idx) => (
             <div key={idx} className="flex items-center justify-between py-4">
               <div className="flex items-center gap-3">
-                <Skeleton className="w-10 h-10 rounded-full" /> {/* 아이콘 자리 */}
+                <Skeleton className="w-10 h-10 rounded-full" />
                 <div className="flex flex-col gap-2">
-                  <Skeleton className="w-20 h-4 rounded" /> {/* 카테고리명 자리 */}
-                  <Skeleton className="w-12 h-3 rounded" /> {/* 퍼센트 자리 */}
+                  <Skeleton className="w-20 h-4 rounded" />
+                  <Skeleton className="w-12 h-3 rounded" />
                 </div>
               </div>
-              <Skeleton className="w-24 h-5 rounded" /> {/* 금액 자리 */}
+              <Skeleton className="w-24 h-5 rounded" />
             </div>
           ))
+        ) : data.length === 0 ? (
+          <div className="py-10 text-center">
+            <Typography variant="body-2" color="neutral-50">
+              이 달에는 거래 내역이 없어요
+            </Typography>
+          </div>
         ) : (
           <>
-            {/* Top 5 리스트 */}
             {topSectors.map((item) => (
               <SectorListItem
                 key={item.key}
-                data={{ ...item, percentage: Math.floor(item.percentage) }}
-                label={CATEGORY_LABELS[item.key] || CATEGORY_LABELS.default}
+                data={item}
+                label={getCategoryLabel(item)}
                 onClick={() => {
                   navigate(`/asset/sector/${item.key}`, {
                     state: { sectorData: item, selectedDate: selectedDate.toISOString() },
@@ -63,6 +80,7 @@ export const SectorListSection = ({
                   key: 'others',
                   amount: otherTotalAmount,
                   percentage: 0,
+                  displayPct: othersDisplayPct,
                   category: 'others',
                   items: [],
                 }}
