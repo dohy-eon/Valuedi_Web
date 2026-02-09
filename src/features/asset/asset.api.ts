@@ -4,7 +4,16 @@
  */
 
 import { apiGet, apiPost, ApiResponse } from '@/utils/api';
-import type { ConnectedBanksResponse, BankAccountsResponse, Account } from './asset.types';
+import type {
+  ConnectedBanksResponse,
+  BankAccountsResponse,
+  Account,
+  AssetSummaryResponse,
+  AccountsListResponse,
+  CardsListResponse,
+  CardIssuerCardsResponse,
+  CardIssuersListResponse,
+} from './asset.types';
 
 export type { Account };
 
@@ -216,7 +225,7 @@ export const getTopCategoriesApi = async (params: {
 
 // ========== 자산(계좌) 관련 타입 및 API ==========
 
-// 인증 헤더 생성 함수 (fetch 사용 시)
+// 인증 헤더 생성 함수 (fetch 사용 시 - 하위 호환성 유지)
 const getAuthHeaders = () => {
   const token = localStorage.getItem('accessToken');
   const headers: Record<string, string> = {
@@ -233,6 +242,7 @@ const getAuthHeaders = () => {
 export const assetApi = {
   /**
    * 연동된 은행 목록 조회
+   * GET /api/assets/banks
    */
   async getConnectedBanks(): Promise<ConnectedBanksResponse> {
     const url = `${API_BASE_URL}/api/assets/banks`;
@@ -267,6 +277,7 @@ export const assetApi = {
 
   /**
    * 은행별 계좌 및 목표 목록 조회
+   * GET /api/assets/banks/{bankCode}
    */
   async getBankAccounts(bankCode: string): Promise<BankAccountsResponse> {
     const url = `${API_BASE_URL}/api/assets/banks/${encodeURIComponent(bankCode)}`;
@@ -297,6 +308,73 @@ export const assetApi = {
 
     const result = await response.json();
     return result;
+  },
+
+  /**
+   * 연동 자산 개수 및 요약 조회
+   * GET /api/assets/summary
+   */
+  async getAssetSummary(): Promise<ApiResponse<AssetSummaryResponse['result']>> {
+    return apiGet<AssetSummaryResponse['result']>('/api/assets/summary');
+  },
+
+  /**
+   * 전체 계좌 목록 조회
+   * GET /api/assets/accounts
+   */
+  async getAccounts(): Promise<ApiResponse<AccountsListResponse['result']>> {
+    return apiGet<AccountsListResponse['result']>('/api/assets/accounts');
+  },
+
+  /**
+   * 전체 카드 목록 조회
+   * GET /api/assets/cards
+   */
+  async getCards(): Promise<ApiResponse<CardsListResponse['result']>> {
+    return apiGet<CardsListResponse['result']>('/api/assets/cards');
+  },
+
+  /**
+   * 연동된 카드사 목록 조회
+   * GET /api/assets/cardIssuers
+   */
+  async getCardIssuers(): Promise<CardIssuersListResponse> {
+    const url = `${API_BASE_URL}/api/assets/cardIssuers`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { message: response.statusText };
+      }
+
+      const error = new Error(`Failed to fetch card issuers: ${response.statusText}`) as Error & {
+        response?: { status: number; data: typeof errorData };
+      };
+      error.response = {
+        status: response.status,
+        data: errorData,
+      };
+      throw error;
+    }
+
+    const result = await response.json();
+    return result;
+  },
+
+  /**
+   * 카드사별 카드 목록 조회
+   * GET /api/assets/cardIssuers/{issuerCode}/cards
+   */
+  async getCardIssuerCards(issuerCode: string): Promise<ApiResponse<CardIssuerCardsResponse['result']>> {
+    return apiGet<CardIssuerCardsResponse['result']>(`/api/assets/cardIssuers/${encodeURIComponent(issuerCode)}/cards`);
   },
 };
 
