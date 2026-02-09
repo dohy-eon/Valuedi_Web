@@ -23,9 +23,7 @@ const MyMbti = () => {
         {/* 이미지 영역 */}
         <div className={cn('flex flex-col gap-[24px] items-center w-full')}>
           <div className={cn('w-full flex items-center justify-center')}>
-            <div className={cn('h-[125px] w-[140px]')}>
               <mbtiResult.icon />
-            </div>
           </div>
 
           {/* 하단 설명 텍스트 */}
@@ -33,13 +31,10 @@ const MyMbti = () => {
             <Typography style="text-body-2-14-semi-bold" className={cn('text-neutral-70')}>
               {mbtiResult.tagline}
             </Typography>
-            <div className={cn('flex flex-col')}>
-              <Typography style="text-body-2-14-regular" className={cn('text-neutral-70 whitespace-nowrap')}>
-                {formatMbtiDescription(mbtiResult.detail).split('\n')[0]}
-              </Typography>
-              {formatMbtiDescription(mbtiResult.detail).split('\n').slice(1).map((line, index) => (
-                <Typography key={index} style="text-body-2-14-regular" className={cn('text-neutral-70')}>
-                  {line}
+            <div className={cn('flex flex-col gap-[8px]')}>
+              {mbtiResult.recommendedActions?.map((text, i) => (
+                <Typography key={i} style="text-body-2-14-regular" className={cn('text-neutral-70')}>
+                  {text}
                 </Typography>
               ))}
             </div>
@@ -78,19 +73,6 @@ const MyMbti = () => {
           </Typography>
           <div className={cn('flex flex-col p-[12px] rounded-[12px] bg-neutral-10')}>
             {mbtiResult.cautions?.map((text, i) => (
-              <Typography key={i} style="text-body-2-14-regular" className="text-neutral-70 whitespace-pre-wrap">
-                {formatMbtiDescription(text)}
-              </Typography>
-            ))}
-          </div>
-        </div>
-
-        <div className={cn('flex flex-col gap-[12px]')}>
-          <Typography style="text-headline-3-18-semi-bold" className="text-neutral-90">
-            추천하는 행동 및 습관
-          </Typography>
-          <div className={cn('flex flex-col p-[12px] rounded-[12px] bg-neutral-10')}>
-            {mbtiResult.recommendedActions?.map((text, i) => (
               <Typography key={i} style="text-body-2-14-regular" className="text-neutral-70 whitespace-pre-wrap">
                 {formatMbtiDescription(text)}
               </Typography>
