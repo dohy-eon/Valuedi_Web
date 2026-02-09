@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
+import { formatCurrency } from '@/utils/formatCurrency';
 import { TROPHY_ICONS } from '@/features/mypage/constants/trophyIcons';
 import DaySpendIcon from '@/assets/icons/trophy/day_spend.svg?react';
 import { getTrophyIconByType } from '@/features/mypage/utils/trophyIconMapper';
@@ -155,11 +156,11 @@ const MyTrophy = () => {
                           <DaySpendIcon />
                         </div>
                         <Typography style="text-body-2-14-regular" className={cn('text-neutral-70')}>
-                          지표 값
+                          소비 금액
                         </Typography>
                       </div>
                       <Typography style="text-body-2-14-semi-bold" className={cn('text-neutral-90')}>
-                        {trophy.metricValue}
+                        {formatCurrency(Number(trophy.metricValue))}
                       </Typography>
                     </div>
                   )}

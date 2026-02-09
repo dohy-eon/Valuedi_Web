@@ -135,11 +135,11 @@ const mockMonthlyTrophies: MyTrophyType[] = [
 ];
 
 // React Query 모킹을 위한 Wrapper 컴포넌트
-const QueryWrapper = ({ 
-  children, 
-  mockData 
-}: { 
-  children: React.ReactNode; 
+const QueryWrapper = ({
+  children,
+  mockData,
+}: {
+  children: React.ReactNode;
   mockData?: {
     allTrophies?: Trophy[];
     dailyTrophies?: MyTrophyType[];
