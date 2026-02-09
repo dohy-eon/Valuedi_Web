@@ -4,7 +4,7 @@ import Hamburger from '@/assets/icons/Hamburger.svg';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
-import { paths } from '@/router/Router';
+import { paths } from '@/router/paths';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 interface TransactionItem {
   id: number;
