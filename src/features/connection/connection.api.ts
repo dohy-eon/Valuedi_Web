@@ -83,7 +83,7 @@ export const deleteConnectionApi = async (connectionId: number): Promise<ApiResp
 /**
  * 전체 자산 새로고침(동기화) 요청
  * POST /api/connections/sync/refresh
- * 
+ *
  * 백그라운드에서 동기화 작업을 시작하고 즉시 응답을 반환합니다.
  * 10분 쿨타임이 있습니다.
  */
@@ -94,7 +94,7 @@ export const refreshSyncApi = async (): Promise<ApiResponse<null>> => {
 /**
  * 자산 동기화 상태 조회
  * GET /api/connections/sync/status
- * 
+ *
  * 최근 요청한 자산 동기화 작업의 진행 상태를 조회합니다.
  */
 export const getSyncStatusApi = async (): Promise<ApiResponse<SyncStatusResponse>> => {

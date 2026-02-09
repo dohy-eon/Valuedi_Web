@@ -338,9 +338,7 @@ export const assetApi = {
    * GET /api/assets/cardIssuers/{issuerCode}/cards
    */
   async getCardIssuerCards(issuerCode: string): Promise<ApiResponse<CardIssuerCardsResponse['result']>> {
-    return apiGet<CardIssuerCardsResponse['result']>(
-      `/api/assets/cardIssuers/${encodeURIComponent(issuerCode)}/cards`
-    );
+    return apiGet<CardIssuerCardsResponse['result']>(`/api/assets/cardIssuers/${encodeURIComponent(issuerCode)}/cards`);
   },
 };
 

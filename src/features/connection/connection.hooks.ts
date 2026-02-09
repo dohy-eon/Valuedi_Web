@@ -66,7 +66,7 @@ export function useDeleteConnection() {
 
 /**
  * 전체 자산 새로고침(동기화) 요청 (Mutation)
- * 
+ *
  * 10분 쿨타임이 있으므로, 429 에러 발생 시 적절히 처리해야 합니다.
  */
 export function useRefreshSync() {
@@ -89,9 +89,9 @@ export function useRefreshSync() {
 
 /**
  * 자산 동기화 상태 조회
- * 
+ *
  * 동기화 진행 중일 때는 주기적으로 폴링하여 상태를 확인할 수 있습니다.
- * 
+ *
  * @param options.pollInterval - 폴링 간격 (ms). 동기화 진행 중일 때만 사용 권장
  */
 export function useSyncStatus(options?: { pollInterval?: number; enabled?: boolean }) {
