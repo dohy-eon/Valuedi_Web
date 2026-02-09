@@ -23,14 +23,20 @@ const MyTrophy = () => {
       {
         queryKey: ['myTrophies', 'DAILY', `${currentYear}-${currentMonth}-${currentDate}`],
         queryFn: async () => {
-          const response = await getMyTrophiesApi({ periodType: 'DAILY', periodKey: `${currentYear}-${currentMonth}-${currentDate}` });
+          const response = await getMyTrophiesApi({
+            periodType: 'DAILY',
+            periodKey: `${currentYear}-${currentMonth}-${currentDate}`,
+          });
           return response.isSuccess && response.result ? response.result : [];
         },
       },
       {
         queryKey: ['myTrophies', 'MONTHLY', `${currentYear}-${currentMonth}`],
         queryFn: async () => {
-          const response = await getMyTrophiesApi({ periodType: 'MONTHLY', periodKey: `${currentYear}-${currentMonth}` });
+          const response = await getMyTrophiesApi({
+            periodType: 'MONTHLY',
+            periodKey: `${currentYear}-${currentMonth}`,
+          });
           return response.isSuccess && response.result ? response.result : [];
         },
       },
@@ -45,18 +51,18 @@ const MyTrophy = () => {
   // 전체 트로피 목록에 획득 여부 정보 추가 (일간 + 월간)
   const allTrophiesWithStatus = useMemo(() => {
     if (!Array.isArray(allTrophies) || !Array.isArray(dailyTrophies) || !Array.isArray(monthlyTrophies)) return [];
-    
+
     const dailyTrophyMap = new Map(dailyTrophies.map((t) => [t.trophyId, t]));
     const monthlyTrophyMap = new Map(monthlyTrophies.map((t) => [t.trophyId, t]));
-    
+
     return allTrophies.map((trophy) => {
       const dailyTrophy = dailyTrophyMap.get(trophy.trophyId);
       const monthlyTrophy = monthlyTrophyMap.get(trophy.trophyId);
-      
+
       const dailyCount = dailyTrophy?.achievedCount || 0;
       const monthlyCount = monthlyTrophy?.achievedCount || 0;
       const isEarned = dailyCount > 0 || monthlyCount > 0;
-      
+
       return {
         ...trophy,
         dailyCount,
@@ -135,7 +141,10 @@ const MyTrophy = () => {
                     )}
                   </div>
 
-                  <Typography style="text-body-2-14-regular" className={cn(isEarned ? 'text-neutral-70' : 'text-neutral-50')}>
+                  <Typography
+                    style="text-body-2-14-regular"
+                    className={cn(isEarned ? 'text-neutral-70' : 'text-neutral-50')}
+                  >
                     {trophy.description}
                   </Typography>
 

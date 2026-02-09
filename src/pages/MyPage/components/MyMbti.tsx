@@ -14,7 +14,11 @@ const MyMbti = () => {
 
   return (
     <div>
-      <div className={cn('flex flex-col gap-[12px] items-center p-[24px] rounded-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)] bg-white')}>
+      <div
+        className={cn(
+          'flex flex-col gap-[12px] items-center p-[24px] rounded-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)] bg-white'
+        )}
+      >
         {/* 상단 제목 */}
         <Typography style="text-body-1-16-semi-bold" className={cn('text-neutral-90')}>
           {mbtiResult?.title}
@@ -23,7 +27,7 @@ const MyMbti = () => {
         {/* 이미지 영역 */}
         <div className={cn('flex flex-col gap-[24px] items-center w-full')}>
           <div className={cn('w-full flex items-center justify-center')}>
-              <mbtiResult.icon />
+            <mbtiResult.icon />
           </div>
 
           {/* 하단 설명 텍스트 */}

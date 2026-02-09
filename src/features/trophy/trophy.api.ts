@@ -17,9 +17,7 @@ export const getTrophiesApi = async (): Promise<ApiResponse<Trophy[]>> => {
  * 내 트로피 현황 조회
  * GET /api/members/me/trophies?periodType={periodType}&periodKey={periodKey}
  */
-export const getMyTrophiesApi = async (
-  params: GetMyTrophiesParams
-): Promise<ApiResponse<MyTrophy[]>> => {
+export const getMyTrophiesApi = async (params: GetMyTrophiesParams): Promise<ApiResponse<MyTrophy[]>> => {
   const { periodType = 'MONTHLY', periodKey } = params;
   const searchParams = new URLSearchParams({
     periodType,
