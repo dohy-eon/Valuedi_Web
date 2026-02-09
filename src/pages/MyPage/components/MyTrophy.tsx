@@ -17,7 +17,7 @@ const MyTrophy = () => {
   // 전체 트로피 목록 조회
   const { data: allTrophies = [], isLoading: isLoadingAll, isError: isErrorAll } = useTrophies();
 
-  // 모든 기간의 트로피 데이터 조회 (일간, 월간, 최근 30일)
+  // 일간과 월간 트로피 데이터 조회
   const periodQueries = useQueries({
     queries: [
       {
@@ -34,62 +34,38 @@ const MyTrophy = () => {
           return response.isSuccess && response.result ? response.result : [];
         },
       },
-      {
-        queryKey: ['myTrophies', 'LAST_30_DAYS', `${currentYear}-${currentMonth}-${currentDate}`],
-        queryFn: async () => {
-          const response = await getMyTrophiesApi({ periodType: 'LAST_30_DAYS', periodKey: `${currentYear}-${currentMonth}-${currentDate}` });
-          return response.isSuccess && response.result ? response.result : [];
-        },
-      },
     ],
   });
 
-  // 모든 기간의 트로피 데이터 합치기
-  const allMyTrophies = useMemo(() => {
-    const trophyMap = new Map<number, { achievedCount: number; metricValue: string | null }>();
-    
-    periodQueries.forEach((query) => {
-      const trophies = query.data || [];
-      trophies.forEach((trophy) => {
-        const existing = trophyMap.get(trophy.trophyId);
-        if (existing) {
-          // 획득 횟수 합산
-          trophyMap.set(trophy.trophyId, {
-            achievedCount: existing.achievedCount + trophy.achievedCount,
-            metricValue: trophy.metricValue || existing.metricValue,
-          });
-        } else {
-          trophyMap.set(trophy.trophyId, {
-            achievedCount: trophy.achievedCount,
-            metricValue: trophy.metricValue || null,
-          });
-        }
-      });
-    });
-
-    return Array.from(trophyMap.entries()).map(([trophyId, data]) => ({
-      trophyId,
-      ...data,
-    }));
-  }, [periodQueries]);
-
+  const dailyTrophies = periodQueries[0].data || [];
+  const monthlyTrophies = periodQueries[1].data || [];
   const isLoadingMy = periodQueries.some((query) => query.isLoading);
   const isErrorMy = periodQueries.some((query) => query.isError);
 
-  // 전체 트로피 목록에 획득 여부 정보 추가
+  // 전체 트로피 목록에 획득 여부 정보 추가 (일간 + 월간)
   const allTrophiesWithStatus = useMemo(() => {
-    if (!Array.isArray(allTrophies) || !Array.isArray(allMyTrophies)) return [];
-    const myTrophyMap = new Map(allMyTrophies.map((t) => [t.trophyId, t]));
+    if (!Array.isArray(allTrophies) || !Array.isArray(dailyTrophies) || !Array.isArray(monthlyTrophies)) return [];
+    
+    const dailyTrophyMap = new Map(dailyTrophies.map((t) => [t.trophyId, t]));
+    const monthlyTrophyMap = new Map(monthlyTrophies.map((t) => [t.trophyId, t]));
+    
     return allTrophies.map((trophy) => {
-      const myTrophy = myTrophyMap.get(trophy.trophyId);
+      const dailyTrophy = dailyTrophyMap.get(trophy.trophyId);
+      const monthlyTrophy = monthlyTrophyMap.get(trophy.trophyId);
+      
+      const dailyCount = dailyTrophy?.achievedCount || 0;
+      const monthlyCount = monthlyTrophy?.achievedCount || 0;
+      const isEarned = dailyCount > 0 || monthlyCount > 0;
+      
       return {
         ...trophy,
-        achievedCount: myTrophy?.achievedCount || 0,
-        metricValue: myTrophy?.metricValue || null,
-        isEarned: (myTrophy?.achievedCount || 0) > 0,
+        dailyCount,
+        monthlyCount,
+        metricValue: monthlyTrophy?.metricValue || dailyTrophy?.metricValue || null,
+        isEarned,
       };
     });
-  }, [allTrophies, allMyTrophies]);
+  }, [allTrophies, dailyTrophies, monthlyTrophies]);
 
   const isLoading = isLoadingAll || isLoadingMy;
 
@@ -140,10 +116,20 @@ const MyTrophy = () => {
                       {trophy.name}
                     </Typography>
 
-                    {isEarned && trophy.achievedCount > 0 && (
+                    {/* 일간 획득 횟수 */}
+                    {trophy.dailyCount > 0 && (
                       <div className={cn('flex px-[8px] py-[4px] bg-yellow-400 rounded-full')}>
                         <Typography style="text-caption-2-11-medium" className={cn('text-neutral-90')}>
-                          {trophy.achievedCount}번 달성
+                          오늘 {trophy.dailyCount}번 달성
+                        </Typography>
+                      </div>
+                    )}
+
+                    {/* 월간 획득 횟수 */}
+                    {trophy.monthlyCount > 0 && (
+                      <div className={cn('flex px-[8px] py-[4px] bg-yellow-400 rounded-full')}>
+                        <Typography style="text-caption-2-11-medium" className={cn('text-neutral-90')}>
+                          이번달 {trophy.monthlyCount}번 달성
                         </Typography>
                       </div>
                     )}
