@@ -1,9 +1,7 @@
 import type { ChangeEvent } from 'react';
-import { useEffect } from 'react';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import AuthInput from '@/components/login/AuthInput';
 import AccountLinkBottomSheet from '@/components/goal/list/AccountLinkBottomSheet';
-import GoalIconPickerBottomSheet from '@/components/goal/detail/GoalIconPickerBottomSheet';
 import GoalCreateStepHeader from '../../../components/goal/create/GoalCreateStepHeader';
 import GoalCreateStepFooter from '../../../components/goal/create/GoalCreateStepFooter';
 import { useGoalForm, type GoalStep, type GoalFormField } from '../../../hooks/Goal/useGoalCreateForm';
@@ -24,11 +22,6 @@ type StepField =
       placeholder: string;
       readOnly?: boolean;
       isGrayBg?: boolean;
-    }
-  | {
-      kind: 'icon';
-      title: string;
-      subtitle: string;
     };
 
 const GoalCreateStep = () => {
@@ -40,25 +33,15 @@ const GoalCreateStep = () => {
     goalAmount,
     accountDisplay,
     isAccountSheetOpen,
-    isIconSheetOpen,
     openAccountSheet,
     closeAccountSheet,
-    openIconSheet,
-    closeIconSheet,
     updateField,
     handleBack,
     handleNext,
     handleAccountSelect,
-    handleIconSelect,
     shouldShowPrimaryButton,
     primaryButtonText,
   } = useGoalForm();
-
-  useEffect(() => {
-    if (currentStep === 7) {
-      openIconSheet();
-    }
-  }, [currentStep, openIconSheet]);
 
   const steps: Record<GoalStep, StepField[]> = {
     1: [
@@ -98,7 +81,6 @@ const GoalCreateStep = () => {
       { kind: 'input', field: 'startDate', label: '시작일', readOnly: true, isGrayBg: true },
       { kind: 'input', field: 'goalName', label: '목표 이름', readOnly: true, isGrayBg: true },
     ],
-    7: [{ kind: 'icon', title: '거의 다 왔어요!', subtitle: '마지막으로 목표의 대표 이미지를 선택해 주세요' }],
   };
 
   const valuesByField: Record<GoalFormField, string> = {
@@ -110,22 +92,13 @@ const GoalCreateStep = () => {
 
   return (
     <>
-      <MobileLayout className="max-w-none shadow-none sm:max-w-[360px] sm:shadow-lg p-0 overflow-hidden bg-white">
+      <MobileLayout className="p-0 overflow-hidden bg-white">
         <div className="flex flex-col w-full min-h-screen">
           <GoalCreateStepHeader currentStep={currentStep} onBack={handleBack} />
 
           <main className="flex-1 flex flex-col px-[20px] pt-[40px] pb-[32px] overflow-y-auto">
             <div className="flex flex-col gap-6">
               {steps[currentStep].map((item, idx) => {
-                if (item.kind === 'icon') {
-                  return (
-                    <div key="icon-step" className="flex flex-col">
-                      <h2 className="text-[24px] font-bold text-gray-900 mb-2">{item.title}</h2>
-                      <p className="text-[14px] text-gray-600">{item.subtitle}</p>
-                    </div>
-                  );
-                }
-
                 if (item.kind === 'account') {
                   const value = accountDisplay;
                   const readOnly = item.readOnly ?? true;
@@ -182,7 +155,6 @@ const GoalCreateStep = () => {
       </MobileLayout>
 
       <AccountLinkBottomSheet isOpen={isAccountSheetOpen} onClose={closeAccountSheet} onSelect={handleAccountSelect} />
-      <GoalIconPickerBottomSheet isOpen={isIconSheetOpen} onClose={closeIconSheet} onConfirm={handleIconSelect} />
     </>
   );
 };

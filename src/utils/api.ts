@@ -3,7 +3,7 @@
  * 백엔드 API와 통신하기 위한 공통 함수들
  */
 
-const API_BASE_URL = 'https://api.valuedi.site';
+export const API_BASE_URL = 'https://api.valuedi.site';
 
 // 공통 응답 타입
 export interface ApiResponse<T = unknown> {
@@ -49,6 +49,17 @@ export const setAccessToken = (token: string): void => {
 export const removeAccessToken = (): void => {
   if (typeof window === 'undefined') return;
   localStorage.removeItem('accessToken');
+};
+
+/**
+ * 인증 헤더 (Authorization Bearer)를 반환합니다.
+ */
+export const getAuthHeaders = (): Record<string, string> => {
+  const token = getAccessToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 };
 
 /**

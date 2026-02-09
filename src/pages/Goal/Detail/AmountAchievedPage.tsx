@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import moreIcon from '@/assets/icons/goal/MoreIcon.svg';
+import Hamburger from '@/assets/icons/Hamburger.svg';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
-import GoalMoreActionsBottomSheet from '@/components/goal/detail/GoalMoreActionsBottomSheet';
-import GoalIconPickerBottomSheet from '@/components/goal/detail/GoalIconPickerBottomSheet';
-import GoalDeleteConfirmModal from '@/components/goal/detail/GoalDeleteConfirmModal';
 import { paths } from '@/router/Router';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 interface TransactionItem {
@@ -80,9 +77,6 @@ const AmountAchievedPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
   const [selectedItem, setSelectedItem] = useState<TransactionItem | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,16 +92,18 @@ const AmountAchievedPage = () => {
   };
 
   return (
-    <MobileLayout className="max-w-none shadow-none sm:max-w-[360px] sm:shadow-lg">
-      <div className="relative flex flex-col w-full h-screen bg-white">
+    <MobileLayout>
+      <div className="relative flex flex-col w-full min-h-screen bg-white">
+        {/* 헤더 및 탭 섹션 */}
         <div className="sticky top-0 z-20 bg-white">
           <div className="flex items-center justify-between px-5 py-5">
             <h1 className="text-xl font-bold text-gray-900">목표</h1>
-            <button type="button" className="p-1" onClick={() => setIsMoreOpen(true)}>
-              <img src={moreIcon} alt="menu" className="w-6 h-6" />
+            <button type="button" className="p-1">
+              <img src={Hamburger} alt="menu" className="w-6 h-6" />
             </button>
           </div>
 
+          {/* 탭 메뉴 */}
           <div className="flex w-full border-b border-gray-200">
             <button
               onClick={() => id && navigate(paths.goal.amountAchieved(id))}
@@ -128,85 +124,62 @@ const AmountAchievedPage = () => {
           </div>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto">
-          <div className="flex flex-col gap-4 p-5">
-            <TotalSection goal={goal} />
+        <div className="flex flex-col gap-4 p-5">
+          <TotalSection goal={goal} />
 
-            <div className="-mx-5 h-0.5 w-[calc(100%+2.5rem)] bg-gray-100" />
+          {/* 구분선: mx-5와 w-[calc(100%+2.5rem)] 대신 간단하게 부모 패딩 상쇄 */}
+          <div className="-mx-5 h-0.5 w-[calc(100%+2.5rem)] bg-gray-100" />
 
-            <div className="py-2">
-              <div className="mb-2 text-lg font-bold text-gray-900">저금 목록</div>
+          {/* 목록 리스트 */}
+          <div className="py-2">
+            <div className="mb-2 text-lg font-bold text-gray-900">저금 목록</div>
 
-              <div className="mb-4 flex items-center gap-2 text-[13px] font-medium text-gray-400">
-                <button
-                  onClick={() => setSortBy('latest')}
-                  className={`transition-colors ${sortBy === 'latest' ? 'text-gray-900' : ''}`}
-                >
-                  최신순
-                </button>
-                <span className="text-gray-200">·</span>
-                <button
-                  onClick={() => setSortBy('achieve')}
-                  className={`transition-colors ${sortBy === 'achieve' ? 'text-gray-900' : ''}`}
-                >
-                  달성순
-                </button>
-              </div>
+            {/* 필터 버튼 */}
+            <div className="mb-4 flex items-center gap-2 text-[13px] font-medium text-gray-400">
+              <button
+                onClick={() => setSortBy('latest')}
+                className={`transition-colors ${sortBy === 'latest' ? 'text-gray-900' : ''}`}
+              >
+                최신순
+              </button>
+              <span className="text-gray-200">·</span>
+              <button
+                onClick={() => setSortBy('achieve')}
+                className={`transition-colors ${sortBy === 'achieve' ? 'text-gray-900' : ''}`}
+              >
+                달성순
+              </button>
+            </div>
 
-              <div className="flex flex-col">
-                {mockTransactions.map((group) => (
-                  <div key={group.date} className="flex flex-col mb-4">
-                    <div className="flex justify-between py-3 text-sm text-gray-400 border-b border-gray-50">
-                      <span>{group.date}</span>
-                      <span>{group.dailyBalance}</span>
-                    </div>
-                    {group.items.map((item) => (
-                      <div
-                        key={item.id}
-                        onClick={() => handleItemClick(item)}
-                        className="flex justify-between px-1 py-5 transition-colors cursor-pointer active:bg-gray-50"
-                      >
-                        <span className="text-base font-medium text-gray-600">{item.type}</span>
-                        <span
-                          className={`text-base font-bold ${item.isPositive ? 'text-gray-900' : 'text-primary-heavy'}`}
-                        >
-                          {item.amount}
-                        </span>
-                      </div>
-                    ))}
+            {/* 리스트 렌더링 */}
+            <div className="flex flex-col">
+              {mockTransactions.map((group) => (
+                <div key={group.date} className="flex flex-col mb-4">
+                  <div className="flex justify-between py-3 text-sm text-gray-400 border-b border-gray-50">
+                    <span>{group.date}</span>
+                    <span>{group.dailyBalance}</span>
                   </div>
-                ))}
-              </div>
+                  {group.items.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => handleItemClick(item)}
+                      className="flex justify-between px-1 py-5 transition-colors cursor-pointer active:bg-gray-50"
+                    >
+                      <span className="text-base font-medium text-gray-600">{item.type}</span>
+                      <span
+                        className={`text-base font-bold ${item.isPositive ? 'text-gray-900' : 'text-primary-heavy'}`}
+                      >
+                        {item.amount}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
         <GoalBottomSheet isOpen={isSheetOpen} item={selectedItem} onClose={() => setIsSheetOpen(false)} />
-        <GoalMoreActionsBottomSheet
-          isOpen={isMoreOpen}
-          onClose={() => setIsMoreOpen(false)}
-          onChangeIcon={() => setIsIconPickerOpen(true)}
-          onEditGoal={() => {
-            if (!id) return;
-            navigate(paths.goal.edit(id));
-          }}
-          onDeleteGoal={() => setIsDeleteModalOpen(true)}
-        />
-
-        <GoalIconPickerBottomSheet
-          isOpen={isIconPickerOpen}
-          onClose={() => setIsIconPickerOpen(false)}
-          onConfirm={(payload) => console.log('아이콘/색상 선택', payload)}
-        />
-
-        <GoalDeleteConfirmModal
-          isOpen={isDeleteModalOpen}
-          onClose={() => setIsDeleteModalOpen(false)}
-          onConfirm={() => {
-            setIsDeleteModalOpen(false);
-            navigate(paths.goal.current);
-          }}
-        />
       </div>
     </MobileLayout>
   );
