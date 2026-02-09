@@ -14,7 +14,7 @@ import SpendYesterdayIcon from '@/assets/icons/home/SpendYesterday.svg';
 import MbtiHomeIcon from '@/assets/icons/home/MbtiHome.svg';
 import { getAccountsApi, Account } from '@/features/asset/asset.api';
 import { getTransactionSummaryApi } from '@/features/transaction/transaction.api';
-import { getFinanceMbtiResultApi } from '@/features/mbti/mbti.api';
+import { getFinanceMbtiResultApi, getMbtiTypeDetails } from '@/features/mbti/mbti.api';
 import { getTop3RecommendationsApi } from '@/features/recommend/recommend.api';
 import { getGoalDetailApi } from '@/features/goal/goal.api';
 import { ApiError } from '@/utils/api';
@@ -61,10 +61,11 @@ export const HomePage = () => {
         const yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
         // 병렬로 모든 API 호출
-        const [accountsRes, transactionRes, mbtiRes, recommendRes] = await Promise.all([
+        const [accountsRes, transactionRes, mbtiRes, mbtiTypesRes, recommendRes] = await Promise.all([
           getAccountsApi(),
           getTransactionSummaryApi(yearMonth),
           getFinanceMbtiResultApi().catch(() => null), // MBTI 결과가 없을 수 있음
+          getMbtiTypeDetails().catch(() => null), // MBTI 타입 상세 정보
           getTop3RecommendationsApi().catch(() => null), // 추천 상품이 없을 수 있음
         ]);
 
@@ -129,10 +130,12 @@ export const HomePage = () => {
         }
 
         // MBTI 결과 처리
-        if (mbtiRes?.result) {
+        if (mbtiRes?.result && mbtiTypesRes?.result) {
           const resultType = mbtiRes.result.resultType;
-          const mbtiData = MBTI_RESULTS[resultType] || DEFAULT_RESULT;
-          setMbtiResult(mbtiData.title);
+          const mbtiTypeDetail = mbtiTypesRes.result.find((type) => type.type === resultType);
+          if (mbtiTypeDetail) {
+            setMbtiResult(mbtiTypeDetail.title);
+          }
         }
 
         // 추천 상품 처리

@@ -19,7 +19,16 @@ export interface CategoryStyle {
 
 /** 프론트에서 쓰는 카테고리 키 목록 (아이콘/스타일 매칭용) */
 const FRONTEND_KEYS = [
-  'transfer', 'traffic', 'shopping', 'food', 'leisure', 'medical', 'market', 'living', 'cafe', 'others',
+  'transfer',
+  'traffic',
+  'shopping',
+  'food',
+  'leisure',
+  'medical',
+  'market',
+  'living',
+  'cafe',
+  'others',
 ] as const;
 
 /** API에서 오는 카테고리 코드 → 프론트 키 (백엔드 DB code 컬럼 기준) */
@@ -122,12 +131,7 @@ export function normalizeCategoryCode(
   categoryName?: string | null,
   categoryId?: number | string | null
 ): string {
-  const id =
-    categoryId != null
-      ? typeof categoryId === 'string'
-        ? parseInt(categoryId, 10)
-        : categoryId
-      : undefined;
+  const id = categoryId != null ? (typeof categoryId === 'string' ? parseInt(categoryId, 10) : categoryId) : undefined;
   if (id != null && !Number.isNaN(id) && API_CATEGORY_ID_MAP[id]) return API_CATEGORY_ID_MAP[id];
 
   const codeRaw = (apiCode ?? '').toString().trim().toLowerCase();

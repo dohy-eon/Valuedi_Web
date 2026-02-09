@@ -10,12 +10,7 @@ import { AssetItemList } from '../AssetDetails/components/AssetItemList';
 import { CATEGORY_STYLES, CATEGORY_LABELS } from '@/features/asset/constants/category';
 import { useGetAssetAnalysis } from '@/hooks/Asset/useGetAssetAnalysis';
 import { TransactionDetailModal } from './components/TransactionDetailModal';
-import {
-  TransactionWithDetails,
-  SectorTransactionGroup,
-  transformToDateGroups,
-  SectorData,
-} from './utils/sectorUtils';
+import { TransactionWithDetails, SectorTransactionGroup, transformToDateGroups, SectorData } from './utils/sectorUtils';
 
 export const SectorDetailPage = () => {
   const { categoryKey } = useParams();
@@ -35,7 +30,13 @@ export const SectorDetailPage = () => {
     return (
       <MobileLayout className="bg-neutral-0">
         <div className="sticky top-0 z-10 w-full bg-white border-b border-neutral-5">
-          <BackPageGNB title="세부내역" onBack={() => navigate(-1)} text="" className="bg-white" titleColor="text-neutral-90" />
+          <BackPageGNB
+            title="세부내역"
+            onBack={() => navigate(-1)}
+            text=""
+            className="bg-white"
+            titleColor="text-neutral-90"
+          />
         </div>
         <div className="p-5 flex flex-col gap-3">
           <div className="h-[134px] bg-neutral-10 rounded-lg animate-pulse" />
@@ -50,7 +51,13 @@ export const SectorDetailPage = () => {
     return (
       <MobileLayout className="bg-neutral-0">
         <div className="sticky top-0 z-10 w-full bg-white border-b border-neutral-5">
-          <BackPageGNB title="세부내역" onBack={() => navigate('/asset/sector', { state: { selectedDate: selectedDate.toISOString() } })} text="" className="bg-white" titleColor="text-neutral-90" />
+          <BackPageGNB
+            title="세부내역"
+            onBack={() => navigate('/asset/sector', { state: { selectedDate: selectedDate.toISOString() } })}
+            text=""
+            className="bg-white"
+            titleColor="text-neutral-90"
+          />
         </div>
         <div className="flex flex-col items-center justify-center flex-1 py-12 px-5">
           <Typography variant="body-2" color="neutral-50" className="text-center">
