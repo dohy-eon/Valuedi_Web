@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getMbtiResult, getMbtiTypeDetails } from '@/features/mbti/mbti.api';
+import { getFinanceMbtiResultApi, getMbtiTypeDetails } from '@/features/mbti/mbti.api';
 import DefaultIcon from '@/assets/icons/Mbti.svg?react';
 import { MBTI_LOCAL_EXTENSIONS } from '@/features/mbti/constants/mbtiType';
 
@@ -7,7 +7,7 @@ export const useGetMbtiTestResult = () => {
   return useQuery({
     queryKey: ['mbtiResult'],
     queryFn: async () => {
-      const [myRes, typesRes] = await Promise.all([getMbtiResult(), getMbtiTypeDetails()]);
+      const [myRes, typesRes] = await Promise.all([getFinanceMbtiResultApi(), getMbtiTypeDetails()]);
 
       if (!myRes.result || !typesRes.result) throw new Error('데이터 로드 실패');
 

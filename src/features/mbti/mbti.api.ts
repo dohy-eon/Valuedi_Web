@@ -1,11 +1,12 @@
+/**
+ * 금융 MBTI 관련 API 함수들
+ */
+
 import { apiGet, apiPost, ApiResponse } from '@/utils/api';
 
-export interface MbtiQuestion {
-  id: number;
-  content: string;
-}
+// ========== 타입 정의 ==========
 
-export interface MbtiResultResponse {
+export interface FinanceMbtiResult {
   testId: number;
   memberId: number;
   resultType: string;
@@ -20,6 +21,11 @@ export interface MbtiResultResponse {
   createdAt: string;
 }
 
+export interface MbtiQuestion {
+  id: number;
+  content: string;
+}
+
 export interface MbtiTypeDetail {
   type: string;
   title: string;
@@ -28,6 +34,8 @@ export interface MbtiTypeDetail {
   cautions: string[];
   recommendedActions: string[];
 }
+
+// ========== API 함수들 ==========
 
 /** 1. 질문지 리스트 가져오기 */
 export const getMbtiQuestions = async (): Promise<ApiResponse<MbtiQuestion[]>> => {
@@ -39,12 +47,15 @@ export const submitMbtiTest = async (answers: { questionId: number; choiceValue:
   return apiPost('/api/finance-mbti/test', { answers });
 };
 
-/** 3. 내 결과 조회하기 */
-export const getMbtiResult = async (): Promise<ApiResponse<MbtiResultResponse>> => {
-  return apiGet<MbtiResultResponse>('/api/finance-mbti/result');
+/**
+ * 사용자의 금융 MBTI 결과 조회
+ * GET /api/finance-mbti/result
+ */
+export const getFinanceMbtiResultApi = async (): Promise<ApiResponse<FinanceMbtiResult>> => {
+  return apiGet<FinanceMbtiResult>('/api/finance-mbti/result');
 };
 
-/** 4. 모든 MBTI 유형 상세 정보 가져오기 */
+/** 3. 모든 MBTI 유형 상세 정보 가져오기 */
 export const getMbtiTypeDetails = async (): Promise<ApiResponse<MbtiTypeDetail[]>> => {
   return apiGet<MbtiTypeDetail[]>('/api/finance-mbti/result/type');
 };

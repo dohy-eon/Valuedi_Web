@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { HomeGNB } from '@/components/gnb/HomeGNB';
@@ -11,21 +12,15 @@ import kbIcon from '@/assets/icons/bank/kb.svg';
 import SpendTodayIcon from '@/assets/icons/home/SpendToday.svg';
 import SpendYesterdayIcon from '@/assets/icons/home/SpendYesterday.svg';
 import MbtiHomeIcon from '@/assets/icons/home/MbtiHome.svg';
+import { getAccountsApi, Account } from '@/features/asset/asset.api';
+import { getTransactionSummaryApi } from '@/features/transaction/transaction.api';
+import { getFinanceMbtiResultApi } from '@/features/mbti/mbti.api';
+import { getTop3RecommendationsApi } from '@/features/recommend/recommend.api';
+import { getGoalDetailApi } from '@/features/goal/goal.api';
+import { ApiError } from '@/utils/api';
 
-// 임시 목표 데이터
-const goals = [
-  { id: '1', name: '테야테야 갈테야', amount: 10000000, iconBg: '#f5f0c8' },
-  { id: '2', name: '목표진행중', amount: 10000000, iconBg: '#c8d1f5' },
-  { id: '3', name: '목표어쩌구입니다', amount: 10000000, iconBg: '#c8def5' },
-];
-
-// 임시 계좌 데이터
-const accounts = [
-  { id: '1', bankName: 'KB국민ONE통장', balance: 11125023, iconBg: '#f5f0c8' },
-  { id: '2', bankName: 'KB국민ONE통장', balance: 115023, iconBg: '#c8d1f5' },
-  { id: '3', bankName: 'KB국민ONE통장', balance: 15023, iconBg: '#c8def5' },
-  { id: '4', bankName: 'KB국민ONE통장', balance: 3023, iconBg: '#d8f5c8' },
-];
+// 목표 색상 배열
+const GOAL_COLORS = ['#f5f0c8', '#c8d1f5', '#c8def5', '#d8f5c8', '#f5c8e8', '#c8f5e0'];
 
 // 목표/계좌 아이콘 컴포넌트
 const GoalAccountIcon = ({ bgColor }: { bgColor: string }) => (
@@ -39,6 +34,128 @@ const GoalAccountIcon = ({ bgColor }: { bgColor: string }) => (
 
 export const HomePage = () => {
   const navigate = useNavigate();
+  const [goals, setGoals] = useState<Array<{ id: string; name: string; amount: number; iconBg: string }>>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [transactionSummary, setTransactionSummary] = useState<{
+    totalExpense: number;
+    diffFromLastMonth: number;
+  } | null>(null);
+  const [mbtiResult, setMbtiResult] = useState<string>('');
+  const [recommendedProducts, setRecommendedProducts] = useState<
+    Array<{
+      korCoNm: string;
+      finPrdtNm: string;
+    }>
+  >([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalGoalCount, setTotalGoalCount] = useState(0);
+  const [totalAccountCount, setTotalAccountCount] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        // 현재 년월 계산 (YYYY-MM 형식)
+        const now = new Date();
+        const yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+        // 병렬로 모든 API 호출
+        const [accountsRes, transactionRes, mbtiRes, recommendRes] = await Promise.all([
+          getAccountsApi(),
+          getTransactionSummaryApi(yearMonth),
+          getFinanceMbtiResultApi().catch(() => null), // MBTI 결과가 없을 수 있음
+          getTop3RecommendationsApi().catch(() => null), // 추천 상품이 없을 수 있음
+        ]);
+
+        // 계좌 목록 처리
+        if (accountsRes.result) {
+          const accountList = accountsRes.result.accountList || [];
+          setAccounts(accountList.slice(0, 3)); // 최대 3개만 표시
+          setTotalAccountCount(accountsRes.result.totalCount || 0);
+
+          // 계좌 목록에서 goalInfo가 있는 것들을 목표로 추출
+          const goalAccounts = accountList.filter((acc) => acc.goalInfo !== null);
+          const uniqueGoals = new Map<number, { goalId: number; title: string }>();
+
+          goalAccounts.forEach((acc) => {
+            if (acc.goalInfo) {
+              uniqueGoals.set(acc.goalInfo.goalId, {
+                goalId: acc.goalInfo.goalId,
+                title: acc.goalInfo.title,
+              });
+            }
+          });
+
+          // 각 목표의 상세 정보 조회
+          const goalDetailsPromises = Array.from(uniqueGoals.values())
+            .slice(0, 3)
+            .map(async (goal, index) => {
+              try {
+                const detailRes = await getGoalDetailApi(goal.goalId);
+                if (detailRes.result) {
+                  return {
+                    id: String(goal.goalId),
+                    name: detailRes.result.title,
+                    amount: detailRes.result.savedAmount,
+                    iconBg: GOAL_COLORS[index % GOAL_COLORS.length],
+                  };
+                }
+              } catch (error) {
+                // 목표 상세 조회 실패 시 기본 정보만 사용
+                return {
+                  id: String(goal.goalId),
+                  name: goal.title,
+                  amount: 0,
+                  iconBg: GOAL_COLORS[index % GOAL_COLORS.length],
+                };
+              }
+              return null;
+            });
+
+          const goalDetails = (await Promise.all(goalDetailsPromises)).filter(
+            (goal): goal is { id: string; name: string; amount: number; iconBg: string } => goal !== null
+          );
+          setGoals(goalDetails);
+          setTotalGoalCount(uniqueGoals.size);
+        }
+
+        // 거래 요약 처리
+        if (transactionRes.result) {
+          setTransactionSummary({
+            totalExpense: transactionRes.result.totalExpense || 0,
+            diffFromLastMonth: transactionRes.result.diffFromLastMonth || 0,
+          });
+        }
+
+        // MBTI 결과 처리
+        if (mbtiRes?.result) {
+          const resultType = mbtiRes.result.resultType;
+          const mbtiData = MBTI_RESULTS[resultType] || DEFAULT_RESULT;
+          setMbtiResult(mbtiData.title);
+        }
+
+        // 추천 상품 처리
+        if (recommendRes?.result?.products) {
+          setRecommendedProducts(
+            recommendRes.result.products.slice(0, 3).map((product) => ({
+              korCoNm: product.korCoNm,
+              finPrdtNm: product.finPrdtNm,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error('데이터 로딩 실패:', error);
+        if (error instanceof ApiError && error.status === 401) {
+          // 인증 오류는 api.ts에서 자동 처리됨
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleNavClick = (item: 'home' | 'asset' | 'recommend' | 'goal') => {
     switch (item) {
@@ -68,7 +185,10 @@ export const HomePage = () => {
       <div className="flex-1 pb-[64px] overflow-y-auto">
         <div className="flex flex-col gap-[8px] px-[20px] py-[16px]">
           {/* 목표 추가하기 카드 */}
-          <div className="bg-white border border-neutral-10 rounded-[8px] p-[12px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
+          <button
+            onClick={() => navigate('/goal/create')}
+            className="w-full bg-white border border-neutral-10 rounded-[8px] p-[12px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)] text-left"
+          >
             <div className="flex gap-[8px] items-center">
               <div className="size-8 flex items-center justify-center">
                 <img src={AddGoalIcon} alt="목표 추가" className="w-8 h-8" />
@@ -82,42 +202,71 @@ export const HomePage = () => {
                 </Typography>
               </div>
             </div>
-          </div>
+          </button>
 
           {/* 나의 목표 섹션 */}
           <div className="bg-white rounded-[8px] px-[12px] pt-[16px] pb-[16px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
             <Typography style="text-body-2-14-regular" className="text-neutral-70 mb-[16px]" fontFamily="pretendard">
               나의 목표
             </Typography>
-            <div className="flex flex-col gap-[8px] mb-[16px]">
-              {goals.map((goal) => (
-                <div key={goal.id} className="flex items-center justify-between py-[8px]">
-                  <div className="flex gap-[8px] items-center">
-                    <GoalAccountIcon bgColor={goal.iconBg} />
-                    <div className="flex flex-col gap-[2px]">
-                      <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
-                        {goal.name}
-                      </Typography>
-                      <Typography style="text-caption-1-12-regular" className="text-neutral-70" fontFamily="pretendard">
-                        {formatCurrency(goal.amount)}
-                      </Typography>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-[20px]">
+                <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
+                  로딩 중...
+                </Typography>
+              </div>
+            ) : goals.length === 0 ? (
+              <div className="flex items-center justify-center py-[20px]">
+                <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
+                  등록된 목표가 없습니다
+                </Typography>
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-col gap-[8px] mb-[16px]">
+                  {goals.map((goal) => (
+                    <div key={goal.id} className="flex items-center justify-between py-[8px]">
+                      <div className="flex gap-[8px] items-center">
+                        <GoalAccountIcon bgColor={goal.iconBg} />
+                        <div className="flex flex-col gap-[2px]">
+                          <Typography
+                            style="text-body-2-14-semi-bold"
+                            className="text-neutral-90"
+                            fontFamily="pretendard"
+                          >
+                            {goal.name}
+                          </Typography>
+                          <Typography
+                            style="text-caption-1-12-regular"
+                            className="text-neutral-70"
+                            fontFamily="pretendard"
+                          >
+                            {formatCurrency(goal.amount)}
+                          </Typography>
+                        </div>
+                      </div>
+                      <div className="w-[18px] h-[18px] flex items-center justify-center">
+                        <MoreViewButton />
+                      </div>
                     </div>
-                  </div>
-                  <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <MoreViewButton />
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <button className="w-full bg-white border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
-              <Typography
-                style="text-body-2-14-regular"
-                className="text-neutral-70 text-center"
-                fontFamily="pretendard"
-              >
-                목표 10개 전체보기
-              </Typography>
-            </button>
+                {totalGoalCount > 3 && (
+                  <button
+                    onClick={() => navigate('/goal/current')}
+                    className="w-full bg-white border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]"
+                  >
+                    <Typography
+                      style="text-body-2-14-regular"
+                      className="text-neutral-70 text-center"
+                      fontFamily="pretendard"
+                    >
+                      목표 {totalGoalCount}개 전체보기
+                    </Typography>
+                  </button>
+                )}
+              </>
+            )}
           </div>
 
           {/* 연결된 은행 및 계좌 섹션 */}
@@ -125,35 +274,64 @@ export const HomePage = () => {
             <Typography style="text-body-2-14-regular" className="text-neutral-70 mb-[16px]" fontFamily="pretendard">
               연결된 은행 및 계좌
             </Typography>
-            <div className="flex flex-col gap-[8px] mb-[16px]">
-              {accounts.map((account) => (
-                <div key={account.id} className="flex items-center justify-between py-[8px]">
-                  <div className="flex gap-[8px] items-center">
-                    <GoalAccountIcon bgColor={account.iconBg} />
-                    <div className="flex flex-col gap-[2px]">
-                      <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
-                        {formatCurrency(account.balance)}
-                      </Typography>
-                      <Typography style="text-caption-1-12-regular" className="text-neutral-70" fontFamily="pretendard">
-                        {account.bankName}
-                      </Typography>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-[20px]">
+                <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
+                  로딩 중...
+                </Typography>
+              </div>
+            ) : accounts.length === 0 ? (
+              <div className="flex items-center justify-center py-[20px]">
+                <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
+                  연결된 계좌가 없습니다
+                </Typography>
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-col gap-[8px] mb-[16px]">
+                  {accounts.map((account, index) => (
+                    <div key={account.accountId} className="flex items-center justify-between py-[8px]">
+                      <div className="flex gap-[8px] items-center">
+                        <GoalAccountIcon bgColor={GOAL_COLORS[index % GOAL_COLORS.length]} />
+                        <div className="flex flex-col gap-[2px]">
+                          <Typography
+                            style="text-body-2-14-semi-bold"
+                            className="text-neutral-90"
+                            fontFamily="pretendard"
+                          >
+                            {formatCurrency(account.balanceAmount)}
+                          </Typography>
+                          <Typography
+                            style="text-caption-1-12-regular"
+                            className="text-neutral-70"
+                            fontFamily="pretendard"
+                          >
+                            {account.accountName}
+                          </Typography>
+                        </div>
+                      </div>
+                      <div className="w-[18px] h-[18px] flex items-center justify-center">
+                        <MoreViewButton />
+                      </div>
                     </div>
-                  </div>
-                  <div className="w-[18px] h-[18px] flex items-center justify-center">
-                    <MoreViewButton />
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <button className="w-full bg-white border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]">
-              <Typography
-                style="text-body-2-14-regular"
-                className="text-neutral-70 text-center"
-                fontFamily="pretendard"
-              >
-                자산 21개 전체보기
-              </Typography>
-            </button>
+                {totalAccountCount > 3 && (
+                  <button
+                    onClick={() => navigate('/asset')}
+                    className="w-full bg-white border border-neutral-10 rounded-[4px] p-[8px] shadow-[0px_0px_16px_0px_rgba(25,25,20,0.04)]"
+                  >
+                    <Typography
+                      style="text-body-2-14-regular"
+                      className="text-neutral-70 text-center"
+                      fontFamily="pretendard"
+                    >
+                      자산 {totalAccountCount}개 전체보기
+                    </Typography>
+                  </button>
+                )}
+              </>
+            )}
           </div>
 
           {/* 이번 달 지출 섹션 */}
@@ -161,50 +339,66 @@ export const HomePage = () => {
             <Typography style="text-body-2-14-regular" className="text-neutral-70 mb-[16px]" fontFamily="pretendard">
               이번 달 지출
             </Typography>
-            <div className="flex flex-col gap-[4px] mb-[16px]">
-              <div className="flex items-center gap-[2px]">
-                <Typography
-                  style="text-headline-3-18-semi-bold"
-                  className="text-black tracking-[-0.36px]"
-                  fontFamily="pretendard"
-                >
-                  {formatCurrency(526387)}
+            {isLoading ? (
+              <div className="flex items-center justify-center py-[20px]">
+                <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
+                  로딩 중...
                 </Typography>
               </div>
-              <Typography style="text-body-3-13-regular" className="text-neutral-70" fontFamily="pretendard">
-                지난 달 같은 기간보다 <span className="font-medium text-neutral-90">10만원</span> 덜 썼어요
-              </Typography>
-            </div>
-            <div className="flex flex-col gap-[12px]">
-              {/* 오늘 지출 */}
-              <div className="flex items-center gap-[8px]">
-                <div className="w-[32px] h-[32px] flex items-center justify-center">
-                  <img src={SpendTodayIcon} alt="오늘 지출" className="w-8 h-8" />
+            ) : (
+              <>
+                <div className="flex flex-col gap-[4px] mb-[16px]">
+                  <div className="flex items-center gap-[2px]">
+                    <Typography
+                      style="text-headline-3-18-semi-bold"
+                      className="text-black tracking-[-0.36px]"
+                      fontFamily="pretendard"
+                    >
+                      {formatCurrency(transactionSummary?.totalExpense || 0)}
+                    </Typography>
+                  </div>
+                  {transactionSummary && transactionSummary.diffFromLastMonth !== 0 && (
+                    <Typography style="text-body-3-13-regular" className="text-neutral-70" fontFamily="pretendard">
+                      지난 달 같은 기간보다{' '}
+                      <span className="font-medium text-neutral-90">
+                        {formatCurrency(Math.abs(transactionSummary.diffFromLastMonth))}
+                      </span>
+                      {transactionSummary.diffFromLastMonth > 0 ? ' 더' : ' 덜'} 썼어요
+                    </Typography>
+                  )}
                 </div>
-                <div className="flex flex-col gap-[2px]">
-                  <Typography style="text-body-2-14-regular" className="text-neutral-70" fontFamily="pretendard">
-                    오늘 지출
-                  </Typography>
-                  <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
-                    {formatCurrency(0)}
-                  </Typography>
+                <div className="flex flex-col gap-[12px]">
+                  {/* 오늘 지출 */}
+                  <div className="flex items-center gap-[8px]">
+                    <div className="w-[32px] h-[32px] flex items-center justify-center">
+                      <img src={SpendTodayIcon} alt="오늘 지출" className="w-8 h-8" />
+                    </div>
+                    <div className="flex flex-col gap-[2px]">
+                      <Typography style="text-body-2-14-regular" className="text-neutral-70" fontFamily="pretendard">
+                        오늘 지출
+                      </Typography>
+                      <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
+                        {formatCurrency(0)}
+                      </Typography>
+                    </div>
+                  </div>
+                  {/* 어제 지출 */}
+                  <div className="flex items-center gap-[8px]">
+                    <div className="w-[32px] h-[32px] flex items-center justify-center">
+                      <img src={SpendYesterdayIcon} alt="어제 지출" className="w-8 h-8" />
+                    </div>
+                    <div className="flex flex-col gap-[2px]">
+                      <Typography style="text-body-2-14-regular" className="text-neutral-70" fontFamily="pretendard">
+                        어제 지출
+                      </Typography>
+                      <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
+                        {formatCurrency(0)}
+                      </Typography>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              {/* 어제 지출 */}
-              <div className="flex items-center gap-[8px]">
-                <div className="w-[32px] h-[32px] flex items-center justify-center">
-                  <img src={SpendYesterdayIcon} alt="어제 지출" className="w-8 h-8" />
-                </div>
-                <div className="flex flex-col gap-[2px]">
-                  <Typography style="text-body-2-14-regular" className="text-neutral-70" fontFamily="pretendard">
-                    어제 지출
-                  </Typography>
-                  <Typography style="text-body-2-14-semi-bold" className="text-neutral-90" fontFamily="pretendard">
-                    {formatCurrency(12)}
-                  </Typography>
-                </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
 
           {/* MBTI 섹션 */}
@@ -213,13 +407,19 @@ export const HomePage = () => {
               <Typography style="text-body-2-14-regular" className="text-neutral-70" fontFamily="pretendard">
                 회원님의 금융 MBTI는?
               </Typography>
-              <Typography
-                style="text-headline-3-18-semi-bold"
-                className="text-neutral-90 tracking-[-0.36px]"
-                fontFamily="pretendard"
-              >
-                불안한 안정자산 추구형
-              </Typography>
+              {isLoading ? (
+                <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
+                  로딩 중...
+                </Typography>
+              ) : (
+                <Typography
+                  style="text-headline-3-18-semi-bold"
+                  className="text-neutral-90 tracking-[-0.36px]"
+                  fontFamily="pretendard"
+                >
+                  {mbtiResult || 'MBTI 결과가 없습니다'}
+                </Typography>
+              )}
             </div>
             <div className="w-full h-[146px] bg-atomic-yellow-95 rounded-[4px] flex items-center justify-center">
               <img src={MbtiHomeIcon} alt="금융 MBTI" className="w-full h-full object-contain" />
@@ -240,40 +440,43 @@ export const HomePage = () => {
                 맞춤 상품이에요
               </Typography>
             </div>
-            <div className="flex gap-[12px] overflow-x-auto px-[12px] -mx-[12px]">
-              <div className="bg-neutral-10 rounded-[16px] p-[16px] min-w-[221px] flex flex-col gap-[4px]">
-                <Typography
-                  style="text-body-1-16-semi-bold"
-                  className="text-neutral-90 leading-[1.3]"
-                  fontFamily="pretendard"
-                >
-                  ONE 체크카드 (K-패스)
-                </Typography>
-                <Typography
-                  style="text-body-3-13-regular"
-                  className="text-neutral-50 leading-[1.3]"
-                  fontFamily="pretendard"
-                >
-                  내 맘대로 골라받는 3가지 캐시백
+            {isLoading ? (
+              <div className="flex items-center justify-center py-[20px]">
+                <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
+                  로딩 중...
                 </Typography>
               </div>
-              <div className="bg-neutral-10 rounded-[16px] p-[16px] min-w-[221px] flex flex-col gap-[4px]">
-                <Typography
-                  style="text-body-1-16-semi-bold"
-                  className="text-neutral-90 leading-[1.3]"
-                  fontFamily="pretendard"
-                >
-                  신한 쏠 뱅크 체크카드
-                </Typography>
-                <Typography
-                  style="text-body-3-13-regular"
-                  className="text-neutral-50 leading-[1.3]"
-                  fontFamily="pretendard"
-                >
-                  한양대학교 에리카 학생이라면 !
+            ) : recommendedProducts.length === 0 ? (
+              <div className="flex items-center justify-center py-[20px]">
+                <Typography style="text-body-2-14-regular" className="text-neutral-50" fontFamily="pretendard">
+                  추천 상품이 없습니다
                 </Typography>
               </div>
-            </div>
+            ) : (
+              <div className="flex gap-[12px] overflow-x-auto px-[12px] -mx-[12px]">
+                {recommendedProducts.map((product, index) => (
+                  <div
+                    key={index}
+                    className="bg-neutral-10 rounded-[16px] p-[16px] min-w-[221px] flex flex-col gap-[4px]"
+                  >
+                    <Typography
+                      style="text-body-1-16-semi-bold"
+                      className="text-neutral-90 leading-[1.3]"
+                      fontFamily="pretendard"
+                    >
+                      {product.finPrdtNm}
+                    </Typography>
+                    <Typography
+                      style="text-body-3-13-regular"
+                      className="text-neutral-50 leading-[1.3]"
+                      fontFamily="pretendard"
+                    >
+                      {product.korCoNm}
+                    </Typography>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
