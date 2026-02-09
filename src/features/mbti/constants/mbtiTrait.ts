@@ -34,8 +34,8 @@ export const MBTI_TRAITS_CONFIG = [
   },
   {
     title: '의사결정',
-    leftLabel: '회피형',
-    rightLabel: '합리형',
+    leftLabel: '회피-소비중심형',
+    rightLabel: '합리-목표중심형',
     keys: { left: 'avoidanceScore', right: 'rationalScore' },
     leftDescription: '결정을 미루며 현재의 만족을 우선시해요.',
     rightDescription: '논리적 판단. 소비는 목표를 위한 수단으로 기능해요.',
