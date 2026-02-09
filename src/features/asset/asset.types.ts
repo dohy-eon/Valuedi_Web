@@ -23,6 +23,15 @@ export interface BankAccountItem {
   connectedGoalId: number | null;
 }
 
+/** 홈 등에서 사용하는 계좌 타입 (목표 연동 정보 포함) */
+export interface Account {
+  accountId: number;
+  accountName: string;
+  balanceAmount: number;
+  connectedGoalId: number | null;
+  goalInfo: { goalId: number; title: string } | null;
+}
+
 // 은행별 목표 정보
 export interface BankGoalItem {
   goalId: number;

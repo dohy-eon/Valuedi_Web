@@ -268,3 +268,6 @@ export const goalApi = {
     return response.json();
   },
 };
+
+/** 목표 상세 조회 (HomePage 등에서 직접 호출용) */
+export const getGoalDetailApi = (goalId: number) => goalApi.getGoalDetail(goalId);

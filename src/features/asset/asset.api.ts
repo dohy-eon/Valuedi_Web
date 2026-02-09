@@ -1,4 +1,6 @@
-import type { ConnectedBanksResponse, BankAccountsResponse } from './asset.types';
+import type { ConnectedBanksResponse, BankAccountsResponse, Account } from './asset.types';
+
+export type { Account };
 
 const API_BASE_URL = 'https://api.valuedi.site';
 
@@ -90,3 +92,50 @@ export const assetApi = {
     return result;
   },
 };
+
+/** 연동 은행 목록 + 은행별 계좌를 합쳐 accountList, totalCount 형태로 반환 (홈 등에서 사용) */
+export interface GetAccountsApiResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    accountList: Account[];
+    totalCount: number;
+  };
+}
+
+export async function getAccountsApi(): Promise<GetAccountsApiResponse> {
+  const banksRes = await assetApi.getConnectedBanks();
+  const banks = banksRes?.result?.filter((b) => b.status === 'ACTIVE') ?? [];
+  const accountList: Account[] = [];
+
+  for (const bank of banks) {
+    try {
+      const res = await assetApi.getBankAccounts(bank.organizationCode);
+      if (!res?.result) continue;
+      const { accountList: list, goalList } = res.result;
+      list.forEach((acc) => {
+        const goal = goalList?.find((g) => g.linkedAccountId === acc.accountId);
+        accountList.push({
+          accountId: acc.accountId,
+          accountName: acc.accountName,
+          balanceAmount: acc.balanceAmount,
+          connectedGoalId: acc.connectedGoalId,
+          goalInfo: goal ? { goalId: goal.goalId, title: goal.title } : null,
+        });
+      });
+    } catch {
+      // 은행별 조회 실패 시 해당 은행만 스킵
+    }
+  }
+
+  return {
+    isSuccess: true,
+    code: 'OK',
+    message: '',
+    result: {
+      accountList,
+      totalCount: accountList.length,
+    },
+  };
+}
