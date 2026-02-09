@@ -3,13 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGoalStep } from './useGoalStep';
 import { useGoalFormFields } from './useGoalFormFields';
 import { useGoalModalControl } from './useGoalModalControl';
-import type {
-  GoalStep,
-  GoalFormField,
-  SelectedAccount,
-  SelectedIcon,
-  UseGoalFormOptions,
-} from './goalForm.types';
+import type { GoalStep, GoalFormField, SelectedAccount, SelectedIcon, UseGoalFormOptions } from './goalForm.types';
 
 // 타입 재export (기존 코드와의 호환성 유지)
 export type { GoalStep, GoalFormField, SelectedAccount, SelectedIcon, UseGoalFormOptions };
@@ -24,18 +18,11 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
   const { currentStep, setCurrentStep, goToNext, goToBack } = useGoalStep({ initialStep: 1 });
 
   // 입력 필드 관리
-  const {
-    fields,
-    hasInputStarted,
-    updateField,
-    resetInputStarted,
-    isFieldValid,
-    getCurrentStepValue,
-    isFormValid,
-  } = useGoalFormFields({
-    mode,
-    initialValues: options.initialValues,
-  });
+  const { fields, hasInputStarted, updateField, resetInputStarted, isFieldValid, getCurrentStepValue, isFormValid } =
+    useGoalFormFields({
+      mode,
+      initialValues: options.initialValues,
+    });
 
   // 모달 제어
   const {
@@ -130,14 +117,7 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
 
     const currentValue = getCurrentStepValue(currentStep);
     return hasInputStarted && currentValue.length > 0;
-  }, [
-    currentStep,
-    selectedAccount,
-    selectedIcon,
-    fields.goalAmount,
-    hasInputStarted,
-    getCurrentStepValue,
-  ]);
+  }, [currentStep, selectedAccount, selectedIcon, fields.goalAmount, hasInputStarted, getCurrentStepValue]);
 
   // 제출 가능 여부 (edit 모드용)
   const canSubmit = useMemo(() => {

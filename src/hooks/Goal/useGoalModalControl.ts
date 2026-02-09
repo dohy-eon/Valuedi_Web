@@ -6,9 +6,7 @@ export interface UseGoalModalControlOptions {
 }
 
 export function useGoalModalControl(options: UseGoalModalControlOptions = {}) {
-  const [selectedAccount, setSelectedAccount] = useState<SelectedAccount | null>(
-    options.initialAccount ?? null
-  );
+  const [selectedAccount, setSelectedAccount] = useState<SelectedAccount | null>(options.initialAccount ?? null);
   const [selectedIcon, setSelectedIcon] = useState<SelectedIcon | null>(null);
   const [isAccountSheetOpen, setIsAccountSheetOpen] = useState(false);
   const [isIconSheetOpen, setIsIconSheetOpen] = useState(false);
@@ -19,10 +17,13 @@ export function useGoalModalControl(options: UseGoalModalControlOptions = {}) {
   const openIconSheet = useCallback(() => setIsIconSheetOpen(true), []);
   const closeIconSheet = useCallback(() => setIsIconSheetOpen(false), []);
 
-  const handleAccountSelect = useCallback((account: SelectedAccount) => {
-    setSelectedAccount(account);
-    closeAccountSheet();
-  }, [closeAccountSheet]);
+  const handleAccountSelect = useCallback(
+    (account: SelectedAccount) => {
+      setSelectedAccount(account);
+      closeAccountSheet();
+    },
+    [closeAccountSheet]
+  );
 
   const handleIconSelect = useCallback(
     (icon: SelectedIcon) => {

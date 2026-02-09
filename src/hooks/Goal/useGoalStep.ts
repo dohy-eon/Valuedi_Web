@@ -8,19 +8,13 @@ export interface UseGoalStepOptions {
 export function useGoalStep(options: UseGoalStepOptions = {}) {
   const [currentStep, setCurrentStep] = useState<GoalStep>(options.initialStep ?? 1);
 
-  const goToNext = useCallback(
-    (step?: GoalStep) => {
-      setCurrentStep((prev) => (step ?? (prev + 1)) as GoalStep);
-    },
-    []
-  );
+  const goToNext = useCallback((step?: GoalStep) => {
+    setCurrentStep((prev) => (step ?? prev + 1) as GoalStep);
+  }, []);
 
-  const goToBack = useCallback(
-    (step?: GoalStep) => {
-      setCurrentStep((prev) => (step ?? (prev - 1)) as GoalStep);
-    },
-    []
-  );
+  const goToBack = useCallback((step?: GoalStep) => {
+    setCurrentStep((prev) => (step ?? prev - 1) as GoalStep);
+  }, []);
 
   const goToStep = useCallback((step: GoalStep) => {
     setCurrentStep(step);
