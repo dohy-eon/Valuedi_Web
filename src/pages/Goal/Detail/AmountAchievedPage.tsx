@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Hamburger from '@/assets/icons/Hamburger.svg';
-import ExBank from '@/assets/icons/goal/ExBank.svg';
-import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
 import { paths } from '@/router/paths';
 import { MobileLayout } from '@/components/layout/MobileLayout';
+import GoalProgressGauge from '@/components/goal/detail/GoalProgressGauge';
+import GoalSummaryCard from '@/components/goal/detail/GoalSummaryCard';
 interface TransactionItem {
   id: number;
   type: string;
@@ -69,10 +69,6 @@ const mockTransactions: TransactionGroup[] = [
   },
 ];
 
-const mockGoals = [
-  { id: 1, bankIcon: ExBank, title: '테야테야유럽갈테야', progress: 32, targetAmount: 10000000, remainingDays: 91 },
-];
-
 const AmountAchievedPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
   const [selectedItem, setSelectedItem] = useState<TransactionItem | null>(null);
@@ -81,8 +77,6 @@ const AmountAchievedPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-
-  const goal = mockGoals.find((g) => g.id === Number(id)) || mockGoals[0];
   const isCurrentActive = location.pathname === paths.goal.amountAchieved(id || '');
   const isPastActive = location.pathname === paths.goal.savingsSimulation(id || '');
 
@@ -123,13 +117,16 @@ const AmountAchievedPage = () => {
             </button>
           </div>
         </div>
+        
+        <GoalProgressGauge goalId={Number(id)} />
+        <div className="px-5">
+          <GoalSummaryCard goalId={Number(id)} />
+        </div>
+
+        {/* 구분선 */}
+        <div className="h-0.5 bg-gray-100" />
 
         <div className="flex flex-col gap-4 p-5">
-          <TotalSection goal={goal} />
-
-          {/* 구분선: mx-5와 w-[calc(100%+2.5rem)] 대신 간단하게 부모 패딩 상쇄 */}
-          <div className="-mx-5 h-0.5 w-[calc(100%+2.5rem)] bg-gray-100" />
-
           {/* 목록 리스트 */}
           <div className="py-2">
             <div className="mb-2 text-lg font-bold text-gray-900">저금 목록</div>
