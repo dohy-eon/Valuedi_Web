@@ -54,7 +54,7 @@ export const MyPage = () => {
             </div>
             <div>
               <Typography style="text-caption-1-12-regular" className={cn('text-neutral-50')}>
-                {mbtiResult.title}
+                {mbtiResult?.title}
               </Typography>
               <Typography style="text-body-2-14-semi-bold" className={cn('text-neutral-90')}>
                 {userName}님

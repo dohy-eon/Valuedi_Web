@@ -1,16 +1,6 @@
 import BottomSheet from '@/components/common/BottomSheet';
 import WriteIcon from '@/assets/icons/goal/WriteIcon.svg';
-
-interface TransactionItem {
-  id: number;
-  type: string;
-  amount: string;
-  time: string;
-  category: string;
-  balanceAfter: string;
-  account: string;
-  isPositive: boolean;
-}
+import type { TransactionItem } from '@/utils/goal/ledgerHelpers';
 
 interface GoalBottomSheetProps {
   isOpen: boolean;

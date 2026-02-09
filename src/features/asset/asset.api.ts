@@ -4,8 +4,13 @@
  */
 
 import { apiGet, apiPost, ApiResponse } from '@/utils/api';
+import type { ConnectedBanksResponse, BankAccountsResponse, Account } from './asset.types';
 
-// ========== POST /api/transactions/rematch-categories (카테고리 재매칭) ==========
+export type { Account };
+
+const API_BASE_URL = 'https://api.valuedi.site';
+
+// ========== 거래(가계부) 관련 타입 및 API ==========
 
 /** rematchCategories 요청 (Swagger 스펙에 맞게 조정) */
 export interface RematchCategoriesRequest {
@@ -28,10 +33,7 @@ export interface RematchCategoriesResult {
 export const rematchCategoriesApi = async (
   params?: RematchCategoriesRequest
 ): Promise<ApiResponse<RematchCategoriesResult | null>> => {
-  return apiPost<RematchCategoriesResult | null>(
-    '/api/transactions/rematch-categories',
-    params ?? {}
-  );
+  return apiPost<RematchCategoriesResult | null>('/api/transactions/rematch-categories', params ?? {});
 };
 
 // ========== GET /api/transactions/by-category (getCategoryStats) ==========
@@ -159,12 +161,8 @@ export interface LedgerSummaryResult {
  * GET /api/transactions/summary?yearMonth=YYYY-MM
  * Swagger: Ledger (거래내역) → getMonthlySummary
  */
-export const getMonthlySummaryApi = async (
-  yearMonth: string
-): Promise<ApiResponse<LedgerSummaryResult>> => {
-  return apiGet<LedgerSummaryResult>(
-    `/api/transactions/summary?yearMonth=${encodeURIComponent(yearMonth)}`
-  );
+export const getMonthlySummaryApi = async (yearMonth: string): Promise<ApiResponse<LedgerSummaryResult>> => {
+  return apiGet<LedgerSummaryResult>(`/api/transactions/summary?yearMonth=${encodeURIComponent(yearMonth)}`);
 };
 
 // ========== GET /api/transactions/trend (월별 지출 추이) ==========
@@ -216,31 +214,135 @@ export const getTopCategoriesApi = async (params: {
   return apiGet<TopCategoryItem[]>(`/api/transactions/top-category?${search.toString()}`);
 };
 
-// ========== 자산(계좌) 관련 타입 ==========
+// ========== 자산(계좌) 관련 타입 및 API ==========
 
-export interface Account {
-  accountId: number;
-  accountName: string;
-  balanceAmount: number;
-  organization: string;
-  createdAt: string;
-  goalInfo: {
-    goalId: number;
-    title: string;
-  } | null;
-}
+// 인증 헤더 생성 함수 (fetch 사용 시)
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('accessToken');
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
 
-export interface AccountListResponse {
-  accountList: Account[];
-  totalCount: number;
-}
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
 
-// ========== 자산(계좌) API ==========
-
-/**
- * 전체 계좌 목록 조회
- * GET /api/assets/accounts
- */
-export const getAccountsApi = async (): Promise<ApiResponse<AccountListResponse>> => {
-  return apiGet<AccountListResponse>('/api/assets/accounts');
+  return headers;
 };
+
+export const assetApi = {
+  /**
+   * 연동된 은행 목록 조회
+   */
+  async getConnectedBanks(): Promise<ConnectedBanksResponse> {
+    const url = `${API_BASE_URL}/api/assets/banks`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { message: response.statusText };
+      }
+
+      const error = new Error(`Failed to fetch connected banks: ${response.statusText}`) as Error & {
+        response?: { status: number; data: typeof errorData };
+      };
+      error.response = {
+        status: response.status,
+        data: errorData,
+      };
+      throw error;
+    }
+
+    const result = await response.json();
+    return result;
+  },
+
+  /**
+   * 은행별 계좌 및 목표 목록 조회
+   */
+  async getBankAccounts(bankCode: string): Promise<BankAccountsResponse> {
+    const url = `${API_BASE_URL}/api/assets/banks/${encodeURIComponent(bankCode)}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { message: response.statusText };
+      }
+
+      const error = new Error(`Failed to fetch bank accounts: ${response.statusText}`) as Error & {
+        response?: { status: number; data: typeof errorData };
+      };
+      error.response = {
+        status: response.status,
+        data: errorData,
+      };
+      throw error;
+    }
+
+    const result = await response.json();
+    return result;
+  },
+};
+
+/** 연동 은행 목록 + 은행별 계좌를 합쳐 accountList, totalCount 형태로 반환 (홈 등에서 사용) */
+export interface GetAccountsApiResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    accountList: Account[];
+    totalCount: number;
+  };
+}
+
+export async function getAccountsApi(): Promise<GetAccountsApiResponse> {
+  const banksRes = await assetApi.getConnectedBanks();
+  const banks = banksRes?.result?.filter((b) => b.status === 'ACTIVE') ?? [];
+  const accountList: Account[] = [];
+
+  for (const bank of banks) {
+    try {
+      const res = await assetApi.getBankAccounts(bank.organizationCode);
+      if (!res?.result) continue;
+      const { accountList: list, goalList } = res.result;
+      list.forEach((acc) => {
+        const goal = goalList?.find((g) => g.linkedAccountId === acc.accountId);
+        accountList.push({
+          accountId: acc.accountId,
+          accountName: acc.accountName,
+          balanceAmount: acc.balanceAmount,
+          connectedGoalId: acc.connectedGoalId,
+          goalInfo: goal ? { goalId: goal.goalId, title: goal.title } : null,
+        });
+      });
+    } catch {
+      // 은행별 조회 실패 시 해당 은행만 스킵
+    }
+  }
+
+  return {
+    isSuccess: true,
+    code: 'OK',
+    message: '',
+    result: {
+      accountList,
+      totalCount: accountList.length,
+    },
+  };
+}

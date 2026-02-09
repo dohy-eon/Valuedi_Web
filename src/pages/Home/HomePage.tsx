@@ -17,7 +17,6 @@ import { getTransactionSummaryApi } from '@/features/transaction/transaction.api
 import { getFinanceMbtiResultApi } from '@/features/mbti/mbti.api';
 import { getTop3RecommendationsApi } from '@/features/recommend/recommend.api';
 import { getGoalDetailApi } from '@/features/goal/goal.api';
-import { MBTI_RESULTS, DEFAULT_RESULT } from '@/features/mbti/constants/mbtiData';
 import { ApiError } from '@/utils/api';
 
 // 목표 색상 배열

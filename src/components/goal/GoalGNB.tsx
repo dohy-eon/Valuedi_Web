@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import Hamburger from '@/assets/icons/hamburger.svg';
-import { paths } from '@/router/Router';
+import { paths } from '@/router/paths';
 
 const GoalGNB = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const GoalGNB = () => {
     <div className="bg-white">
       {/* 헤더 영역 */}
       <div className="flex items-center justify-between px-5 py-5">
-        <h1 className="text-xl font-bold text-gray-900">목표</h1>
+        <h1 className="text-lg font-semibold text-gray-900">목표</h1>
         <button type="button" className="p-1">
           <img src={Hamburger} alt="menu" className="w-6 h-6" />
         </button>
@@ -23,7 +23,7 @@ const GoalGNB = () => {
         <button
           onClick={() => navigate(paths.goal.current)}
           className={`flex-1 py-4 text-center text-base transition-all ${
-            isCurrentActive ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-medium text-gray-400'
+            isCurrentActive ? 'font-semibold text-gray-900 border-b-2 border-gray-900' : 'font-medium text-gray-400'
           }`}
         >
           현재 목표
@@ -31,7 +31,7 @@ const GoalGNB = () => {
         <button
           onClick={() => navigate(paths.goal.past)}
           className={`flex-1 py-4 text-center text-base transition-all ${
-            isPastActive ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-medium text-gray-400'
+            isPastActive ? 'font-semibold text-gray-900 border-b-2 border-gray-900' : 'font-medium text-gray-400'
           }`}
         >
           지난 목표
