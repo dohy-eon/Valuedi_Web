@@ -1,42 +1,85 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
 import { TROPHY_ICONS } from '@/features/mypage/constants/trophyIcons';
 import DaySpendIcon from '@/assets/icons/trophy/day_spend.svg?react';
-import { formatCurrency } from '@/utils/formatCurrency';
 import { getTrophyIconByType } from '@/features/mypage/utils/trophyIconMapper';
-import { useTrophies, useMyTrophies, type PeriodType } from '@/features/trophy';
-import { SegmentedButton } from '@/components/buttons/SegmentedButton';
+import { useTrophies } from '@/features/trophy';
+import { useQueries } from '@tanstack/react-query';
+import { getMyTrophiesApi } from '@/features/trophy/trophy.api';
 
 const MyTrophy = () => {
-  const [periodType, setPeriodType] = useState<PeriodType>('MONTHLY');
-
-  // periodKey 계산
-  const periodKey = useMemo(() => {
-    const now = new Date();
-    if (periodType === 'MONTHLY') {
-      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-    } else if (periodType === 'DAILY') {
-      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-    } else {
-      // LAST_30_DAYS
-      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-    }
-  }, [periodType]);
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+  const currentDate = String(now.getDate()).padStart(2, '0');
 
   // 전체 트로피 목록 조회
   const { data: allTrophies = [], isLoading: isLoadingAll, isError: isErrorAll } = useTrophies();
 
-  // 내 트로피 현황 조회
-  const { data: myTrophies = [], isLoading: isLoadingMy, isError: isErrorMy } = useMyTrophies({
-    periodType,
-    periodKey,
+  // 모든 기간의 트로피 데이터 조회 (일간, 월간, 최근 30일)
+  const periodQueries = useQueries({
+    queries: [
+      {
+        queryKey: ['myTrophies', 'DAILY', `${currentYear}-${currentMonth}-${currentDate}`],
+        queryFn: async () => {
+          const response = await getMyTrophiesApi({ periodType: 'DAILY', periodKey: `${currentYear}-${currentMonth}-${currentDate}` });
+          return response.isSuccess && response.result ? response.result : [];
+        },
+      },
+      {
+        queryKey: ['myTrophies', 'MONTHLY', `${currentYear}-${currentMonth}`],
+        queryFn: async () => {
+          const response = await getMyTrophiesApi({ periodType: 'MONTHLY', periodKey: `${currentYear}-${currentMonth}` });
+          return response.isSuccess && response.result ? response.result : [];
+        },
+      },
+      {
+        queryKey: ['myTrophies', 'LAST_30_DAYS', `${currentYear}-${currentMonth}-${currentDate}`],
+        queryFn: async () => {
+          const response = await getMyTrophiesApi({ periodType: 'LAST_30_DAYS', periodKey: `${currentYear}-${currentMonth}-${currentDate}` });
+          return response.isSuccess && response.result ? response.result : [];
+        },
+      },
+    ],
   });
+
+  // 모든 기간의 트로피 데이터 합치기
+  const allMyTrophies = useMemo(() => {
+    const trophyMap = new Map<number, { achievedCount: number; metricValue: string | null }>();
+    
+    periodQueries.forEach((query) => {
+      const trophies = query.data || [];
+      trophies.forEach((trophy) => {
+        const existing = trophyMap.get(trophy.trophyId);
+        if (existing) {
+          // 획득 횟수 합산
+          trophyMap.set(trophy.trophyId, {
+            achievedCount: existing.achievedCount + trophy.achievedCount,
+            metricValue: trophy.metricValue || existing.metricValue,
+          });
+        } else {
+          trophyMap.set(trophy.trophyId, {
+            achievedCount: trophy.achievedCount,
+            metricValue: trophy.metricValue || null,
+          });
+        }
+      });
+    });
+
+    return Array.from(trophyMap.entries()).map(([trophyId, data]) => ({
+      trophyId,
+      ...data,
+    }));
+  }, [periodQueries]);
+
+  const isLoadingMy = periodQueries.some((query) => query.isLoading);
+  const isErrorMy = periodQueries.some((query) => query.isError);
 
   // 전체 트로피 목록에 획득 여부 정보 추가
   const allTrophiesWithStatus = useMemo(() => {
-    if (!Array.isArray(allTrophies) || !Array.isArray(myTrophies)) return [];
-    const myTrophyMap = new Map(myTrophies.map((t) => [t.trophyId, t]));
+    if (!Array.isArray(allTrophies) || !Array.isArray(allMyTrophies)) return [];
+    const myTrophyMap = new Map(allMyTrophies.map((t) => [t.trophyId, t]));
     return allTrophies.map((trophy) => {
       const myTrophy = myTrophyMap.get(trophy.trophyId);
       return {
@@ -46,26 +89,12 @@ const MyTrophy = () => {
         isEarned: (myTrophy?.achievedCount || 0) > 0,
       };
     });
-  }, [allTrophies, myTrophies]);
-
-  const periodOptions = [
-    { label: '일간', value: 'DAILY' as const },
-    { label: '월간', value: 'MONTHLY' as const },
-    { label: '최근 30일', value: 'LAST_30_DAYS' as const },
-  ];
+  }, [allTrophies, allMyTrophies]);
 
   const isLoading = isLoadingAll || isLoadingMy;
 
   return (
     <div className={cn('flex flex-col gap-[24px]')}>
-      {/* 기간 선택 */}
-      <div className={cn('flex flex-col gap-[12px]')}>
-        <Typography style="text-body-2-14-regular" className={cn('text-neutral-70')}>
-          조회 기간
-        </Typography>
-        <SegmentedButton<PeriodType> value={periodType} onChange={setPeriodType} options={periodOptions} />
-      </div>
-
       {/* 전체 트로피 목록 */}
       <div className={cn('flex flex-col gap-[20px]')}>
         <Typography style="text-body-1-16-semi-bold" className={cn('text-neutral-90')}>
@@ -112,9 +141,9 @@ const MyTrophy = () => {
                     </Typography>
 
                     {isEarned && trophy.achievedCount > 0 && (
-                      <div className={cn('flex px-[8px] py-[4px] bg-primary-normal rounded-full')}>
+                      <div className={cn('flex px-[8px] py-[4px] bg-yellow-400 rounded-full')}>
                         <Typography style="text-caption-2-11-medium" className={cn('text-neutral-90')}>
-                          {periodType === 'MONTHLY' ? `이번달 ${trophy.achievedCount}번 달성` : `${trophy.achievedCount}번 달성`}
+                          {trophy.achievedCount}번 달성
                         </Typography>
                       </div>
                     )}
