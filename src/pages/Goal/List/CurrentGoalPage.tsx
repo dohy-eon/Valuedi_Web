@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import GoalGNB from '@/components/goal/GoalGNB';
 import { BottomNavigation } from '@/components/gnb/BottomNavigation';
 import DropDown from '@/assets/icons/goal/Dropdown.svg';
-import ExBank from '@/assets/icons/goal/ExBank.svg';
 import GoalCard from '@/components/goal/GoalCard';
 import { useActiveGoals } from '@/features/goal';
 import { MobileLayout } from '@/components/layout/MobileLayout';
@@ -36,7 +35,7 @@ export const CurrentGoalPage = () => {
             </div>
             <div className="flex flex-col">
               <span className="text-sm text-gray-400">또 다른 목표가 있나요?</span>
-              <span className="text-sm font-bold text-gray-900">목표 추가하기</span>
+              <span className="text-sm font-semibold text-gray-900">목표 추가하기</span>
             </div>
           </div>
 
@@ -71,11 +70,12 @@ export const CurrentGoalPage = () => {
                   key={goal.goalId}
                   goal={{
                     id: goal.goalId,
-                    bankIcon: ExBank,
                     title: goal.title,
                     progress: goal.achievementRate,
                     targetAmount: goal.savedAmount,
                     remainingDays: goal.remainingDays,
+                    colorCode: goal.colorCode,
+                    iconId: goal.iconId,
                   }}
                   type="current"
                 />

@@ -74,7 +74,6 @@ const mockGoals = [
 ];
 
 const AmountAchievedPage = () => {
-  const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
   const [selectedItem, setSelectedItem] = useState<TransactionItem | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
@@ -126,30 +125,14 @@ const AmountAchievedPage = () => {
       <div className="flex flex-col gap-4 p-5">
         <TotalSection goal={goal} />
 
-        {/* 구분선: mx-5와 w-[calc(100%+2.5rem)] 대신 간단하게 부모 패딩 상쇄 */}
+        {/* 구분선 */}
         <div className="-mx-5 h-0.5 w-[calc(100%+2.5rem)] bg-gray-100" />
 
         {/* 목록 리스트 */}
         <div className="py-2">
           <div className="mb-2 text-lg font-bold text-gray-900">저금 목록</div>
 
-          {/* 필터 버튼 */}
-          <div className="mb-4 flex items-center gap-2 text-[13px] font-medium text-gray-400">
-            <button
-              onClick={() => setSortBy('latest')}
-              className={`transition-colors ${sortBy === 'latest' ? 'text-gray-900' : ''}`}
-            >
-              최신순
-            </button>
-            <span className="text-gray-200">·</span>
-            <button
-              onClick={() => setSortBy('achieve')}
-              className={`transition-colors ${sortBy === 'achieve' ? 'text-gray-900' : ''}`}
-            >
-              달성순
-            </button>
-          </div>
-
+          
           {/* 리스트 렌더링 */}
           <div className="flex flex-col">
             {mockTransactions.map((group) => (

@@ -1,28 +1,9 @@
+import { API_BASE_URL, getAuthHeaders } from '@/utils/api';
 import type { AccountsResponse } from './account.types';
 
-const API_BASE_URL = 'https://api.valuedi.site';
-
-// API 에러 타입 정의
 interface ApiError extends Error {
-  response?: {
-    status: number;
-    data: unknown;
-  };
+  response?: { status: number; data: unknown };
 }
-
-// 인증 헤더 생성 함수
-const getAuthHeaders = () => {
-  const token = localStorage.getItem('accessToken');
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  return headers;
-};
 
 export const accountApi = {
   // 연결된 계좌 목록 조회

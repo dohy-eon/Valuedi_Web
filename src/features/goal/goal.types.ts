@@ -65,6 +65,8 @@ export interface GoalDetail {
   targetAmount: number;
   remainingDays: number;
   achievementRate: number;
+  startDate?: string;
+  endDate?: string;
   account: {
     bankName: string;
     accountNumber: string;
@@ -151,4 +153,20 @@ export interface GoalLedgersResponse {
 export interface GetGoalLedgersParams {
   page?: number;
   size?: number;
+}
+
+// 목표에 연결되지 않은 계좌 목록 조회
+export interface UnlinkedAccountItem {
+  accountId: number;
+  accountName: string;
+  accountDisplay: string;
+}
+
+export interface GoalUnlinkedAccountsResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    accounts: UnlinkedAccountItem[];
+  };
 }

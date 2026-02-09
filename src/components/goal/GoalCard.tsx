@@ -2,15 +2,20 @@ import { useNavigate } from 'react-router-dom';
 import { paths } from '@/router/paths';
 import MoneyIcon from '@/assets/icons/goal/MoneyIcon.svg';
 import CalendarIcon from '@/assets/icons/goal/CalendarIcon.svg';
+import { toHexColor } from '@/features/goal';
+import { GOAL_ICON_SRC } from '@/components/goal/goalIconAssets';
+import ExBank from '@/assets/icons/goal/ExBank.svg';
 
 interface GoalCardProps {
   goal: {
     id: number;
-    bankIcon: string;
+    bankIcon?: string;
     title: string;
     progress: number;
     targetAmount: number;
     remainingDays: number;
+    colorCode?: string;
+    iconId?: number;
   };
   type?: 'current' | 'past';
 }
@@ -21,6 +26,10 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
     navigate(paths.goal.amountAchieved(goal.id));
   };
 
+  const hasGoalStyle = goal.colorCode != null && goal.iconId != null;
+  const bgColor = goal.colorCode ? toHexColor(goal.colorCode) : undefined;
+  const iconSrc = goal.iconId != null ? GOAL_ICON_SRC[goal.iconId] : null;
+
   return (
     <div
       onClick={handleClick}
@@ -29,13 +38,24 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
       }`}
     >
       <div className="flex items-center gap-3 mb-5">
-        <div className="flex items-center justify-center w-10 h-10 bg-neutral-10 rounded-xl">
-          <img src={goal.bankIcon} alt="bank" className="w-6 h-6" />
+        <div
+          className={
+            hasGoalStyle && bgColor
+              ? 'flex items-center justify-center w-9 h-9 rounded-lg shrink-0'
+              : 'flex items-center justify-center w-9 h-9 bg-neutral-10 rounded-lg shrink-0'
+          }
+          style={hasGoalStyle && bgColor ? { backgroundColor: bgColor } : undefined}
+        >
+          {iconSrc ? (
+            <img src={iconSrc} alt="" className="w-6 h-6 brightness-0 invert" />
+          ) : (
+            <img src={goal.bankIcon ?? ExBank} alt="" className="w-6 h-6" />
+          )}
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-base font-bold text-[#171714]">{goal.title}</span>
-          <div className="px-2.5 py-0.5 bg-primary-normal rounded-full text-xs font-bold text-[#171714] whitespace-nowrap">
+          <span className="text-sm font-semibold text-[#171714]">{goal.title}</span>
+          <div className="px-2 py-0.5 bg-primary-normal rounded-full text-xs font-semibold text-[#171714] whitespace-nowrap">
             {goal.progress}% 달성
           </div>
         </div>
@@ -44,18 +64,18 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-neutral-50">
-            <img src={MoneyIcon} alt="money" className="w-5 h-5 opacity-40" />
-            <span className="text-sm font-medium">목표 금액</span>
+            <img src={MoneyIcon} alt="money" className="w-4 h-4 opacity-40" />
+            <span className="text-xs font-medium">목표 금액</span>
           </div>
-          <span className="text-sm font-bold text-[#171714]">{goal.targetAmount.toLocaleString()}원</span>
+          <span className="text-xs font-semibold text-[#171714]">{goal.targetAmount.toLocaleString()}원</span>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-neutral-50">
-            <img src={CalendarIcon} alt="calendar" className="w-5 h-5 opacity-40" />
-            <span className="text-sm font-medium">남은 일자</span>
+            <img src={CalendarIcon} alt="calendar" className="w-4 h-4 opacity-40" />
+            <span className="text-xs font-medium">남은 일자</span>
           </div>
-          <span className="text-sm font-bold text-[#171714]">{goal.remainingDays}일</span>
+          <span className="text-xs font-semibold text-[#171714]">{goal.remainingDays}일</span>
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { API_BASE_URL, getAuthHeaders } from '@/utils/api';
 import type {
   GetGoalsParams,
   GoalsResponse,
@@ -11,11 +12,11 @@ import type {
   DeleteGoalResponse,
   GoalLedgersResponse,
   GetGoalLedgersParams,
+  GoalUnlinkedAccountsResponse,
 } from './goal.types';
 
-const API_BASE_URL = 'https://api.valuedi.site';
+const GOALS_PATH_PREFIX = '/api/goals';
 
-// API 에러 타입 정의
 interface ApiError extends Error {
   response?: {
     status: number;
@@ -23,23 +24,7 @@ interface ApiError extends Error {
   };
 }
 
-// 인증 헤더 생성 함수
-const getAuthHeaders = () => {
-  const token = localStorage.getItem('accessToken');
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  return headers;
-};
-
 export const goalApi = {
-  // 목표 목록 조회
-
   async getGoals(params?: GetGoalsParams): Promise<GoalsResponse> {
     const queryParams = new URLSearchParams();
 
@@ -53,7 +38,7 @@ export const goalApi = {
       queryParams.append('limit', params.limit.toString());
     }
 
-    const url = `${API_BASE_URL}/api/goals${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = `${API_BASE_URL}${GOALS_PATH_PREFIX}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
     const response = await fetch(url, {
       method: 'GET',
@@ -71,7 +56,7 @@ export const goalApi = {
   // 목표 추가
 
   async createGoal(data: CreateGoalRequest): Promise<CreateGoalResponse> {
-    const url = `${API_BASE_URL}/api/goals`;
+    const url = `${API_BASE_URL}${GOALS_PATH_PREFIX}`;
 
     console.log('목표 생성 API 요청:', {
       url,
@@ -112,7 +97,7 @@ export const goalApi = {
   // 목표 상세 조회
 
   async getGoalDetail(goalId: number): Promise<GoalDetailResponse> {
-    const url = `${API_BASE_URL}/api/goals/${goalId}`;
+    const url = `${API_BASE_URL}${GOALS_PATH_PREFIX}/${goalId}`;
 
     const response = await fetch(url, {
       method: 'GET',
@@ -127,13 +112,45 @@ export const goalApi = {
       throw new Error(`Failed to fetch goal detail: ${response.statusText}`);
     }
 
+    const data = await response.json();
+    const result = data?.result;
+    if (result && typeof result === 'object') {
+      if (result.start_date != null && result.startDate == null) result.startDate = result.start_date;
+      if (result.end_date != null && result.endDate == null) result.endDate = result.end_date;
+    }
+    return data;
+  },
+
+  // 목표에 연결되지 않은 계좌 목록 조회
+
+  async getGoalUnlinkedAccounts(): Promise<GoalUnlinkedAccountsResponse> {
+    const url = `${API_BASE_URL}${GOALS_PATH_PREFIX}/accounts`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { message: response.statusText };
+      }
+      const error: ApiError = new Error(`Failed to fetch goal unlinked accounts: ${response.statusText}`);
+      error.response = { status: response.status, data: errorData };
+      throw error;
+    }
+
     return response.json();
   },
 
   // 목표-계좌 연결
 
   async linkAccount(goalId: number, data: LinkAccountRequest): Promise<LinkAccountResponse> {
-    const url = `${API_BASE_URL}/api/goals/${goalId}/linked-accounts`;
+    const url = `${API_BASE_URL}${GOALS_PATH_PREFIX}/${goalId}/linked-accounts`;
 
     console.log('목표-계좌 연결 API 요청:', {
       url,
@@ -173,9 +190,8 @@ export const goalApi = {
   },
 
   // 목표 수정
-
   async updateGoal(goalId: number, data: UpdateGoalRequest): Promise<UpdateGoalResponse> {
-    const url = `${API_BASE_URL}/api/goals/${goalId}`;
+    const url = `${API_BASE_URL}${GOALS_PATH_PREFIX}/${goalId}`;
 
     const response = await fetch(url, {
       method: 'PATCH',
@@ -185,13 +201,21 @@ export const goalApi = {
     });
 
     if (!response.ok) {
-      let errorData;
+      let errorData: { message?: string; code?: string; result?: unknown };
       try {
         errorData = await response.json();
+        if (response.status === 400) {
+          console.error('목표 수정 400 에러 응답:', errorData);
+          if (errorData?.result && typeof errorData.result === 'object') {
+            console.error('검증 상세(result):', errorData.result);
+          }
+        }
       } catch {
         errorData = { message: response.statusText };
       }
-      const err: ApiError = new Error(`Failed to update goal: ${response.statusText}`);
+      const message =
+        typeof errorData?.message === 'string' ? errorData.message : `Failed to update goal: ${response.statusText}`;
+      const err: ApiError = new Error(message);
       err.response = { status: response.status, data: errorData };
       throw err;
     }
@@ -201,7 +225,7 @@ export const goalApi = {
   // 목표 삭제
 
   async deleteGoal(goalId: number): Promise<DeleteGoalResponse> {
-    const url = `${API_BASE_URL}/api/goals/${goalId}`;
+    const url = `${API_BASE_URL}${GOALS_PATH_PREFIX}/${goalId}`;
 
     const response = await fetch(url, {
       method: 'DELETE',
@@ -230,7 +254,7 @@ export const goalApi = {
     if (params?.page !== undefined) queryParams.append('page', params.page.toString());
     if (params?.size !== undefined) queryParams.append('size', params.size.toString());
 
-    const url = `${API_BASE_URL}/api/goals/${goalId}/ledgers${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = `${API_BASE_URL}${GOALS_PATH_PREFIX}/${goalId}/ledgers${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
     const response = await fetch(url, {
       method: 'GET',

@@ -1,65 +1,15 @@
-import { useEffect, useState } from 'react';
-
-interface GoalDetailResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: {
-    goalId: number;
-    title: string;
-    savedAmount: number;
-    targetAmount: number;
-    remainingDays: number;
-    achievementRate: number;
-    account: {
-      bankName: string;
-      accountNumber: string;
-    };
-    status: string;
-    colorCode: string;
-    iconId: number;
-  };
-}
+import { useGoalDetail, toHexColor } from '@/features/goal';
+import { GOAL_ICON_SRC } from '@/components/goal/goalIconAssets';
+import ExBank from '@/assets/icons/goal/ExBank.svg';
 
 interface GoalProgressGaugeProps {
   goalId: number;
 }
 
 const GoalProgressGauge = ({ goalId }: GoalProgressGaugeProps) => {
-  const [goalData, setGoalData] = useState<GoalDetailResponse['result'] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchGoalData = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem('accessToken');
-
-        const response = await fetch(`https://api.valuedi.site/api/goals/${goalId}`, {
-          headers: {
-            accept: '*/*',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data: GoalDetailResponse = await response.json();
-
-        if (data.isSuccess && data.result) {
-          setGoalData(data.result);
-        } else {
-          setError(data.message || '데이터를 불러오는데 실패했습니다.');
-        }
-      } catch (err) {
-        setError('데이터를 불러오는 중 오류가 발생했습니다.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGoalData();
-  }, [goalId]);
+  const { data, isLoading: loading, error: queryError } = useGoalDetail(goalId);
+  const goalData = data?.result ?? null;
+  const error = queryError ? '데이터를 불러오는데 실패했습니다.' : null;
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('ko-KR').format(amount);
@@ -81,17 +31,39 @@ const GoalProgressGauge = ({ goalId }: GoalProgressGaugeProps) => {
     );
   }
 
+  const hasGoalStyle = goalData.colorCode != null && goalData.iconId != null;
+  const bgColor = goalData.colorCode ? toHexColor(goalData.colorCode) : undefined;
+  const iconSrc = goalData.iconId != null ? GOAL_ICON_SRC[goalData.iconId] : null;
+
   return (
-    <div className="relative overflow-hidden bg-white min-h-[50px] flex flex-col justify-end p-8 mx-[-1.25rem] w-[calc(100%+2.5rem)] shadow-sm">
+    <div className="relative overflow-hidden bg-white min-h-[50px] flex flex-col justify-start pb-6 px-8 mx-[-1.25rem] w-[calc(100%+2.5rem)] shadow-sm">
       <div
         className="absolute bottom-0 left-0 w-full transition-all duration-1000 ease-out bg-primary-normal"
         style={{ height: `${goalData.achievementRate}%` }}
       />
 
       <div className="relative z-10">
-        <div className="px-1 mb-2 text-sm font-medium text-gray-600">총 모인 금액</div>
+        <div className="flex items-center gap-2 mb-5">
+          <div
+            className={
+              hasGoalStyle && bgColor
+                ? 'flex items-center justify-center w-9 h-9 rounded-lg shrink-0'
+                : 'flex items-center justify-center w-9 h-9 bg-neutral-10 rounded-lg shrink-0'
+            }
+            style={hasGoalStyle && bgColor ? { backgroundColor: bgColor } : undefined}
+          >
+            {iconSrc ? (
+              <img src={iconSrc} alt="" className="w-6 h-6 brightness-0 invert" />
+            ) : (
+              <img src={ExBank} alt="" className="w-6 h-6" />
+            )}
+          </div>
+          <span className="text-sm font-semibold text-[#171714]">{goalData.title}</span>
+        </div>
 
-        <div className="flex items-center gap-4 px-1 pb-4">
+        <div className="px-1 mb-1.5 text-sm font-medium text-gray-600">총 모인 금액</div>
+
+        <div className="flex items-center gap-4 px-1">
           <span className="text-2xl font-bold text-black leading-tight">{formatAmount(goalData.savedAmount)}원</span>
 
           <div className="px-3 py-1 bg-primary-normal rounded-full text-xs font-bold text-[#171714]">

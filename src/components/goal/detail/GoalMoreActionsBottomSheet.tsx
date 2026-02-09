@@ -7,7 +7,6 @@ interface GoalMoreActionsBottomSheetProps {
   onClose: () => void;
   onEditGoal?: () => void;
   onDeleteGoal?: () => void;
-  // New props for the icon picker
   initialColorId?: string;
   initialIconId?: string;
   onIconChangeConfirm?: (payload: { colorId: string; iconId: string }) => void;

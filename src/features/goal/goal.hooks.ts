@@ -15,42 +15,28 @@ export const goalKeys = {
   details: () => [...goalKeys.all, 'detail'] as const,
   detail: (id: number) => [...goalKeys.details(), id] as const,
   ledgers: (goalId: number, params?: GetGoalLedgersParams) => [...goalKeys.all, 'ledgers', goalId, params] as const,
+  unlinkedAccounts: () => [...goalKeys.all, 'unlinked-accounts'] as const,
 };
-
-/**
- * 목표 목록 조회
- */
+// 목표 목록 조회
 export function useGoals(params?: GetGoalsParams) {
   return useQuery({
     queryKey: goalKeys.list(params),
     queryFn: () => goalApi.getGoals(params),
   });
 }
-
-/**
- * 활성 목표 목록 조회
- */
+// 활성 목표 목록 조회
 export function useActiveGoals(sort?: GoalSort) {
   return useGoals({ status: 'ACTIVE', sort });
 }
-
-/**
- * 완료된 목표 목록 조회
- */
+// 완료된 목표 목록 조회
 export function useCompletedGoals(sort?: GoalSort) {
   return useGoals({ status: 'COMPLETE', sort });
 }
-
-/**
- * 실패한 목표 목록 조회
- */
+//실패한 목표 목록 조회
 export function useFailedGoals(sort?: GoalSort) {
   return useGoals({ status: 'FAILED', sort });
 }
-
-/**
- * 목표 추가
- */
+// 목표 추가
 export function useCreateGoal() {
   const queryClient = useQueryClient();
 
@@ -62,10 +48,7 @@ export function useCreateGoal() {
     },
   });
 }
-
-/**
- * 목표 상세 조회
- */
+// 목표 상세 조회
 export function useGoalDetail(goalId?: number) {
   return useQuery({
     queryKey: goalKeys.detail(goalId!),
@@ -73,10 +56,15 @@ export function useGoalDetail(goalId?: number) {
     enabled: !!goalId,
   });
 }
-
-/**
- * 목표-계좌 연결
- */
+// 목표에 연결되지 않은 계좌 목록 조회
+export function useGoalUnlinkedAccounts(enabled = true) {
+  return useQuery({
+    queryKey: goalKeys.unlinkedAccounts(),
+    queryFn: () => goalApi.getGoalUnlinkedAccounts(),
+    enabled,
+  });
+}
+// 목표-계좌 연결
 export function useLinkAccount() {
   const queryClient = useQueryClient();
 
@@ -88,10 +76,7 @@ export function useLinkAccount() {
     },
   });
 }
-
-/**
- * 목표 수정
- */
+// 목표 수정
 export function useUpdateGoal() {
   const queryClient = useQueryClient();
 
@@ -103,10 +88,7 @@ export function useUpdateGoal() {
     },
   });
 }
-
-/**
- * 목표 삭제
- */
+// 목표 삭제
 export function useDeleteGoal() {
   const queryClient = useQueryClient();
 
@@ -119,9 +101,7 @@ export function useDeleteGoal() {
   });
 }
 
-/**
- * 목표 거래내역 조회
- */
+//목표 거래내역 조회
 export function useGoalLedgers(goalId: number | undefined, params?: GetGoalLedgersParams) {
   return useQuery({
     queryKey: goalKeys.ledgers(goalId ?? 0, params),

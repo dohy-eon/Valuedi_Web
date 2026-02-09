@@ -3,7 +3,6 @@ import GoalGNB from '@/components/goal/GoalGNB';
 import { BottomNavigation } from '@/components/gnb/BottomNavigation';
 import DropDown from '@/assets/icons/goal/Dropdown.svg';
 import GoalCard from '@/components/goal/GoalCard';
-import ExBank from '@/assets/icons/goal/ExBank.svg';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useCompletedGoals } from '@/features/goal';
 
@@ -55,11 +54,12 @@ export const PastGoalPage = () => {
                     key={goal.goalId}
                     goal={{
                       id: goal.goalId,
-                      bankIcon: ExBank, // TODO: iconId에 따라 매핑
                       title: goal.title,
                       progress: goal.achievementRate,
-                      targetAmount: goal.savedAmount, // TODO: targetAmount 추가 필요
+                      targetAmount: goal.savedAmount,
                       remainingDays: goal.remainingDays,
+                      colorCode: goal.colorCode,
+                      iconId: goal.iconId,
                     }}
                     type="past"
                   />

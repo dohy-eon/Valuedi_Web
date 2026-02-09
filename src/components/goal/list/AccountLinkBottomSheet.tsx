@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import BottomSheet from '@/components/common/BottomSheet';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import { Typography } from '@/components/typography';
 import { useAllBankAccounts } from '@/features/asset';
+import { useGoalUnlinkedAccounts } from '@/features/goal';
+import { getBankDisplayName } from '@/features/connection/constants/organizationCodes';
+import { BANKS } from '@/features/bank/constants/banks';
 
 interface Account {
   id: string;
@@ -16,26 +19,85 @@ interface AccountLinkBottomSheetProps {
   onSelect: (account: Account) => void;
 }
 
-const formatBalance = (amount: number) => amount.toLocaleString('ko-KR') + '원';
+function getBankIconAndBg(bankNameOrCode: string): { icon: string | undefined; bgColor: string } {
+  const displayName = getBankDisplayName(bankNameOrCode);
+  const bank = BANKS.find(
+    (b) =>
+      displayName.includes(b.name.replace('은행', '').replace('카드', '')) ||
+      b.name.includes(displayName.replace('은행', ''))
+  );
+  const colorMapping: Record<string, string> = {
+    국민은행: 'kb',
+    기업은행: 'ibk',
+    신한은행: 'shinhan',
+    농협은행: 'nh',
+    우리은행: 'woori',
+    수협은행: 'suhyup',
+    하나은행: 'hana',
+  };
+  const colorId = colorMapping[displayName] ?? bank?.id;
+  return {
+    icon: bank?.icon,
+    bgColor: colorId ? `var(--color-bank-${colorId})` : 'var(--color-neutral-5)',
+  };
+}
 
 const AccountLinkBottomSheet = ({ isOpen, onClose, onSelect }: AccountLinkBottomSheetProps) => {
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
 
-  // 연동된 모든 은행의 계좌 목록 조회
-  const { data: accountsData, isLoading, error } = useAllBankAccounts(isOpen);
-  const accounts: Account[] =
-    accountsData?.map((acc) => ({
+  const { data: allAccounts, isLoading: loadingAll, error } = useAllBankAccounts(isOpen);
+  const { data: unlinkedData, isLoading: loadingUnlinked } = useGoalUnlinkedAccounts(isOpen);
+
+  const unlinkedAccountIds = useMemo(() => {
+    const ids = new Set<number>();
+    unlinkedData?.result?.accounts?.forEach((a) => ids.add(a.accountId));
+    return ids;
+  }, [unlinkedData]);
+
+  const unlinkedDisplayMap = useMemo(() => {
+    const map = new Map<number, string>();
+    unlinkedData?.result?.accounts?.forEach((a) => map.set(a.accountId, a.accountDisplay));
+    return map;
+  }, [unlinkedData]);
+
+  const accounts: Array<{
+    id: string;
+    bankName: string;
+    accountNumber: string;
+    isLinkable: boolean;
+    accountDisplay?: string;
+  }> = useMemo(() => {
+    if (!allAccounts) return [];
+    return allAccounts.map((acc) => ({
       id: acc.accountId.toString(),
-      bankName: acc.bankName,
-      accountNumber: `${acc.accountName} · ${formatBalance(acc.balanceAmount)}`,
-    })) ?? [];
+      bankName: getBankDisplayName(acc.bankName),
+      accountNumber: unlinkedDisplayMap.get(acc.accountId) ?? `${acc.accountName}`,
+      isLinkable: unlinkedAccountIds.has(acc.accountId),
+      accountDisplay: unlinkedDisplayMap.get(acc.accountId),
+    }));
+  }, [allAccounts, unlinkedAccountIds, unlinkedDisplayMap]);
+
+  const isLoading = loadingAll || loadingUnlinked;
 
   const handleSelect = () => {
     if (selectedAccount) {
-      onSelect(selectedAccount);
+      onSelect({
+        id: selectedAccount.id,
+        bankName: selectedAccount.bankName,
+        accountNumber: selectedAccount.accountNumber,
+      });
       setSelectedAccount(null);
       onClose();
     }
+  };
+
+  const handleAccountClick = (account: (typeof accounts)[0]) => {
+    if (!account.isLinkable) return;
+    setSelectedAccount(
+      selectedAccount?.id === account.id
+        ? null
+        : { id: account.id, bankName: account.bankName, accountNumber: account.accountNumber }
+    );
   };
 
   const handleManualAdd = () => {
@@ -82,40 +144,74 @@ const AccountLinkBottomSheet = ({ isOpen, onClose, onSelect }: AccountLinkBottom
             </Typography>
           </div>
         ) : (
-          accounts.map((account) => (
-            <div
-              key={account.id}
-              onClick={() => setSelectedAccount(account)}
-              className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${
-                selectedAccount?.id === account.id
-                  ? 'border-primary-normal bg-primary-light'
-                  : 'border-neutral-40 bg-white'
-              }`}
-            >
-              <div className="w-10 h-10 bg-primary-normal rounded-lg flex-shrink-0" />
-              <div className="flex-1">
-                <Typography style="text-body-1-16-medium" fontFamily="pretendard" className="text-neutral-90">
-                  {account.bankName}
-                </Typography>
-                <Typography style="text-body-3-13-regular" fontFamily="pretendard" color="neutral-60">
-                  {account.accountNumber}
-                </Typography>
-              </div>
-              {selectedAccount?.id === account.id && (
-                <div className="w-5 h-5 rounded-full bg-primary-normal flex items-center justify-center flex-shrink-0">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path
-                      d="M2 6L4.5 8.5L10 3"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+          accounts.map((account) => {
+            const { icon, bgColor } = getBankIconAndBg(account.bankName);
+            const isSelected = selectedAccount?.id === account.id;
+            const isDisabled = !account.isLinkable;
+
+            return (
+              <div
+                key={account.id}
+                onClick={() => handleAccountClick(account)}
+                className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
+                  isDisabled
+                    ? 'bg-neutral-10 border-neutral-20 cursor-not-allowed opacity-60'
+                    : isSelected
+                      ? 'bg-primary-light border-primary-normal cursor-pointer'
+                      : 'bg-white border-neutral-10 cursor-pointer hover:bg-neutral-5'
+                }`}
+              >
+                <div
+                  className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center"
+                  style={{ backgroundColor: bgColor }}
+                >
+                  {icon ? (
+                    <img src={icon} alt="" className="w-6 h-6 object-contain" />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-neutral-30" />
+                  )}
                 </div>
-              )}
-            </div>
-          ))
+                <div className="flex-1 min-w-0">
+                  <Typography
+                    style="text-body-1-16-semi-bold"
+                    fontFamily="pretendard"
+                    className={isDisabled ? 'text-neutral-50' : 'text-neutral-90'}
+                  >
+                    {account.bankName}
+                  </Typography>
+                  <Typography
+                    style="text-body-3-13-regular"
+                    fontFamily="pretendard"
+                    className={isDisabled ? 'text-neutral-40' : 'text-neutral-60'}
+                  >
+                    {account.accountNumber}
+                  </Typography>
+                  {isDisabled && (
+                    <Typography
+                      style="text-caption-1-12-regular"
+                      fontFamily="pretendard"
+                      className="text-neutral-50 mt-0.5"
+                    >
+                      이미 목표에 연결된 계좌입니다
+                    </Typography>
+                  )}
+                </div>
+                {account.isLinkable && isSelected && (
+                  <div className="w-5 h-5 rounded-full bg-primary-normal flex items-center justify-center flex-shrink-0">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2 6L4.5 8.5L10 3"
+                        stroke="white"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            );
+          })
         )}
       </div>
 

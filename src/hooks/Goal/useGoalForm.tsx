@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export type GoalStep = 1 | 2 | 3 | 4 | 5 | 6 | 7;
@@ -48,6 +48,26 @@ export function useGoalForm(options: UseGoalFormOptions = {}) {
   const [isAccountSheetOpen, setIsAccountSheetOpen] = useState(false);
   const [isIconSheetOpen, setIsIconSheetOpen] = useState(false);
   const [hasInputStarted, setHasInputStarted] = useState(false);
+
+  // edit 모드: 상세 로드 후 initialValues가 채워지면 폼 상태 동기화 (시작일/종료일 등)
+  useEffect(() => {
+    if (!isEdit || !options.initialValues) return;
+    const iv = options.initialValues;
+    if (iv.goalName !== undefined) setGoalName(iv.goalName);
+    if (iv.startDate !== undefined) setStartDate(iv.startDate);
+    if (iv.endDate !== undefined) setEndDate(iv.endDate);
+    if (iv.goalAmount !== undefined) setGoalAmount(iv.goalAmount);
+    if (iv.selectedAccount !== undefined) setSelectedAccount(iv.selectedAccount);
+    // initialValues 객체 전체가 아닌 값만 의존 (객체 참조 시 매 렌더 덮어쓰기 방지)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isEdit,
+    options.initialValues?.goalName,
+    options.initialValues?.startDate,
+    options.initialValues?.endDate,
+    options.initialValues?.goalAmount,
+    options.initialValues?.selectedAccount,
+  ]);
 
   const accountDisplay = useMemo(() => {
     if (!selectedAccount) return '';
