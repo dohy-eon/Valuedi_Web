@@ -1,5 +1,5 @@
 /**
- * 자산/거래 분석 관련 API
+ * 자산/거래 분석 및 계좌 관련 API
  * Swagger: https://api.valuedi.site/swagger-ui/index.html → Ledger (거래내역)
  */
 
@@ -214,4 +214,33 @@ export const getTopCategoriesApi = async (params: {
   const search = new URLSearchParams({ yearMonth: params.yearMonth });
   if (params.limit != null) search.set('limit', String(params.limit));
   return apiGet<TopCategoryItem[]>(`/api/transactions/top-category?${search.toString()}`);
+};
+
+// ========== 자산(계좌) 관련 타입 ==========
+
+export interface Account {
+  accountId: number;
+  accountName: string;
+  balanceAmount: number;
+  organization: string;
+  createdAt: string;
+  goalInfo: {
+    goalId: number;
+    title: string;
+  } | null;
+}
+
+export interface AccountListResponse {
+  accountList: Account[];
+  totalCount: number;
+}
+
+// ========== 자산(계좌) API ==========
+
+/**
+ * 전체 계좌 목록 조회
+ * GET /api/assets/accounts
+ */
+export const getAccountsApi = async (): Promise<ApiResponse<AccountListResponse>> => {
+  return apiGet<AccountListResponse>('/api/assets/accounts');
 };
