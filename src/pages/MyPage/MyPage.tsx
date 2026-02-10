@@ -61,11 +61,10 @@ export const MyPage = () => {
               </Typography>
             </div>
           </div>
-          <div className="w-[18px] h-[18px]">
-            <MoreViewButton />
-          </div>
         </div>
+      </div>
 
+      <div className={cn('sticky z-10 w-full px-[20px] top-[50px] pb-[20px]')}>
         <SegmentedButton<TabType> value={activeTab} onChange={setActiveTab} options={tabOptions} />
       </div>
 
