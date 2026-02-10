@@ -6,6 +6,7 @@ import { CompareBar } from './CompareBar';
 import { Skeleton } from '@/components/skeleton/Skeleton';
 import { CompareBarSkeleton } from './CompareBarSkeleton';
 import { getPeerCompareApi } from '@/features/asset/asset.api';
+import { useUserName } from '@/hooks/useUserName';
 
 // 💡 3. Props 인터페이스 추가
 interface PeerCompareSectionProps {
@@ -13,6 +14,7 @@ interface PeerCompareSectionProps {
 }
 
 export const PeerCompareSection = ({ isLoading = false }: PeerCompareSectionProps) => {
+  const userName = useUserName();
   const now = useMemo(() => new Date(), []);
   const yearMonth = useMemo(() => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`, [now]);
 
@@ -59,7 +61,7 @@ export const PeerCompareSection = ({ isLoading = false }: PeerCompareSectionProp
           <>
             <CompareBar label="또래 평균" amount={peerTotal} maxAmount={Math.max(myTotal, peerTotal) * 1.2} />
             <CompareBar
-              label="김휘주님"
+              label={`${userName}님`}
               amount={myTotal}
               isHighlight={true}
               maxAmount={Math.max(myTotal, peerTotal) * 1.2}

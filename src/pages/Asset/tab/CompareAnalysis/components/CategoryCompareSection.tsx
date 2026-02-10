@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/skeleton/Skeleton';
 import { CompareBarSkeleton } from './CompareBarSkeleton';
 import { getTransactionsByCategoryApi } from '@/features/asset/asset.api';
 import { normalizeCategoryCode } from '@/features/asset/constants/category';
+import { useUserName } from '@/hooks/useUserName';
 
 const DISPLAY_NAMES: Record<string, string> = {
   traffic: '교통',
@@ -27,6 +28,7 @@ interface CategoryCompareSectionProps {
 }
 
 export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSectionProps) => {
+  const userName = useUserName();
   const [selectedCategory, setSelectedCategory] = useState('traffic');
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -113,7 +115,7 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
               maxAmount={Math.max(myCategoryTotal, peerCategoryTotal, 100000) * 1.2}
             />
             <CompareBar
-              label="김휘주님"
+              label={`${userName}님`}
               amount={myCategoryTotal}
               isHighlight={true}
               maxAmount={Math.max(myCategoryTotal, peerCategoryTotal, 100000) * 1.2}
