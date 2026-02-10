@@ -3,6 +3,8 @@ import { MobileLayout } from '@/components/layout/MobileLayout';
 import { Typography } from '@/components/typography';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import BackPageIcon from '@/assets/icons/BackPage.svg';
+import { GoalSummaryCard } from '@/components/goal/GoalSummaryCard';
+import { GOAL_COLOR_NAME_TO_CODE } from '@/features/goal';
 
 const GoalCreatePage = () => {
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ const GoalCreatePage = () => {
         </header>
 
         <main className="flex-1 flex flex-col px-[20px] pt-[40px] pb-[32px] overflow-y-auto">
-          <div className="flex flex-col gap-[8px] mb-[40px]">
+          <div className="flex flex-col gap-[8px] mb-[32px]">
             <Typography style="text-headline-1-22-bold" fontFamily="pretendard" className="text-neutral-90" as="h1">
               나의 목표를 작성 해볼까요?
             </Typography>
@@ -43,7 +45,18 @@ const GoalCreatePage = () => {
             </Typography>
           </div>
           <div className="flex-1 flex items-center justify-center mb-[32px]">
-            <div className="w-full max-w-[150px] h-[150px] aspect-square bg-neutral-30" />
+            <GoalSummaryCard
+              title="나의 목표"
+              colorCode={GOAL_COLOR_NAME_TO_CODE.yellow}
+              iconId={11} // Saving 아이콘
+              targetAmountText="??? 원"
+              startDateText="--.--.--"
+              endDateText="--.--.--"
+              remainingDaysText="?? 일"
+              accountText="목표를 설정하면 저축계좌가 표시돼요"
+              showDates={false}
+              showAccount={false}
+            />
           </div>
         </main>
 
