@@ -76,9 +76,7 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-[#171714]">{titleText}</span>
           {statusLabel && (
-            <div
-              className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}
-            >
+            <div className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}>
               {statusLabel}
             </div>
           )}
@@ -105,9 +103,7 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
               <img src={MoneyIcon} alt="money" className="w-4 h-4 opacity-40" />
               <span className="text-xs font-medium">목표 금액</span>
             </div>
-            <span className="text-xs font-semibold text-[#171714]">
-              {goal.targetAmount.toLocaleString()}원
-            </span>
+            <span className="text-xs font-semibold text-[#171714]">{goal.targetAmount.toLocaleString()}원</span>
           </div>
 
           <div className="flex items-center justify-between">

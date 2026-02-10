@@ -14,10 +14,7 @@ interface PeerCompareSectionProps {
 
 export const PeerCompareSection = ({ isLoading = false }: PeerCompareSectionProps) => {
   const now = useMemo(() => new Date(), []);
-  const yearMonth = useMemo(
-    () => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`,
-    [now]
-  );
+  const yearMonth = useMemo(() => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`, [now]);
 
   const { data, isLoading: isPeerLoading } = useQuery({
     queryKey: ['transactions', 'peer-compare', yearMonth],

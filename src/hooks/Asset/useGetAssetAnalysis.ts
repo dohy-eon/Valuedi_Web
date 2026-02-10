@@ -6,9 +6,7 @@ import {
   getIntegerPercentagesSum100,
 } from '@/pages/Asset/tab/SectorAnalysis/utils/sectorUtils';
 import {
-  rematchCategoriesApi,
   getTransactionsByCategoryApi,
-  syncTransactionsApi,
   getTransactionsApi,
   type LedgerTransactionItem,
 } from '@/features/asset/asset.api';

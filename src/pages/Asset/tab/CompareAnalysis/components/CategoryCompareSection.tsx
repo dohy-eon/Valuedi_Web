@@ -31,17 +31,12 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const now = useMemo(() => new Date(), []);
-  const yearMonth = useMemo(
-    () => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`,
-    [now]
-  );
+  const yearMonth = useMemo(() => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`, [now]);
 
   const { data, isLoading: isCategoryLoading } = useQuery({
     queryKey: ['transactions', 'by-category', yearMonth],
     queryFn: () => getTransactionsByCategoryApi(yearMonth),
   });
-
-  const categoryItems = data?.result ?? [];
 
   const handleCategoryClick = (catKey: string, e: React.MouseEvent<HTMLButtonElement>) => {
     setSelectedCategory(catKey);
@@ -59,11 +54,12 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
   };
 
   const myCategoryTotal = useMemo(() => {
-    if (!Array.isArray(categoryItems) || categoryItems.length === 0) return 0;
-    return categoryItems
+    const items = data?.result ?? [];
+    if (!Array.isArray(items) || items.length === 0) return 0;
+    return items
       .filter((item) => normalizeCategoryCode(item.categoryCode, item.categoryName) === selectedCategory)
       .reduce((sum, item) => sum + (item.totalAmount ?? 0), 0);
-  }, [categoryItems, selectedCategory]);
+  }, [data, selectedCategory]);
 
   const peerCategoryTotal = PEER_AVERAGE_DATA.categories[selectedCategory] || 0;
 

@@ -72,12 +72,11 @@ const groupTransactionsByDate = (items: LedgerTransactionItem[]): TransactionGro
     const isIncome = (item.type ?? '').toString().toUpperCase() === 'INCOME';
     const amount = isIncome ? Math.abs(rawAmount) : -Math.abs(rawAmount);
 
-    const categoryName = (item as any).categoryName as string | undefined;
-    const memo = (item as any).memo as string | undefined;
-    const sub =
-      categoryName && memo ? `${categoryName} | ${memo}` : categoryName ? categoryName : memo ? memo : '기타';
+    const categoryName = item.categoryName as string | undefined;
+    const memo = item.memo as string | undefined;
+    const sub = categoryName && memo ? `${categoryName} | ${memo}` : categoryName ? categoryName : memo ? memo : '기타';
 
-    const txId = (item as any).id ?? item.transactionId ?? Date.now() + group.items.length;
+    const txId = item.id ?? item.transactionId ?? Date.now() + group.items.length;
 
     group.items.push({
       id: txId,
@@ -141,17 +140,9 @@ export const useGetAccountDetail = () => {
 
     getTransactionsApi({ yearMonth, size: 200, sort: 'LATEST' })
       .then((res) => {
-        const raw = res?.result as
-          | { content?: LedgerTransactionItem[] }
-          | LedgerTransactionItem[]
-          | null
-          | undefined;
+        const raw = res?.result as { content?: LedgerTransactionItem[] } | LedgerTransactionItem[] | null | undefined;
 
-        const content = Array.isArray(raw)
-          ? raw
-          : Array.isArray(raw?.content)
-            ? raw.content
-            : [];
+        const content = Array.isArray(raw) ? raw : Array.isArray(raw?.content) ? raw.content : [];
 
         const groups = groupTransactionsByDate(content);
         setTransactionHistory(groups);

@@ -72,16 +72,8 @@ const getCardColorByOrgCode = (orgCode?: string | null): ColorToken => {
  * 를 사용해 목업 대신 실제 API 데이터를 반환한다.
  */
 export const useGetAssetList = () => {
-  const {
-    data: accountsData,
-    isLoading: isAccountsLoading,
-    isError: isAccountsError,
-  } = useAccounts();
-  const {
-    data: cardsData,
-    isLoading: isCardsLoading,
-    isError: isCardsError,
-  } = useCards();
+  const { data: accountsData, isLoading: isAccountsLoading, isError: isAccountsError } = useAccounts();
+  const { data: cardsData, isLoading: isCardsLoading, isError: isCardsError } = useCards();
 
   const bankAccounts: AccountData[] = useMemo(() => {
     const list = accountsData?.result?.accountList ?? [];
@@ -107,10 +99,7 @@ export const useGetAssetList = () => {
     }));
   }, [cardsData]);
 
-  const totalAsset = useMemo(
-    () => bankAccounts.reduce((sum, account) => sum + account.amount, 0),
-    [bankAccounts]
-  );
+  const totalAsset = useMemo(() => bankAccounts.reduce((sum, account) => sum + account.amount, 0), [bankAccounts]);
 
   return {
     totalAsset,

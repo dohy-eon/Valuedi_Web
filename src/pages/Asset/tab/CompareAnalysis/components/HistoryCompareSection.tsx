@@ -15,10 +15,7 @@ interface HistoryCompareSectionProps {
 export const HistoryCompareSection = ({ isLoading = false }: HistoryCompareSectionProps) => {
   // 기준: 이번 달을 포함한 최근 4개월 추이
   const now = useMemo(() => new Date(), []);
-  const toYearMonth = useMemo(
-    () => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`,
-    [now]
-  );
+  const toYearMonth = useMemo(() => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`, [now]);
   const fromYearMonth = useMemo(() => {
     const d = new Date(now.getFullYear(), now.getMonth() - 3, 1);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
@@ -29,9 +26,8 @@ export const HistoryCompareSection = ({ isLoading = false }: HistoryCompareSecti
     queryFn: () => getTrendApi({ fromYearMonth, toYearMonth }),
   });
 
-  const trendItems: TrendItem[] = data?.result ?? [];
-
   const { totalJan, totalDec, totalNov } = useMemo(() => {
+    const trendItems: TrendItem[] = data?.result ?? [];
     const map = new Map<string, number>();
     trendItems.forEach((item) => {
       const ym = item.yearMonth;
@@ -52,7 +48,7 @@ export const HistoryCompareSection = ({ isLoading = false }: HistoryCompareSecti
       totalDec: map.get(ymDec) ?? 0,
       totalNov: map.get(ymNov) ?? 0,
     };
-  }, [trendItems, toYearMonth, now]);
+  }, [data, toYearMonth, now]);
 
   const diffAmount = Math.abs(totalJan - totalDec);
   const isReduced = totalJan < totalDec;
