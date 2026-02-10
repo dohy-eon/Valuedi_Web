@@ -31,17 +31,12 @@ const BaseLoginContainer: React.FC<BaseLoginContainerProps> = ({ className, onLo
 
         // 은행 연동 상태와 금융 MBTI 상태 확인 후 리디렉션
         try {
-          const [connectionsRes, mbtiRes] = await Promise.allSettled([
-            getConnectionsApi(),
-            getFinanceMbtiResultApi(),
-          ]);
+          const [connectionsRes, mbtiRes] = await Promise.allSettled([getConnectionsApi(), getFinanceMbtiResultApi()]);
 
           // 은행 연동 여부 확인
           const hasBankConnection =
             connectionsRes.status === 'fulfilled' &&
-            connectionsRes.value?.result?.some(
-              (conn) => (conn.businessType || conn.type) === 'BK'
-            );
+            connectionsRes.value?.result?.some((conn) => (conn.businessType || conn.type) === 'BK');
 
           // 금융 MBTI 존재 여부 확인
           const hasMbti = mbtiRes.status === 'fulfilled' && !!mbtiRes.value?.result;
