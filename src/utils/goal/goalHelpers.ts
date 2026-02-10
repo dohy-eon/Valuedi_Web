@@ -28,7 +28,7 @@ export function formatDate(dateStr: string) {
 /** API에서 받은 날짜(YYYY-MM-DD 또는 ISO)를 입력 필드용 YY-MM-DD로 변환 */
 export function toInputDate(apiDate: string | undefined): string {
   if (!apiDate || typeof apiDate !== 'string') return '';
-  const datePart = apiDate.slice(0, 10);
+  const datePart = apiDate.trim().slice(0, 10);
   if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) return datePart.slice(2);
   return apiDate;
 }
