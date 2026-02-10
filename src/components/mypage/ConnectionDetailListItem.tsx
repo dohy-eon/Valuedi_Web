@@ -23,7 +23,7 @@ const ConnectionDetailListItem: React.FC<ConnectionDetailListItemProps> = ({
   const defaultBgColor = isCardType ? 'bg-atomic-yellow-95' : 'bg-bank-plus';
 
   return (
-    <div className={cn('flex items-center gap-4 py-2', className)}>
+    <div className={cn('flex items-center gap-[8px] py-2', className)}>
       {/* 💡 아이콘 박스 규격 수정 및 배경색 로직 적용 */}
       <div
         className={cn(

@@ -5,7 +5,6 @@ import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
 import BackPageGNB from '@/components/gnb/BackPageGNB';
 import ProfileIcon from '@/assets/icons/mbti/Profile.svg';
-import { MoreViewButton } from '@/components/buttons';
 import MyMbti from './components/MyMbti';
 import { SegmentedButton } from '@/components/buttons/SegmentedButton';
 import { useGetProfile } from '@/hooks/MyPage/useGetProfile';
@@ -61,11 +60,10 @@ export const MyPage = () => {
               </Typography>
             </div>
           </div>
-          <div className="w-[18px] h-[18px]">
-            <MoreViewButton />
-          </div>
         </div>
+      </div>
 
+      <div className={cn('sticky z-10 w-full px-[20px] top-[50px] pb-[20px]')}>
         <SegmentedButton<TabType> value={activeTab} onChange={setActiveTab} options={tabOptions} />
       </div>
 
