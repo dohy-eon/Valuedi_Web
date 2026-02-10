@@ -45,13 +45,10 @@ export function GoalSummaryCard({
 }: GoalSummaryCardProps) {
   // 목표 색상 팔레트 기준 기본값: yellow (#F8D444)
   const resolvedColor = colorCode ? toHexColor(colorCode) : GOAL_COLOR_NAME_TO_CODE.yellow;
-  const resolvedIcon =
-    iconId != null ? (GOAL_ICON_SRC[iconId] ?? DEFAULT_GOAL_ICON) : DEFAULT_GOAL_ICON;
+  const resolvedIcon = iconId != null ? (GOAL_ICON_SRC[iconId] ?? DEFAULT_GOAL_ICON) : DEFAULT_GOAL_ICON;
 
   const resolvedAccountText =
-    bankName != null && bankName !== ''
-      ? `${getBankDisplayName(bankName)} ${accountText}`.trim()
-      : accountText;
+    bankName != null && bankName !== '' ? `${getBankDisplayName(bankName)} ${accountText}`.trim() : accountText;
 
   return (
     <div className="w-full max-w-[320px] mx-auto bg-white rounded-2xl shadow-sm border border-neutral-10 overflow-hidden mb-8">
@@ -63,11 +60,7 @@ export function GoalSummaryCard({
           >
             <img src={resolvedIcon} alt="" className="w-6 h-6 brightness-0 invert" />
           </div>
-          <Typography
-            style="text-body-1-16-semi-bold"
-            fontFamily="pretendard"
-            className="text-neutral-90 truncate"
-          >
+          <Typography style="text-body-1-16-semi-bold" fontFamily="pretendard" className="text-neutral-90 truncate">
             {title}
           </Typography>
         </div>
@@ -115,9 +108,7 @@ export function GoalSummaryCard({
                 <img src={MoneyIcon} alt="" className="w-4 h-4 opacity-60" />
                 <span className="text-sm">저축계좌</span>
               </div>
-              <span className="text-sm text-neutral-90 truncate max-w-[180px] text-right">
-                {resolvedAccountText}
-              </span>
+              <span className="text-sm text-neutral-90 truncate max-w-[180px] text-right">{resolvedAccountText}</span>
             </div>
           )}
         </div>
@@ -125,4 +116,3 @@ export function GoalSummaryCard({
     </div>
   );
 }
-
