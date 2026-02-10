@@ -5,7 +5,6 @@ import { Typography } from '@/components';
 import { cn } from '@/utils/cn';
 import BackPageGNB from '@/components/gnb/BackPageGNB';
 import ProfileIcon from '@/assets/icons/mbti/Profile.svg';
-import { MoreViewButton } from '@/components/buttons';
 import MyMbti from './components/MyMbti';
 import { SegmentedButton } from '@/components/buttons/SegmentedButton';
 import { useGetProfile } from '@/hooks/MyPage/useGetProfile';

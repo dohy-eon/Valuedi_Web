@@ -9,6 +9,15 @@ interface ConnectionListProps {
   organizationCode: string;
 }
 
+interface AssetListItem {
+  accountId?: number; // 은행 계좌 ID
+  accountName?: string; // 은행 계좌 이름
+  accountNumber?: string; // 은행 계좌 번호
+  cardId?: number; // 카드 ID
+  cardName?: string; // 카드 이름
+  cardNoMasked?: string; // 마스킹된 카드 번호
+}
+
 export const ConnectionList = ({ bankName, organizationCode }: ConnectionListProps) => {
   // 💡 '카드'라는 글자가 포함되어 있는지 확인하여 모드 결정
   const isCard = bankName.includes('카드');
@@ -36,10 +45,10 @@ export const ConnectionList = ({ bankName, organizationCode }: ConnectionListPro
 
   return (
     <section className="px-5 pb-8 space-y-2">
-      {filteredList.map((item: any) => (
+      {filteredList.map((item: AssetListItem) => (
         <ConnectionDetailListItem
           key={isCard ? item.cardId : item.accountId}
-          displayName={isCard ? item.cardName : item.accountName}
+          displayName={(isCard ? item.cardName : item.accountName) || '연결된 정보 확인'}
           accountNumber={isCard ? formatCardNumber(item.cardNoMasked) : item.accountNumber || '연결된 정보 확인'}
           isCardType={isCard}
         />
