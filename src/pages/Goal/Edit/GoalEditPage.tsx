@@ -34,7 +34,7 @@ function GoalEditForm({
   onSuccess: () => void;
 }) {
   const navigate = useNavigate();
-  // API 목표 상세 조회 시 시작일/종료일(startDate, endDate) 반영
+  // 목표 상세 조회 응답에 포함된 시작일/종료일 사용
   const startDateFromApi = detail.startDate;
   const endDateFromApi = detail.endDate;
 

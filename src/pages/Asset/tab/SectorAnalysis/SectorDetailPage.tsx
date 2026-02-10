@@ -10,15 +10,7 @@ import { AssetItemList } from '../AssetDetails/components/AssetItemList';
 import { CATEGORY_STYLES, CATEGORY_LABELS } from '@/features/asset/constants/category';
 import { useGetAssetAnalysis } from '@/hooks/Asset/useGetAssetAnalysis';
 import { TransactionDetailModal } from './components/TransactionDetailModal';
-
-// 💡 리팩토링된 정석 타입 및 유틸 임포트
-import {
-  TransactionWithDetails,
-  SectorTransactionGroup,
-  transformToDateGroups,
-  transformToCategoryGroups,
-  SectorData,
-} from './utils/sectorUtils';
+import { TransactionWithDetails, SectorTransactionGroup, transformToDateGroups, SectorData } from './utils/sectorUtils';
 
 export const SectorDetailPage = () => {
   const { categoryKey } = useParams();
@@ -26,26 +18,67 @@ export const SectorDetailPage = () => {
   const location = useLocation();
   const selectedDate = location.state?.selectedDate ? new Date(location.state.selectedDate) : new Date();
 
-  const { transactions, totalExpense } = useGetAssetAnalysis(selectedDate);
+  const { allSectors, isLoading } = useGetAssetAnalysis(selectedDate);
 
-  // 1. 상세 모달 상태
   const [selectedItem, setSelectedItem] = useState<TransactionWithDetails | null>(null);
 
-  /**
-   * 2. 데이터 로드 로직
-   * 부모 페이지에서 넘겨준 state가 있으면 우선 사용하고, 없으면 직접 훅으로 가져옵니다. ㅋ
-   */
   const stateData = location.state?.sectorData as SectorData | undefined;
+  const selectedCategory = stateData || allSectors.find((s) => s.key === categoryKey);
 
-  const selectedCategory =
-    stateData || transformToCategoryGroups(transactions, totalExpense).find((s) => s.key === categoryKey);
+  // 로딩 중이면 스켈레톤, 카테고리 없으면 안내 후 뒤로가기
+  if (isLoading && !stateData) {
+    return (
+      <MobileLayout className="bg-neutral-0">
+        <div className="sticky top-0 z-10 w-full bg-white border-b border-neutral-5">
+          <BackPageGNB
+            title="세부내역"
+            onBack={() => navigate(-1)}
+            text=""
+            className="bg-white"
+            titleColor="text-neutral-90"
+          />
+        </div>
+        <div className="p-5 flex flex-col gap-3">
+          <div className="h-[134px] bg-neutral-10 rounded-lg animate-pulse" />
+          <div className="h-4 w-32 bg-neutral-10 rounded animate-pulse" />
+          <div className="h-20 bg-neutral-10 rounded animate-pulse" />
+        </div>
+      </MobileLayout>
+    );
+  }
 
-  // 데이터가 없으면 안전하게 차단 ㅋ
-  if (!selectedCategory || !selectedCategory.items) return null;
+  if (!selectedCategory) {
+    return (
+      <MobileLayout className="bg-neutral-0">
+        <div className="sticky top-0 z-10 w-full bg-white border-b border-neutral-5">
+          <BackPageGNB
+            title="세부내역"
+            onBack={() => navigate('/asset/sector', { state: { selectedDate: selectedDate.toISOString() } })}
+            text=""
+            className="bg-white"
+            titleColor="text-neutral-90"
+          />
+        </div>
+        <div className="flex flex-col items-center justify-center flex-1 py-12 px-5">
+          <Typography variant="body-2" color="neutral-50" className="text-center">
+            카테고리 정보를 찾을 수 없습니다.
+          </Typography>
+          <button
+            type="button"
+            onClick={() => navigate('/asset/sector', { state: { selectedDate: selectedDate.toISOString() } })}
+            className="mt-4 text-primary-normal text-sm font-medium"
+          >
+            카테고리 분석으로 돌아가기
+          </button>
+        </div>
+      </MobileLayout>
+    );
+  }
 
-  const { key, amount: totalAmount, items } = selectedCategory;
+  const items = selectedCategory.items ?? [];
+  const { key, amount: totalAmount } = selectedCategory;
   const style = CATEGORY_STYLES[key] || CATEGORY_STYLES.default;
-  const label = CATEGORY_LABELS[key] || CATEGORY_LABELS.default;
+  const label = CATEGORY_LABELS[key] || selectedCategory.category || CATEGORY_LABELS.default;
 
   // 3. 화면 렌더링을 위한 날짜별 그룹화 실행
   const historyData: SectorTransactionGroup[] = transformToDateGroups(items);

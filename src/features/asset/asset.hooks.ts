@@ -8,6 +8,11 @@ export const assetKeys = {
   all: ['assets'] as const,
   banks: () => [...assetKeys.all, 'banks'] as const,
   bankAccounts: (bankCode: string) => [...assetKeys.all, 'banks', bankCode] as const,
+  summary: () => [...assetKeys.all, 'summary'] as const,
+  accounts: () => [...assetKeys.all, 'accounts'] as const,
+  cards: () => [...assetKeys.all, 'cards'] as const,
+  cardIssuers: () => [...assetKeys.all, 'cardIssuers'] as const,
+  cardIssuerCards: (issuerCode: string) => [...assetKeys.all, 'cardIssuers', issuerCode, 'cards'] as const,
 };
 
 /**
@@ -87,4 +92,60 @@ export function useAllBankAccounts(enabled = true) {
     error,
     banksData,
   };
+}
+
+/**
+ * 연동 자산 개수 및 요약 조회
+ * GET /api/assets/summary
+ */
+export function useAssetSummary() {
+  return useQuery({
+    queryKey: assetKeys.summary(),
+    queryFn: () => assetApi.getAssetSummary(),
+  });
+}
+
+/**
+ * 전체 계좌 목록 조회
+ * GET /api/assets/accounts
+ */
+export function useAccounts() {
+  return useQuery({
+    queryKey: assetKeys.accounts(),
+    queryFn: () => assetApi.getAccounts(),
+  });
+}
+
+/**
+ * 전체 카드 목록 조회
+ * GET /api/assets/cards
+ */
+export function useCards() {
+  return useQuery({
+    queryKey: assetKeys.cards(),
+    queryFn: () => assetApi.getCards(),
+  });
+}
+
+/**
+ * 연동된 카드사 목록 조회
+ * GET /api/assets/cardIssuers
+ */
+export function useCardIssuers() {
+  return useQuery({
+    queryKey: assetKeys.cardIssuers(),
+    queryFn: () => assetApi.getCardIssuers(),
+  });
+}
+
+/**
+ * 카드사별 카드 목록 조회
+ * GET /api/assets/cardIssuers/{issuerCode}/cards
+ */
+export function useCardIssuerCards(issuerCode: string | null) {
+  return useQuery({
+    queryKey: assetKeys.cardIssuerCards(issuerCode ?? ''),
+    queryFn: () => assetApi.getCardIssuerCards(issuerCode!),
+    enabled: !!issuerCode,
+  });
 }

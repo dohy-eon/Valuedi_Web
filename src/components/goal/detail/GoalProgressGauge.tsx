@@ -1,7 +1,6 @@
 import { useGoalDetail, toHexColor } from '@/features/goal';
 import { GOAL_ICON_SRC } from '@/components/goal/goalIconAssets';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
-
 interface GoalProgressGaugeProps {
   goalId: number;
 }
@@ -17,18 +16,14 @@ const GoalProgressGauge = ({ goalId }: GoalProgressGaugeProps) => {
 
   if (loading) {
     return (
-      <div className="relative overflow-hidden bg-white min-h-[220px] flex items-center justify-center p-8 mx-[-1.25rem] w-[calc(100%+2.5rem)] shadow-sm">
-        <p className="text-gray-500">로딩 중...</p>
+      <div className="p-3 bg-white rounded-3xl shadow-sm flex items-center justify-center">
+        <p className="text-gray-500 text-sm">로딩 중...</p>
       </div>
     );
   }
 
   if (error || !goalData) {
-    return (
-      <div className="relative overflow-hidden bg-white min-h-[220px] flex items-center justify-center p-8 mx-[-1.25rem] w-[calc(100%+2.5rem)] shadow-sm">
-        <p className="text-red-500">{error || '데이터를 불러올 수 없습니다.'}</p>
-      </div>
-    );
+    return null;
   }
 
   const hasGoalStyle = goalData.colorCode != null && goalData.iconId != null;
@@ -36,14 +31,14 @@ const GoalProgressGauge = ({ goalId }: GoalProgressGaugeProps) => {
   const iconSrc = goalData.iconId != null ? GOAL_ICON_SRC[goalData.iconId] : null;
 
   return (
-    <div className="relative overflow-hidden bg-white min-h-[50px] flex flex-col justify-start pb-6 px-8 mx-[-1.25rem] w-[calc(100%+2.5rem)] shadow-sm">
+    <div className="relative overflow-hidden bg-white min-h-[50px] flex flex-col justify-start pb-6 px-5 rounded-2xl mx-5">
       <div
         className="absolute bottom-0 left-0 w-full transition-all duration-1000 ease-out bg-primary-normal"
         style={{ height: `${goalData.achievementRate}%` }}
       />
 
       <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-5">
+        <div className="flex items-center gap-2 mb-5 mt-5">
           <div
             className={
               hasGoalStyle && bgColor

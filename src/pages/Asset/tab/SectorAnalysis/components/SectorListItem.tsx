@@ -12,7 +12,8 @@ import { TransactionWithDetails } from '../utils/sectorUtils';
 export interface SectorData {
   key: string; // 'food', 'transfer' 등 (카테고리 구분값)
   amount: number; // 해당 카테고리 총 지출 금액
-  percentage: number;
+  percentage: number; // 차트용 (합 100%)
+  displayPct?: number; // 리스트 표시용 정수 퍼센트 (합 100)
   category: string; // 전체 대비 비중
   items?: TransactionWithDetails[]; // 상세 내역 리스트
 }
@@ -49,9 +50,9 @@ export const SectorListItem = ({ data, label, onClick }: SectorListItemProps) =>
             {label}
           </Typography>
           {/* 퍼센트가 0보다 클 때만 노출 (소수점 없이 정수형) */}
-          {data.percentage > 0 && (
+          {(data.displayPct ?? data.percentage) > 0 && (
             <Typography variant="caption-1" color="neutral-40">
-              {Math.floor(data.percentage)}% {/* 💡 여기서도 한 번 더 안전하게 처리 ㅋ */}
+              {data.displayPct ?? Math.floor(data.percentage)}%
             </Typography>
           )}
         </div>

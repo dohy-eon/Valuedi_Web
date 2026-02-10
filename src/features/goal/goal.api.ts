@@ -115,10 +115,8 @@ export const goalApi = {
     const data = await response.json();
     const result = data?.result;
     if (result && typeof result === 'object') {
-      const r = result as Record<string, unknown>;
-      // 목표 상세 API 시작일/종료일: snake_case → camelCase 정규화
-      if (r.start_date != null && r.startDate == null) r.startDate = r.start_date;
-      if (r.end_date != null && r.endDate == null) r.endDate = r.end_date;
+      if (result.start_date != null && result.startDate == null) result.startDate = result.start_date;
+      if (result.end_date != null && result.endDate == null) result.endDate = result.end_date;
     }
     return data;
   },

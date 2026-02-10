@@ -35,13 +35,8 @@ const GoalSummaryCard = ({ goalId }: GoalSummaryCardProps) => {
   }
 
   if (error || !goalData) {
-    return (
-      <div className="p-3 bg-white rounded-3xl">
-        <div className="p-5 space-y-4 bg-gray-100 rounded-lg">
-          <p className="text-xs text-center text-red-500">{error || '데이터를 불러올 수 없습니다.'}</p>
-        </div>
-      </div>
-    );
+    // 에러나 데이터 없음일 때는 카드 자체를 숨겨서 오류 화면처럼 보이지 않게 처리
+    return null;
   }
 
   return (

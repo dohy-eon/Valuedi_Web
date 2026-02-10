@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import GoalGNB from '@/components/goal/GoalGNB';
+import { HomeGNB } from '@/components/gnb/HomeGNB';
 import { BottomNavigation } from '@/components/gnb/BottomNavigation';
 import DropDown from '@/assets/icons/goal/Dropdown.svg';
 import GoalCard from '@/components/goal/GoalCard';
 import { MobileLayout } from '@/components/layout/MobileLayout';
 import { useCompletedGoals } from '@/features/goal';
+import { paths } from '@/router/paths';
 
 export const PastGoalPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'achieve'>('latest');
@@ -18,7 +19,13 @@ export const PastGoalPage = () => {
     <MobileLayout>
       <div className="flex flex-col w-full min-h-screen bg-gray-50">
         <div className="sticky top-0 z-20 w-full bg-white">
-          <GoalGNB />
+          <HomeGNB
+            title="목표"
+            tabs={[
+              { label: '현재 목표', path: paths.goal.current },
+              { label: '지난 목표', path: paths.goal.past },
+            ]}
+          />
         </div>
 
         <main className="flex-1 pb-24">
@@ -60,6 +67,8 @@ export const PastGoalPage = () => {
                       remainingDays: goal.remainingDays,
                       colorCode: goal.colorCode,
                       iconId: goal.iconId,
+                      status: goal.status,
+                      savedAmount: goal.savedAmount,
                     }}
                     type="past"
                   />

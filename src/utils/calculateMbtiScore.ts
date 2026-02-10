@@ -1,16 +1,22 @@
-import { DEFAULT_RESULT } from '@/features/mbti/constants/mbtiData';
+import { MBTI_TRAITS_CONFIG } from '@/features/mbti/constants/mbtiTrait';
+import { FinanceMbtiResult } from '@/features/mbti/mbti.api';
 
-type Answers = Record<number, number>;
+export const calculateMbtiScores = (scores: FinanceMbtiResult) => {
+  return MBTI_TRAITS_CONFIG.map((trait) => {
+    const leftRawScore = scores[trait.keys.left as keyof FinanceMbtiResult] as number;
+    const rightRawScore = scores[trait.keys.right as keyof FinanceMbtiResult] as number;
 
-export const calculateMbtiScore = (_answers: Answers) => {
-  return {
-    mbtiCode: 'SPGV',
-    data: DEFAULT_RESULT,
-    scores: {
-      emotion: 50,
-      control: 50,
-      risk: 50,
-      decision: 50,
-    },
-  };
+    const total = leftRawScore + rightRawScore;
+    const leftPercent = total === 0 ? 50 : Math.round((leftRawScore / total) * 100);
+    const isLeftDominant = leftPercent >= 50;
+
+    return {
+      title: trait.title,
+      leftLabel: trait.leftLabel,
+      rightLabel: trait.rightLabel,
+      leftScore: leftPercent,
+      description: isLeftDominant ? trait.leftDescription : trait.rightDescription,
+      details: isLeftDominant ? trait.leftDetails : trait.rightDetails,
+    };
+  });
 };

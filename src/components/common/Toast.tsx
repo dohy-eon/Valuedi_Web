@@ -1,9 +1,29 @@
 // src/components/common/Toast.tsx
+import { useEffect } from 'react';
 import { Typography } from '@/components/typography';
 import WarningIcon from '@/assets/icons/warning.svg';
 import { cn } from '@/utils/cn';
 
-export const Toast = ({ message, isOpen }: { message: string; isOpen: boolean }) => {
+interface ToastProps {
+  message: string;
+  isOpen: boolean;
+  onClose?: () => void;
+  autoClose?: boolean;
+  autoCloseDelay?: number;
+}
+
+export const Toast = ({ message, isOpen, onClose, autoClose = true, autoCloseDelay = 3000 }: ToastProps) => {
+  // 자동 닫기 (onClose가 없거나 autoClose가 false면 실행 안 함)
+  useEffect(() => {
+    if (isOpen && autoClose && onClose) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, autoCloseDelay);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, autoClose, onClose, autoCloseDelay]);
+
   if (!isOpen) return null;
 
   return (
@@ -11,7 +31,7 @@ export const Toast = ({ message, isOpen }: { message: string; isOpen: boolean })
       <div
         className={cn(
           'flex items-center shadow-lg',
-          'w-[320px] h-[48px] rounded-[8px] gap-2 px-[10px] py-3',
+          'w-[320px] min-h-[48px] rounded-[8px] gap-2 px-[10px] py-3',
           'backdrop-blur-[8px]'
         )}
         style={{
