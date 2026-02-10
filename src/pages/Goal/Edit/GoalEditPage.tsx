@@ -34,9 +34,9 @@ function GoalEditForm({
   onSuccess: () => void;
 }) {
   const navigate = useNavigate();
-  const detailWithSnake = detail as GoalDetail & { start_date?: string; end_date?: string };
-  const startDateFromApi = detail.startDate ?? detailWithSnake?.start_date;
-  const endDateFromApi = detail.endDate ?? detailWithSnake?.end_date;
+  // 목표 상세 조회 응답에 포함된 시작일/종료일 사용
+  const startDateFromApi = detail.startDate;
+  const endDateFromApi = detail.endDate;
 
   const initialSelectedAccount: SelectedAccount =
     state?.selectedAccount ??

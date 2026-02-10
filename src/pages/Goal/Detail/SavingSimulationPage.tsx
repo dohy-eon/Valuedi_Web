@@ -1,10 +1,10 @@
 import { MobileLayout } from '@/components/layout/MobileLayout';
-import TotalSection from '@/components/goal/TotalSection';
-import ExBank from '@/assets/icons/goal/ExBank.svg';
 import SavingList from '@/components/goal/detail/SavingList';
 import GoalMoreActionsBottomSheet from '@/components/goal/detail/GoalMoreActionsBottomSheet';
 import GoalDeleteConfirmModal from '@/components/goal/detail/GoalDeleteConfirmModal';
 import GoalDetailPageHeader from '@/components/goal/detail/GoalDetailPageHeader';
+import GoalProgressGauge from '@/components/goal/detail/GoalProgressGauge';
+import GoalSummaryCard from '@/components/goal/detail/GoalSummaryCard';
 import { useGoalDetailActions, useGoalDetailSheetInitials } from '@/hooks/Goal/useGoalDetailActions';
 
 const SavingSimulationPage = () => {
@@ -49,8 +49,6 @@ const SavingSimulationPage = () => {
     );
   }
 
-  const goalWithIcon = { ...goal, bankIcon: ExBank };
-
   return (
     <MobileLayout>
       <div className="relative flex flex-col w-full min-h-screen bg-white overflow-x-hidden">
@@ -61,8 +59,10 @@ const SavingSimulationPage = () => {
           onMoreClick={() => setMoreSheetOpen(true)}
         />
 
-        <div className="flex flex-col gap-4 p-5">
-          <TotalSection goal={goalWithIcon} />
+        {/* AmountAchievedPage와 동일한 게이지 + 요약 섹션 */}
+        <GoalProgressGauge goalId={goal.goalId} />
+        <div className="px-5">
+          <GoalSummaryCard goalId={goal.goalId} />
         </div>
 
         <div className="text-xl font-bold pb-5 px-6">목표 계산기</div>

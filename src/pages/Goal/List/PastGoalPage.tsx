@@ -67,6 +67,8 @@ export const PastGoalPage = () => {
                       remainingDays: goal.remainingDays,
                       colorCode: goal.colorCode,
                       iconId: goal.iconId,
+                      status: goal.status,
+                      savedAmount: goal.savedAmount,
                     }}
                     type="past"
                   />

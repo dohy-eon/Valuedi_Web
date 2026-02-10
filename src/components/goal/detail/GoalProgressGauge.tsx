@@ -31,7 +31,7 @@ const GoalProgressGauge = ({ goalId }: GoalProgressGaugeProps) => {
   const iconSrc = goalData.iconId != null ? GOAL_ICON_SRC[goalData.iconId] : null;
 
   return (
-    <div className="relative overflow-hidden bg-white min-h-[50px] flex flex-col justify-start pb-6 px-5 rounded-3xl shadow-sm">
+    <div className="relative overflow-hidden bg-white min-h-[50px] flex flex-col justify-start pb-6 px-5 rounded-2xl mx-5">
       <div
         className="absolute bottom-0 left-0 w-full transition-all duration-1000 ease-out bg-primary-normal"
         style={{ height: `${goalData.achievementRate}%` }}

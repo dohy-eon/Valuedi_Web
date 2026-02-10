@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { paths } from '@/router/paths';
 import MoneyIcon from '@/assets/icons/goal/MoneyIcon.svg';
 import CalendarIcon from '@/assets/icons/goal/CalendarIcon.svg';
-import { toHexColor } from '@/features/goal';
+import { toHexColor, type GoalStatus } from '@/features/goal';
 import { GOAL_ICON_SRC } from '@/components/goal/goalIconAssets';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 
@@ -16,6 +16,8 @@ interface GoalCardProps {
     remainingDays: number;
     colorCode?: string;
     iconId?: number;
+    status?: GoalStatus;
+    savedAmount?: number;
   };
   type?: 'current' | 'past';
 }
@@ -30,12 +32,30 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   const bgColor = goal.colorCode ? toHexColor(goal.colorCode) : undefined;
   const iconSrc = goal.iconId != null ? GOAL_ICON_SRC[goal.iconId] : null;
 
+  const isPast = type === 'past';
+
+  // 상단 제목 & 상태 배지
+  const titleText = isPast ? '목표성공입니다' : goal.title;
+  let statusLabel: string | null = null;
+  let statusClass = '';
+
+  if (isPast) {
+    if (goal.status === 'COMPLETE') {
+      statusLabel = '달성완료';
+      statusClass = 'bg-primary-normal text-[#171714]';
+    } else if (goal.status === 'FAILED') {
+      statusLabel = '달성실패';
+      statusClass = 'bg-gray-200 text-gray-600';
+    }
+  } else {
+    statusLabel = `${goal.progress}% 달성`;
+    statusClass = 'bg-primary-normal text-[#171714]';
+  }
+
   return (
     <div
       onClick={handleClick}
-      className={`w-full transition-colors bg-white shadow-sm cursor-pointer p-5 rounded-xl active:bg-gray-50 ${
-        type === 'past' ? 'opacity-70' : ''
-      }`}
+      className="w-full transition-colors bg-white shadow-sm cursor-pointer p-5 rounded-xl active:bg-gray-50"
     >
       <div className="flex items-center gap-3 mb-5">
         <div
@@ -54,30 +74,51 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-[#171714]">{goal.title}</span>
-          <div className="px-2 py-0.5 bg-primary-normal rounded-full text-xs font-semibold text-[#171714] whitespace-nowrap">
-            {goal.progress}% 달성
-          </div>
+          <span className="text-sm font-semibold text-[#171714]">{titleText}</span>
+          {statusLabel && (
+            <div
+              className={`px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}
+            >
+              {statusLabel}
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-neutral-50">
-            <img src={MoneyIcon} alt="money" className="w-4 h-4 opacity-40" />
-            <span className="text-xs font-medium">목표 금액</span>
+      {/* 하단 내용: 현재 목표 / 지난 목표에 따라 다른 정보 표시 */}
+      {isPast ? (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-neutral-50">
+              <img src={MoneyIcon} alt="money" className="w-4 h-4 opacity-40" />
+              <span className="text-xs font-medium">달성금액</span>
+            </div>
+            <span className="text-xs font-semibold text-[#171714]">
+              {(goal.savedAmount ?? goal.targetAmount).toLocaleString()}원
+            </span>
           </div>
-          <span className="text-xs font-semibold text-[#171714]">{goal.targetAmount.toLocaleString()}원</span>
         </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-neutral-50">
+              <img src={MoneyIcon} alt="money" className="w-4 h-4 opacity-40" />
+              <span className="text-xs font-medium">목표 금액</span>
+            </div>
+            <span className="text-xs font-semibold text-[#171714]">
+              {goal.targetAmount.toLocaleString()}원
+            </span>
+          </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-neutral-50">
-            <img src={CalendarIcon} alt="calendar" className="w-4 h-4 opacity-40" />
-            <span className="text-xs font-medium">남은 일자</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-neutral-50">
+              <img src={CalendarIcon} alt="calendar" className="w-4 h-4 opacity-40" />
+              <span className="text-xs font-medium">남은 일자</span>
+            </div>
+            <span className="text-xs font-semibold text-[#171714]">{goal.remainingDays}일</span>
           </div>
-          <span className="text-xs font-semibold text-[#171714]">{goal.remainingDays}일</span>
         </div>
-      </div>
+      )}
     </div>
   );
 };
