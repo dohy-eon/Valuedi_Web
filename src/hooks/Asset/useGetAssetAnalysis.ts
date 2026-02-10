@@ -5,7 +5,6 @@ import {
   normalizeSectorPercentages,
   getIntegerPercentagesSum100,
 } from '@/pages/Asset/tab/SectorAnalysis/utils/sectorUtils';
-import { useGetAccountDetail } from '@/hooks/Asset/useGetAccountDetail';
 import {
   rematchCategoriesApi,
   getTransactionsByCategoryApi,
@@ -69,27 +68,26 @@ function mapLedgerItemToTransactionWithDetails(
   };
 }
 
-export const useGetAssetAnalysis = (selectedDate: Date = new Date()) => {
-  const { accountInfo } = useGetAccountDetail();
-  const accountDisplay = accountInfo?.accountNumber || '국민은행 592802-04-170725';
+export const useGetAssetAnalysis = (selectedDate: Date = new Date(), options?: { enabled?: boolean }) => {
+  const enabled = options?.enabled ?? true;
+  // 상세 모달용 계좌 표시명 (분석 페이지에서는 구체 계좌 정보가 중요하지 않아 고정값 사용)
+  const accountDisplay = '연결 계좌';
 
   const [isLoading, setIsLoading] = useState(true);
   const [sectorsFromApi, setSectorsFromApi] = useState<SectorData[]>([]);
   const [totalExpenseFromApi, setTotalExpenseFromApi] = useState(0);
   const [transactionsFromApi, setTransactionsFromApi] = useState<TransactionWithDetails[]>([]);
 
-  // Swagger: rematchCategories → sync(동기화 트리거) → by-category + getTransactions(거래 목록 조회)
-  // 개발 환경에서 과도한 트래픽 및 브라우저 리소스 에러를 막기 위해
-  // rematchCategories / syncTransactions 호출은 일단 비활성화하고,
-  // by-category + getTransactions 만 사용한다.
   useEffect(() => {
+    if (!enabled) {
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     const yearMonth = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}`;
 
     const run = async () => {
-      // TODO: 필요 시, 사용자 액션에 의해서만 재매칭/동기화를 트리거하도록 변경
-      // await rematchCategoriesApi({ yearMonth }).catch(() => {});
-      // await syncTransactionsApi({ yearMonth }).catch(() => {});
       return Promise.all([
         getTransactionsByCategoryApi(yearMonth),
         getTransactionsApi({ yearMonth, size: 200, sort: 'LATEST' }),
@@ -140,7 +138,7 @@ export const useGetAssetAnalysis = (selectedDate: Date = new Date()) => {
         setTransactionsFromApi([]);
       })
       .finally(() => setIsLoading(false));
-  }, [selectedDate, accountDisplay]);
+  }, [selectedDate, enabled, accountDisplay]);
 
   const totalExpense = useMemo(() => {
     if (totalExpenseFromApi > 0) return totalExpenseFromApi;

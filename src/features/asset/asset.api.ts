@@ -82,6 +82,8 @@ export interface LedgerCategoryRef {
 }
 
 export interface LedgerTransactionItem {
+  /** 공통 ID (신규 스펙: id, 구 스펙: transactionId) */
+  id?: number;
   transactionId?: number;
   date?: string;
   transactionAt?: string; // API가 ISO 날짜로 내려줄 수 있음
@@ -97,6 +99,8 @@ export interface LedgerTransactionItem {
   /** 문자열이면 코드, 객체면 { code, name, id } */
   category?: string | LedgerCategoryRef;
   type?: string;
+  memo?: string;
+  afterBalance?: number;
   [key: string]: unknown;
 }
 
@@ -221,6 +225,24 @@ export const getTopCategoriesApi = async (params: {
   const search = new URLSearchParams({ yearMonth: params.yearMonth });
   if (params.limit != null) search.set('limit', String(params.limit));
   return apiGet<TopCategoryItem[]>(`/api/transactions/top-category?${search.toString()}`);
+};
+
+// ========== GET /api/transactions/peer-compare (또래 비교) ==========
+
+export interface PeerCompareResult {
+  myTotalExpense?: number;
+  perAverageExpense?: number;
+  message?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * 또래 비교 (MVP)
+ * GET /api/transactions/peer-compare?yearMonth=YYYY-MM
+ * Swagger: Ledger (거래내역) → peer-compare
+ */
+export const getPeerCompareApi = async (yearMonth: string): Promise<ApiResponse<PeerCompareResult>> => {
+  return apiGet<PeerCompareResult>(`/api/transactions/peer-compare?yearMonth=${encodeURIComponent(yearMonth)}`);
 };
 
 // ========== 자산(계좌) 관련 타입 및 API ==========

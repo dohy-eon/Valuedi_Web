@@ -1,12 +1,14 @@
 import { useState, useMemo, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Typography } from '@/components/typography';
 import { formatCurrency } from '@/utils/formatCurrency';
-import { useGetAssetAnalysis } from '@/hooks/Asset/useGetAssetAnalysis';
 import { PEER_AVERAGE_DATA } from '../constants/mockData';
 import { CompareBar } from './CompareBar';
 import { cn } from '@/utils/cn';
-import { Skeleton } from '@/components/skeleton/Skeleton'; // 💡 1. 추가
-import { CompareBarSkeleton } from './CompareBarSkeleton'; // 💡 2. 추가
+import { Skeleton } from '@/components/skeleton/Skeleton';
+import { CompareBarSkeleton } from './CompareBarSkeleton';
+import { getTransactionsByCategoryApi } from '@/features/asset/asset.api';
+import { normalizeCategoryCode } from '@/features/asset/constants/category';
 
 const DISPLAY_NAMES: Record<string, string> = {
   traffic: '교통',
@@ -28,8 +30,18 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
   const [selectedCategory, setSelectedCategory] = useState('traffic');
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const now = new Date();
-  const { transactions } = useGetAssetAnalysis(now);
+  const now = useMemo(() => new Date(), []);
+  const yearMonth = useMemo(
+    () => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`,
+    [now]
+  );
+
+  const { data, isLoading: isCategoryLoading } = useQuery({
+    queryKey: ['transactions', 'by-category', yearMonth],
+    queryFn: () => getTransactionsByCategoryApi(yearMonth),
+  });
+
+  const categoryItems = data?.result ?? [];
 
   const handleCategoryClick = (catKey: string, e: React.MouseEvent<HTMLButtonElement>) => {
     setSelectedCategory(catKey);
@@ -47,10 +59,11 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
   };
 
   const myCategoryTotal = useMemo(() => {
-    return transactions
-      .filter((item) => item.category === selectedCategory && item.type === 'expense')
-      .reduce((sum, item) => sum + Math.abs(item.amount), 0);
-  }, [transactions, selectedCategory]);
+    if (!Array.isArray(categoryItems) || categoryItems.length === 0) return 0;
+    return categoryItems
+      .filter((item) => normalizeCategoryCode(item.categoryCode, item.categoryName) === selectedCategory)
+      .reduce((sum, item) => sum + (item.totalAmount ?? 0), 0);
+  }, [categoryItems, selectedCategory]);
 
   const peerCategoryTotal = PEER_AVERAGE_DATA.categories[selectedCategory] || 0;
 
@@ -65,7 +78,7 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
         ref={scrollRef}
         className="flex gap-2 mb-10 overflow-x-auto pb-1 no-scrollbar scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {isLoading
+        {isLoading || isCategoryLoading
           ? // 로딩 중일 땐 칩 모양 스켈레톤 5개 표시
             Array.from({ length: 5 }).map((_, idx) => (
               <Skeleton key={idx} className="min-w-[60px] h-8 rounded-full flex-shrink-0" />
@@ -91,7 +104,7 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
 
       {/* 💡 5. 바 차트 영역 로딩 처리 */}
       <div className="flex justify-center items-end gap-14 px-10 h-44 mb-10">
-        {isLoading ? (
+        {isLoading || isCategoryLoading ? (
           <>
             <CompareBarSkeleton />
             <CompareBarSkeleton />
@@ -115,7 +128,7 @@ export const CategoryCompareSection = ({ isLoading = false }: CategoryCompareSec
 
       {/* 💡 6. 하단 요약 카드 로딩 처리 */}
       <div className="bg-neutral-10 rounded-xl p-5 space-y-3">
-        {isLoading ? (
+        {isLoading || isCategoryLoading ? (
           <>
             <div className="flex justify-between">
               <Skeleton className="w-16 h-4 rounded" />

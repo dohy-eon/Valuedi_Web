@@ -67,9 +67,9 @@ export const AssetAccountDetailPage = () => {
                 <AssetDailyHeader date={group.date} dailyTotal={group.dailyTotal} />
 
                 <div className={cn('flex flex-col gap-[8px]')}>
-                  {group.items.map((item) => (
+                  {group.items.map((item, idx) => (
                     <AssetItemList
-                      key={item.id}
+                      key={`${group.day}-${item.id}-${idx}`}
                       title={item.title}
                       subTitle={item.sub}
                       amount={item.amount}
