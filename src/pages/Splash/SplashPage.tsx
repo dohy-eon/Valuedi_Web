@@ -42,11 +42,7 @@ const SplashPage = () => {
         </div>
 
         {/* 중앙 로고 */}
-        <div
-          className={cn(
-            'flex flex-col items-center justify-center min-h-screen w-full relative z-10'
-          )}
-        >
+        <div className={cn('flex flex-col items-center justify-center min-h-screen w-full relative z-10')}>
           <div className={cn('absolute left-[124px] top-[425.31px] w-[100px] h-[23px]')}>
             <img src={splashLogo} alt="Valuedi" className={cn('w-full h-full')} />
           </div>
