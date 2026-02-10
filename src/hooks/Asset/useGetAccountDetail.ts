@@ -1,106 +1,162 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { AccountInfo, TransactionGroup } from '@/features/asset/constants/account';
+import { useAccounts } from '@/features/asset';
+import { getTransactionsApi, type LedgerTransactionItem } from '@/features/asset/asset.api';
+import { getBankDisplayName } from '@/features/connection/constants/organizationCodes';
+import type { ColorToken } from '@/styles/design-system';
+
+// 은행 코드 → 색상 토큰 매핑 (자산 목록과 동일한 규칙 사용)
+const getBankColorByOrgCode = (orgCode?: string | null): ColorToken => {
+  switch (orgCode) {
+    case '0004':
+      return 'bank-kb';
+    case '0089':
+      return 'bank-kbank';
+    case '0045':
+      return 'bank-saemaul';
+    case '0003':
+      return 'bank-ibk';
+    case '0032':
+    case '0034':
+    case '0037':
+    case '0039':
+      return 'bank-gwangju_jeonbuk';
+    case '0011':
+      return 'bank-nh';
+    case '0007':
+      return 'bank-suhyup';
+    case '0020':
+      return 'bank-woori';
+    case '0023':
+      return 'bank-sc';
+    case '0048':
+      return 'bank-shinhyup';
+    case '0071':
+      return 'bank-postbank';
+    case '0081':
+      return 'bank-hana';
+    case '0088':
+      return 'bank-shinhan';
+    default:
+      return 'bank-plus';
+  }
+};
+
+// 거래 목록을 날짜별 그룹(TransactionGroup)으로 변환
+const groupTransactionsByDate = (items: LedgerTransactionItem[]): TransactionGroup[] => {
+  const groups = new Map<number, TransactionGroup>();
+
+  items.forEach((item) => {
+    const rawDate = (item.transactionAt ?? item.date ?? '') as string;
+    if (!rawDate) return;
+
+    const dateObj = new Date(rawDate);
+    if (Number.isNaN(dateObj.getTime())) return;
+
+    const day = dateObj.getDate();
+    let group = groups.get(day);
+    if (!group) {
+      group = {
+        date: `${day}일`,
+        day,
+        dailyTotal: 0,
+        totalIncome: 0,
+        totalExpense: 0,
+        items: [],
+      };
+      groups.set(day, group);
+    }
+
+    const rawAmount = Number(item.amount ?? 0);
+    const isIncome = (item.type ?? '').toString().toUpperCase() === 'INCOME';
+    const amount = isIncome ? Math.abs(rawAmount) : -Math.abs(rawAmount);
+
+    const categoryName = item.categoryName as string | undefined;
+    const memo = item.memo as string | undefined;
+    const sub = categoryName && memo ? `${categoryName} | ${memo}` : categoryName ? categoryName : memo ? memo : '기타';
+
+    const txId = item.id ?? item.transactionId ?? Date.now() + group.items.length;
+
+    group.items.push({
+      id: txId,
+      title: (item.title as string) ?? '',
+      sub,
+      amount,
+      type: isIncome ? 'income' : 'expense',
+      category: 'default', // 상세 카테고리 색상/아이콘은 기본값 사용
+    });
+
+    if (isIncome) {
+      group.totalIncome += Math.abs(amount);
+      group.dailyTotal += Math.abs(amount);
+    } else {
+      group.totalExpense += Math.abs(amount);
+      group.dailyTotal -= Math.abs(amount);
+    }
+  });
+
+  return Array.from(groups.values()).sort((a, b) => b.day - a.day);
+};
 
 export const useGetAccountDetail = () => {
-  // API 연동 전까지 사용할 임시 목업 데이터
-  const mockAccountInfo: AccountInfo = {
-    bankName: 'KB국민ONE은행',
-    accountNumber: '국민은행 | 592802-04-170725',
-    balance: 526387,
-    bgColor: 'bank-kb',
-  };
+  const { id } = useParams<{ id?: string }>();
+  const accountId = id ? Number(id) : null;
 
-  const mockHistory: TransactionGroup[] = [
-    {
-      date: '19일 오늘',
-      day: 19,
-      totalIncome: 0,
-      totalExpense: 45500,
-      dailyTotal: -45500,
-      items: [
-        { id: 1, title: '스타벅스 사당점', sub: '식비 | 체크카드', amount: -4500, type: 'expense', category: 'food' },
-        {
-          id: 2,
-          title: '카카오T_택시',
-          sub: '교통 | 카카오뱅크 카드',
-          amount: -12000,
-          type: 'expense',
-          category: 'traffic',
-        },
-        { id: 3, title: '올리브영 사당', sub: '쇼핑 | 화장품', amount: -25000, type: 'expense', category: 'shopping' },
-        { id: 4, title: 'GS25 편의점', sub: '식비 | 간식 구매', amount: -4000, type: 'expense', category: 'food' },
-      ],
-    },
-    {
-      date: '18일 어제',
-      day: 18,
-      dailyTotal: 2457000,
-      totalIncome: 2500000,
-      totalExpense: 43000,
-      items: [
-        {
-          id: 6,
-          title: '급여 입금',
-          sub: '수입 | (주)밸류디컴퍼니',
-          amount: 2500000,
-          type: 'income',
-          category: 'default',
-        },
-        {
-          id: 7,
-          title: '쿠팡 로켓배송',
-          sub: '쇼핑 | 생필품 구매',
-          amount: -28000,
-          type: 'expense',
-          category: 'shopping',
-        },
-        {
-          id: 8,
-          title: 'CGV 사당',
-          sub: '여가/문화 | 영화 예매',
-          amount: -15000,
-          type: 'expense',
-          category: 'leisure',
-        },
-      ],
-    },
-    {
-      date: '17일 금요일',
-      day: 17,
-      dailyTotal: -60550,
-      totalIncome: 350,
-      totalExpense: 60900,
-      items: [
-        {
-          id: 10,
-          title: '김*주',
-          sub: '내계좌이체 | KB국민ONE통장',
-          amount: -50000,
-          type: 'expense',
-          category: 'transfer',
-        },
-        {
-          id: 11,
-          title: '멜론 정기결제',
-          sub: '여가/문화 | 스트리밍',
-          amount: -10900,
-          type: 'expense',
-          category: 'leisure',
-        },
-        {
-          id: 12,
-          title: '이자입금',
-          sub: '금융수입 | 쏠편한 입출금통장(저축예금)',
-          amount: 350,
-          type: 'income',
-          category: 'default',
-        },
-      ],
-    },
-  ];
+  const { data: accountsData } = useAccounts();
+  const [transactionHistory, setTransactionHistory] = useState<TransactionGroup[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+
+  // 계좌 정보는 자산 계좌 목록(/api/assets/accounts) 기반
+  const accountInfo: AccountInfo = useMemo(() => {
+    const list = accountsData?.result?.accountList ?? [];
+    const selected =
+      (accountId && list.find((a) => a.accountId === accountId)) || (list.length > 0 ? list[0] : undefined);
+
+    if (!selected) {
+      return {
+        bankName: '내 계좌',
+        accountNumber: '연결된 계좌가 없습니다',
+        balance: 0,
+        bgColor: 'bank-plus',
+      };
+    }
+
+    const bankName = getBankDisplayName(selected.organization);
+    const accountNumber = `${bankName} | ${selected.accountName}`;
+
+    return {
+      bankName,
+      accountNumber,
+      balance: selected.balanceAmount,
+      bgColor: getBankColorByOrgCode(selected.organization),
+    };
+  }, [accountsData, accountId]);
+
+  // 현재 월 기준 거래 내역(/api/transactions) 조회
+  useEffect(() => {
+    const now = new Date();
+    const yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    getTransactionsApi({ yearMonth, size: 200, sort: 'LATEST' })
+      .then((res) => {
+        const raw = res?.result as { content?: LedgerTransactionItem[] } | LedgerTransactionItem[] | null | undefined;
+
+        const content = Array.isArray(raw) ? raw : Array.isArray(raw?.content) ? raw.content : [];
+
+        const groups = groupTransactionsByDate(content);
+        setTransactionHistory(groups);
+        setTotalCount(content.length);
+      })
+      .catch(() => {
+        setTransactionHistory([]);
+        setTotalCount(0);
+      });
+  }, []);
 
   return {
-    accountInfo: mockAccountInfo,
-    transactionHistory: mockHistory,
-    totalCount: 10,
+    accountInfo,
+    transactionHistory,
+    totalCount,
   };
 };

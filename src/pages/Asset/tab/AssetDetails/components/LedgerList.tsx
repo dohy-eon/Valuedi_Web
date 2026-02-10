@@ -11,9 +11,9 @@ export const LedgerList = () => {
           <AssetDailyHeader date={group.date} dailyTotal={group.dailyTotal} />
 
           <div className="flex flex-col gap-[8px]">
-            {group.items.map((tx) => (
+            {group.items.map((tx, idx) => (
               <AssetItemList
-                key={tx.id}
+                key={`${group.day}-${tx.id}-${idx}`}
                 title={tx.title}
                 subTitle={tx.sub}
                 amount={tx.amount}
