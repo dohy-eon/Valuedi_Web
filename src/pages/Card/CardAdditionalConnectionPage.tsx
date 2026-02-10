@@ -17,8 +17,8 @@ const CardAdditionalConnectionPage = () => {
   };
 
   const handleSkip = () => {
-    // 메인 페이지로 이동
-    navigate('/home');
+    // mbti 검사 페이지로 이동
+    navigate('/mbti');
   };
 
   return (
