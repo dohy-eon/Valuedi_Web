@@ -25,4 +25,3 @@ const GoalCreateStepFooter = ({ isVisible, buttonText, onClick }: GoalCreateStep
 };
 
 export default GoalCreateStepFooter;
-

@@ -6,6 +6,8 @@ import { Typography } from '@/components';
 import { LoginButton } from '@/components/buttons';
 import CheckBoxButton from '@/components/mypage/WithdrawCheckBoxButton';
 import { cn } from '@/utils/cn';
+import { removeAccessToken } from '@/utils/api';
+import { withdrawMemberApi, WithdrawReasonCode } from '@/features/auth/auth.api';
 
 const WITHDRAW_REASONS = [
   '금융 관리에 도움이 되지 않았어요',
@@ -16,15 +18,40 @@ const WITHDRAW_REASONS = [
   '기타',
 ];
 
+const WITHDRAW_REASON_CODE_MAP: Record<string, WithdrawReasonCode> = {
+  '금융 관리에 도움이 되지 않았어요': 'NOT_HELPFUL',
+  '사용이 어려워요': 'DIFFICULT_TO_USE',
+  '필요한 기능이 없어요': 'MISSING_FEATURES',
+  '보안이 걱정돼요': 'PRIVACY_CONCERNS',
+  '오류가 자주 발생해요': 'FREQUENT_ERRORS',
+  기타: 'OTHERS',
+};
+
 export const WithdrawPage = () => {
   const navigate = useNavigate();
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
 
-  const handleWithdraw = () => {
+  const handleWithdraw = async () => {
     if (!selectedReason) return;
-    // 💡 탈퇴 처리 로직 후 로그인 페이지로 이동
-    console.log('선택된 탈퇴 사유:', selectedReason);
-    navigate('/login', { replace: true });
+
+    const reasonCode = WITHDRAW_REASON_CODE_MAP[selectedReason];
+    if (!reasonCode) return;
+
+    try {
+      console.log('[Withdraw] DELETE /api/users/me request', { reason: reasonCode });
+      await withdrawMemberApi({ reason: reasonCode });
+      console.log('[Withdraw] DELETE /api/users/me success');
+
+      // 로컬 토큰 제거
+      removeAccessToken();
+
+      // TODO: 전역 상태가 있다면 여기서도 초기화 필요
+
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('[Withdraw] error 회원 탈퇴 중 오류가 발생했습니다.', error);
+      // TODO: 사용자에게 토스트/모달로 에러 안내
+    }
   };
 
   return (

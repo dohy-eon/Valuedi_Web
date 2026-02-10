@@ -53,6 +53,7 @@ export const SettingsPage = () => {
           <SettingsItem label="MBTI 검사하기" onClick={() => navigate('/mbti')} />
           <SettingsItem label="회원정보 변경" onClick={handleDevelopingClick} />
           <SettingsItem label="비밀번호 재설정" onClick={handleDevelopingClick} />
+          <SettingsItem label="약관 및 마케팅 동의 관리" onClick={() => navigate('/mypage/settings/terms')} />
         </SettingsSection>
 
         <SectionDivider />

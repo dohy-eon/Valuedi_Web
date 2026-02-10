@@ -9,7 +9,7 @@ export const useGetProfile = () => {
   return {
     userName,
     mbtiResult: mbtiResult?.data,
-    scores: mbtiResult.scores,
+    isLoading: mbtiResult?.isLoading || false,
     myTrophies: MY_TROPHIES,
     trophyGuide: TROPHY_GUIDE,
   };

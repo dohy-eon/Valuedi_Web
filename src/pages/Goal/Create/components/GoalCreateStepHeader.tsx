@@ -17,4 +17,3 @@ const GoalCreateStepHeader = ({ currentStep, onBack }: GoalCreateStepHeaderProps
 };
 
 export default GoalCreateStepHeader;
-

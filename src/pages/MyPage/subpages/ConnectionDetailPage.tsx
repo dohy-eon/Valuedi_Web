@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { MobileLayout } from '@/components/layout/MobileLayout';
@@ -10,17 +11,20 @@ import {
   getBankIdFromOrganizationCode,
   getCardIdFromOrganizationCode,
 } from '@/features/connection/constants/organizationCodes';
+import { Toast } from '@/components/common/Toast';
 
 // 분리한 컴포넌트들 불러오기
 import { ConnectionHeader } from '@/pages/MyPage/components/ConnectionHeader';
 import { ConnectionList } from '@/pages/MyPage/components/ConnectionList';
 import { ConnectedGoalsSection } from '@/pages/MyPage/components/ConnectedGoalsSection';
 import { ConnectionFooter } from '@/pages/MyPage/components/ConnectionFooter';
+import { assetApi } from '@/features/asset';
 
 export const ConnectionDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
+  const [errorToast, setErrorToast] = useState({ isOpen: false, message: '' });
 
   // 이전 페이지에서 전달받은 은행/카드 이름 (기본값: 국민은행)
   const bankName = location.state?.bankName || '국민은행';
@@ -30,6 +34,12 @@ export const ConnectionDetailPage = () => {
   const { data: connectionsData } = useQuery({
     queryKey: ['connections'],
     queryFn: () => getConnectionsApi(),
+  });
+
+  const { data: accountsData, isLoading } = useQuery({
+    queryKey: ['assets', 'accounts'],
+    queryFn: () => assetApi.getAccounts(),
+    enabled: !isCard, // 은행 상세 페이지일 때만 계좌/목표 조회
   });
 
   // 현재 은행/카드에 해당하는 connectionId 찾기
@@ -51,6 +61,31 @@ export const ConnectionDetailPage = () => {
       return bankId === bank.id && businessType === 'BK';
     }
   });
+
+  const connectedGoals = useMemo(() => {
+    // 1. 데이터가 없거나 카드 페이지면 빈 배열 반환
+    if (!accountsData?.result?.accountList || isCard) return [];
+
+    // 2. 현재 상세페이지 기관 코드 추출 (organizationCode와 organization 모두 대응)
+    const currentOrg = currentConnection?.organizationCode || currentConnection?.organization;
+
+    return accountsData.result.accountList
+      .filter((acc) => {
+        // 3. 기관 코드가 일치하고 + goalInfo가 null이 아닌 것만 필터링
+        const isSameBank = acc.organization === currentOrg;
+        const hasGoal = acc.goalInfo !== null;
+        return isSameBank && hasGoal;
+      })
+      .map((acc) => {
+        // 4. 위에서 null 체크를 했으므로 안전하게 접근 (acc.goalInfo!)
+        const goal = acc.goalInfo!;
+        return {
+          id: String(goal.goalId),
+          title: goal.title,
+          subText: acc.accountName,
+        };
+      });
+  }, [accountsData, currentConnection, isCard]);
 
   // 삭제 mutation
   const deleteMutation = useMutation({
@@ -77,26 +112,25 @@ export const ConnectionDetailPage = () => {
         }
       }
 
-      alert(errorMessage);
+      // 에러 토스트 표시 (자동 닫기 비활성화, 사용자가 직접 닫을 수 있도록)
+      setErrorToast({ isOpen: true, message: errorMessage });
     },
   });
 
   /**
    * 💡 삭제 버튼 클릭 시 실행될 함수
+   * 모달에서 확인 버튼을 누르면 호출됨
    */
   const handleDelete = () => {
     if (!currentConnection) {
-      alert('연동 정보를 찾을 수 없습니다.');
+      setErrorToast({ isOpen: true, message: '연동 정보를 찾을 수 없습니다.' });
+      setTimeout(() => setErrorToast({ isOpen: false, message: '' }), 3000);
       return;
     }
 
-    if (window.confirm('정말로 이 연동을 해제하시겠습니까?')) {
-      deleteMutation.mutate(currentConnection.connectionId);
-    }
+    // 모달에서 이미 확인했으므로 바로 삭제 실행
+    deleteMutation.mutate(currentConnection.connectionId);
   };
-
-  // 💡 데이터 설정: 은행일 때만 샘플 목표를 보여줌
-  const connectedGoals = isCard ? [] : [{ id: '1', title: '어쩌구저쩌구목표', subText: 'KB국민ONE통장-저축예금' }];
 
   return (
     <MobileLayout className={cn('bg-white flex flex-col h-screen overflow-hidden')}>
@@ -110,22 +144,34 @@ export const ConnectionDetailPage = () => {
 
       <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {/* 1. 상단 브랜드 헤더 */}
-        <ConnectionHeader bankName={bankName} />
+        <ConnectionHeader bankName={bankName} connectedAt={currentConnection?.connectedAt} />
 
         {/* 2. 연결된 항목 리스트 */}
-        <ConnectionList bankName={bankName} />
+        <ConnectionList bankName={bankName} organizationCode={currentConnection?.organizationCode || ''} />
 
-        {/* 💡 섹션 구분 회색 바 */}
-        <div className="h-2 bg-neutral-10 w-full" />
+        {!isCard && (
+          <>
+            {/* 💡 섹션 구분 회색 바 */}
+            <div className="h-2 bg-neutral-10 w-full" />
 
-        {/* 3. 연결된 목표 섹션 */}
-        <div className="px-5 py-10">
-          <ConnectedGoalsSection goals={connectedGoals} />
-        </div>
+            {/* 3. 연결된 목표 섹션 */}
+            <div className="px-5 py-10">
+              <ConnectedGoalsSection goals={connectedGoals} isLoading={isLoading} />
+            </div>
+          </>
+        )}
 
         {/* 4. 하단 푸터 (삭제 함수 전달) */}
         <ConnectionFooter onDelete={handleDelete} />
       </div>
+
+      {/* 에러 토스트 */}
+      <Toast
+        message={errorToast.message}
+        isOpen={errorToast.isOpen}
+        onClose={() => setErrorToast({ isOpen: false, message: '' })}
+        autoClose={false}
+      />
     </MobileLayout>
   );
 };

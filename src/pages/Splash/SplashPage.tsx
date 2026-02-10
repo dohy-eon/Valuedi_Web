@@ -24,8 +24,8 @@ const SplashPage = () => {
               'flex flex-col items-center gap-1 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px]'
             )}
           >
-            <div className={cn('w-[200px] h-[200px] flex items-center justify-center rounded-[7px]')}>
-              <ValuediLogo className={cn('w-full h-full')} />
+            <div className={cn('flex items-center justify-center rounded-[7px]')}>
+              <ValuediLogo className={cn('w-[31px] h-auto')} />
             </div>
           </div>
           <Typography

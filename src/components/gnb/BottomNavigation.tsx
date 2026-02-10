@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import { Typography } from '@/components/typography';
 import HomeIconActive from '@/assets/icons/home/HomeActive.svg';
@@ -19,12 +20,37 @@ export interface BottomNavigationProps {
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeItem = 'home', className, onItemClick }) => {
+  const navigate = useNavigate();
+
   const navItems: { id: BottomNavItem; label: string; iconActive: string; iconInactive: string }[] = [
     { id: 'home', label: '홈', iconActive: HomeIconActive, iconInactive: HomeIconInactive },
     { id: 'asset', label: '자산', iconActive: AssetIconActive, iconInactive: AssetIconInactive },
     { id: 'recommend', label: '추천', iconActive: RecommendIconActive, iconInactive: RecommendIconInactive },
     { id: 'goal', label: '목표', iconActive: GoalIconActive, iconInactive: GoalIconInactive },
   ];
+
+  const handleItemClick = (itemId: BottomNavItem) => {
+    if (onItemClick) {
+      onItemClick(itemId);
+      return;
+    }
+
+    // 기본 네비게이션 동작
+    switch (itemId) {
+      case 'home':
+        navigate('/');
+        break;
+      case 'asset':
+        navigate('/asset');
+        break;
+      case 'recommend':
+        navigate('/recommend');
+        break;
+      case 'goal':
+        navigate('/goal/current');
+        break;
+    }
+  };
 
   return (
     <nav
@@ -43,7 +69,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeItem =
             <button
               key={item.id}
               type="button"
-              onClick={() => onItemClick?.(item.id)}
+              onClick={() => handleItemClick(item.id)}
               className={cn('flex flex-col gap-[4px] items-center justify-center', 'p-[10px] w-[90px]')}
             >
               <div className="w-[24px] h-[24px] flex items-center justify-center">

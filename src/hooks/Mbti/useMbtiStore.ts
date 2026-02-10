@@ -22,7 +22,7 @@ export const useMbtiStore = create<MbtiState>((set) => ({
   actions: {
     setStep: (step) => set({ step }),
     setTestStep: (step) => set({ testStep: step }),
-    setAnswer: (id, score) => set((state) => ({ answers: { ...state.answers, [id]: score } })),
+    setAnswer: (id, value) => set((state) => ({ answers: { ...state.answers, [id]: value } })),
     reset: () => set({ step: 'intro', testStep: 0, answers: {} }),
   },
 }));

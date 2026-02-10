@@ -44,13 +44,13 @@ const SavingList = () => {
             key={item.id}
             type="button"
             onClick={() => handleOpen(item.id)}
-            className="flex items-center justify-between p-4 bg-gray-100 rounded-2xl"
+            className="flex items-center justify-between p-3 bg-gray-100 rounded-xl"
           >
             <div className="flex items-center gap-2 ">
-              <div className={`w-9 h-8 rounded-2xl bg-neutral-10 flex items-center justify-center flex-shrink-0`}>
+              <div className={`w-7 h-7 rounded-lg bg-neutral-10 flex items-center justify-center flex-shrink-0`}>
                 <img src={item.icon} alt={item.title} />
               </div>
-              <span className="text-lg font-bold text-black">{item.title}</span>
+              <span className="text-sm font-bold">{item.title}</span>
             </div>
             <span className="text-sm font-bold text-gray-400">
               {item.amountWon ? `${item.amountWon.toLocaleString('ko-KR')}원 절약` : '???원 절약'}
