@@ -10,7 +10,7 @@ interface ConnectedGoalItemProps {
 
 export const ConnectedGoalItem = ({ title, subText, className }: ConnectedGoalItemProps) => {
   return (
-    <div className={cn('flex items-center gap-4 py-2', className)}>
+    <div className={cn('flex items-center gap-[8px] py-2', className)}>
       <div className="w-8 h-8 bg-atomic-red-60 rounded-lg flex items-center justify-center shrink-0">
         <img src={GoalIcon} alt="goal" />
       </div>
