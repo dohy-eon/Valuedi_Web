@@ -43,7 +43,6 @@ export function GoalSummaryCard({
   showDates = true,
   showAccount = true,
 }: GoalSummaryCardProps) {
-  // 목표 색상 팔레트 기준 기본값: yellow (#F8D444)
   const resolvedColor = colorCode ? toHexColor(colorCode) : GOAL_COLOR_NAME_TO_CODE.yellow;
   const resolvedIcon = iconId != null ? (GOAL_ICON_SRC[iconId] ?? DEFAULT_GOAL_ICON) : DEFAULT_GOAL_ICON;
 

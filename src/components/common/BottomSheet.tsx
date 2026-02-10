@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ReactNode } from 'react';
-import { MobileLayout } from '../layout/MobileLayout';
 interface BottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -20,7 +19,7 @@ const BottomSheet = ({ isOpen, onClose, title, children }: BottomSheetProps) => 
             onClick={onClose}
             className="fixed inset-0 z-[100] bg-black/40"
           />
-          <MobileLayout>
+          <div className="fixed bottom-0 left-0 right-0 z-[101] flex justify-center pointer-events-none">
             <div className="w-full max-w-[360px] pointer-events-auto">
               <motion.div
                 initial={{ y: '100%' }}
@@ -34,7 +33,7 @@ const BottomSheet = ({ isOpen, onClose, title, children }: BottomSheetProps) => 
                 {children}
               </motion.div>
             </div>
-          </MobileLayout>
+          </div>
         </>
       )}
     </AnimatePresence>
