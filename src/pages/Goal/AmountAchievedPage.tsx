@@ -4,8 +4,8 @@ import Hamburger from '@/assets/icons/Hamburger.svg';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import TotalSection from '@/components/goal/TotalSection';
 import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
-import { paths } from '@/router/paths';
 import type { TransactionItem } from '@/utils/goal/ledgerHelpers';
+import { paths } from '@/router/paths';
 
 // 로컬 목데이터용 타입 (실제 API TransactionItem과는 별개)
 interface MockTransactionItem {
@@ -17,6 +17,9 @@ interface MockTransactionItem {
   balanceAfter: string;
   account: string;
   isPositive: boolean;
+  dateKey: string;
+  dateLabel: string;
+  rawAmount: number;
 }
 
 interface TransactionGroup {
@@ -40,6 +43,9 @@ const mockTransactions: TransactionGroup[] = [
         balanceAfter: '23,000원',
         account: '국민은행 592802-04-170725',
         isPositive: true,
+        dateKey: '2025-12-03',
+        dateLabel: '3일 오늘',
+        rawAmount: 3000,
       },
       {
         id: 102,
@@ -50,6 +56,9 @@ const mockTransactions: TransactionGroup[] = [
         balanceAfter: '10,000원',
         account: '우리은행 1002-123-456789',
         isPositive: false,
+        dateKey: '2025-12-03',
+        dateLabel: '3일 오늘',
+        rawAmount: -13000,
       },
     ],
   },
@@ -66,6 +75,9 @@ const mockTransactions: TransactionGroup[] = [
         balanceAfter: '230,000원',
         account: '국민은행 592802-04-170725',
         isPositive: true,
+        dateKey: '2025-12-02',
+        dateLabel: '2일 어제',
+        rawAmount: 3000,
       },
     ],
   },

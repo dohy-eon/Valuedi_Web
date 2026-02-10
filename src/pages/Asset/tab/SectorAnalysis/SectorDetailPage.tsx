@@ -17,12 +17,11 @@ export const SectorDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const selectedDate = location.state?.selectedDate ? new Date(location.state.selectedDate) : new Date();
-
-  const { allSectors, isLoading } = useGetAssetAnalysis(selectedDate);
-
   const [selectedItem, setSelectedItem] = useState<TransactionWithDetails | null>(null);
 
   const stateData = location.state?.sectorData as SectorData | undefined;
+  // state로 카테고리 데이터가 넘어온 경우에는 분석 API 호출을 생략해 리소스 사용을 줄인다.
+  const { allSectors, isLoading } = useGetAssetAnalysis(selectedDate, { enabled: !stateData });
   const selectedCategory = stateData || allSectors.find((s) => s.key === categoryKey);
 
   // 로딩 중이면 스켈레톤, 카테고리 없으면 안내 후 뒤로가기
@@ -126,15 +125,15 @@ export const SectorDetailPage = () => {
 
           <div className="flex flex-col gap-[20px]">
             {historyData.map((group: SectorTransactionGroup) => (
-              <div key={group.date} className="flex flex-col">
+              <div key={`${group.date}-${group.day}`} className="flex flex-col">
                 {/* 날짜 구분선 헤더 */}
                 <AssetDailyHeader date={group.date} dailyTotal={group.dailyTotal} />
 
                 {/* 해당 날짜의 지출 아이템들 ㅋ */}
                 <div className="flex flex-col gap-[8px] mt-[8px]">
-                  {group.items.map((item: TransactionWithDetails) => (
+                  {group.items.map((item: TransactionWithDetails, idx: number) => (
                     <div
-                      key={item.id}
+                      key={`${group.day}-${item.id}-${idx}`}
                       onClick={() => setSelectedItem(item)}
                       className="cursor-pointer active:bg-neutral-5 rounded-lg transition-colors"
                     >
