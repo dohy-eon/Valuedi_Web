@@ -18,7 +18,6 @@ import GoalCompletePage from '@/pages/Goal/Create/GoalCompletePage';
 import SavingSimulationPage from '@/pages/Goal/Detail/SavingSimulationPage';
 import GoalAlmostDonePage from '@/pages/Goal/Edit/GoalAlmostDonePage';
 import GoalEditPage from '@/pages/Goal/Edit/GoalEditPage';
-
 import {
   BankConnectionStartPage,
   BankSelectPage,

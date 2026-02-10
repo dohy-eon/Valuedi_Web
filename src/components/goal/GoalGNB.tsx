@@ -5,6 +5,7 @@ import { paths } from '@/router/paths';
 const GoalGNB = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const isCurrentActive = location.pathname === paths.goal.current || location.pathname === '/goal';
   const isPastActive = location.pathname === paths.goal.past;
 

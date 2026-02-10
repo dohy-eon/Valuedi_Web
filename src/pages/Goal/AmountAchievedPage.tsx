@@ -7,10 +7,25 @@ import GoalBottomSheet from '@/components/goal/GoalBottonSheet';
 import type { TransactionItem } from '@/utils/goal/ledgerHelpers';
 import { paths } from '@/router/paths';
 
+// 로컬 목데이터용 타입 (실제 API TransactionItem과는 별개)
+interface MockTransactionItem {
+  id: number;
+  type: string;
+  amount: string;
+  time: string;
+  category: string;
+  balanceAfter: string;
+  account: string;
+  isPositive: boolean;
+  dateKey: string;
+  dateLabel: string;
+  rawAmount: number;
+}
+
 interface TransactionGroup {
   date: string;
   dailyBalance: string;
-  items: TransactionItem[];
+  items: MockTransactionItem[];
 }
 
 // --- 목데이터 ---
@@ -84,8 +99,15 @@ const AmountAchievedPage = () => {
   const isCurrentActive = location.pathname === paths.goal.amountAchieved(id || '');
   const isPastActive = location.pathname === paths.goal.savingsSimulation(id || '');
 
-  const handleItemClick = (item: TransactionItem) => {
-    setSelectedItem(item);
+  const handleItemClick = (item: MockTransactionItem) => {
+    // 목데이터를 실제 TransactionItem 타입으로 매핑 (GoalBottomSheet가 사용하는 필드만 채움)
+    const adapted: TransactionItem = {
+      ...item,
+      dateKey: '',
+      dateLabel: '',
+      rawAmount: 0,
+    };
+    setSelectedItem(adapted);
     setIsSheetOpen(true);
   };
 
