@@ -59,10 +59,11 @@ const BankConnectingPage = () => {
         errorMessage = error.message || errorMessage;
         if (error.code === 'CODEF400_1') {
           errorMessage = '잘못된 비밀번호이거나 인증 정보가 올바르지 않습니다.';
+        } else if (error.code === 'CODEF400_2') {
+          errorMessage = '이미 연동된 계정입니다. 다른 계정을 선택해주세요.';
         }
       }
 
-      alert(errorMessage);
       navigate(-1); // 이전 페이지로 돌아가기
     },
   });
