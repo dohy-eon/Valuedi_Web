@@ -245,6 +245,23 @@ export const getPeerCompareApi = async (yearMonth: string): Promise<ApiResponse<
   return apiGet<PeerCompareResult>(`/api/transactions/peer-compare?yearMonth=${encodeURIComponent(yearMonth)}`);
 };
 
+// ========== GET /api/transactions/by-day (일별 수입/지출 합계) ==========
+
+export interface DailyTransactionSummary {
+  date: string; // YYYY-MM-DD
+  totalIncome: number;
+  totalExpense: number;
+}
+
+/**
+ * 일별 수입/지출 합계 (달력용)
+ * GET /api/transactions/by-day?yearMonth=YYYY-MM
+ * Swagger: Ledger (거래내역) → by-day
+ */
+export const getDailyTransactionsApi = async (yearMonth: string): Promise<ApiResponse<DailyTransactionSummary[]>> => {
+  return apiGet<DailyTransactionSummary[]>(`/api/transactions/by-day?yearMonth=${encodeURIComponent(yearMonth)}`);
+};
+
 // ========== 자산(계좌) 관련 타입 및 API ==========
 
 // 인증 헤더 생성 함수 (fetch 사용 시 - 하위 호환성 유지)
