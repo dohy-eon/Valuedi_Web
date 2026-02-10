@@ -9,12 +9,14 @@ import { Typography } from '../typography';
 import { LoginButton } from '../buttons';
 import { signUpApi, ApiError } from '@/features/auth';
 
-// 약관 ID 매핑 (백엔드와 협의 필요)
+// 약관 ID 매핑 - /api/terms 스펙과 동일하게 맞춤
+// 1: AGE_14, 2: SERVICE, 3: SECURITY, 4: PRIVACY, 5: MARKETING
 const TERMS_ID_MAP: Record<string, number> = {
-  age: 1, // 만 14세 이상
-  service: 2, // 이용약관
-  privacy: 3, // 개인정보 수집 및 이용
-  marketing: 4, // 마케팅
+  age: 1, // 만 14세 이상입니다.
+  service: 2, // 밸류디 이용약관 동의
+  security: 3, // 밸류디 전자금융거래 이용약관 동의
+  privacy: 4, // 밸류디 개인정보 수집 및 이용 동의
+  marketing: 5, // 마케팅 목적의 개인정보 수집 및 이용 동의
 };
 
 const SignUpEmailContainer = () => {
@@ -24,6 +26,7 @@ const SignUpEmailContainer = () => {
   const [termsAgreements, setTermsAgreements] = useState<Record<string, boolean>>({
     age: false,
     service: false,
+    security: false,
     privacy: false,
     marketing: false,
   });
@@ -36,6 +39,7 @@ const SignUpEmailContainer = () => {
       navigate('/login');
     },
     onError: (error: ApiError) => {
+      console.error('[SignUp] error', error);
       if (error.code === 'AUTH403_1') {
         alert('이메일 인증이 완료되지 않았습니다.');
       } else if (error.code === 'AUTH409_1') {
@@ -46,7 +50,7 @@ const SignUpEmailContainer = () => {
     },
   });
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     const signupDataStr = sessionStorage.getItem('signupData');
     if (!signupDataStr) {
       alert('회원가입 정보를 찾을 수 없습니다. 다시 시도해주세요.');
@@ -56,16 +60,22 @@ const SignUpEmailContainer = () => {
 
     const signupData = JSON.parse(signupDataStr);
 
-    // 약관 동의 정보 변환
-    const agreements = Object.entries(termsAgreements).map(([key, isAgreed]) => ({
+    // 약관 동의 정보 변환 (회원가입 요청용)
+    const agreementsForSignUp = Object.entries(termsAgreements).map(([key, isAgreed]) => ({
       termsId: TERMS_ID_MAP[key] || 0,
       isAgreed,
     }));
 
+    console.log('[SignUp] request payload', {
+      ...signupData,
+      email: auth.email,
+      agreements: agreementsForSignUp,
+    });
+
     signUpMutation.mutate({
       ...signupData,
       email: auth.email,
-      agreements,
+      agreements: agreementsForSignUp,
     });
   };
 

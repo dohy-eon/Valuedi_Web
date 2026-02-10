@@ -5,11 +5,18 @@ import CheckBoxButton from '@/components/buttons/CheckBoxButton';
 import { MoreViewButton } from '@/components/buttons/MoreViewButton';
 
 // 약관 데이터 정의 (필수 여부 포함)
+// Swagger /api/terms 기준:
+// 1: AGE_14 - "만 14세 이상입니다." (필수)
+// 2: SERVICE - "밸류디 이용약관 동의" (필수)
+// 3: SECURITY - "밸류디 전자금융거래 이용약관 동의" (필수)
+// 4: PRIVACY - "밸류디 개인정보 수집 및 이용 동의" (필수)
+// 5: MARKETING - "마케팅 목적의 개인정보 수집 및 이용 동의" (선택)
 const TERMS_LIST = [
-  { id: 'age', label: '[필수] 만 14세 이상입니다.', required: true },
-  { id: 'service', label: '[필수] 밸류디 이용약관 동의', required: true },
-  { id: 'privacy', label: '[필수] 밸류디 개인정보 수집 및 이용 동의', required: true },
-  { id: 'marketing', label: '[선택] 마케팅 목적의 개인정보 수집 및 이용 동의', required: false },
+  { id: 'age', label: '[필수] 만 14세 이상입니다.', required: true }, // termsId 1
+  { id: 'service', label: '[필수] 밸류디 이용약관 동의', required: true }, // termsId 2
+  { id: 'security', label: '[필수] 밸류디 전자금융거래 이용약관 동의', required: true }, // termsId 3
+  { id: 'privacy', label: '[필수] 밸류디 개인정보 수집 및 이용 동의', required: true }, // termsId 4
+  { id: 'marketing', label: '[선택] 마케팅 목적의 개인정보 수집 및 이용 동의', required: false }, // termsId 5
 ];
 
 interface TermsAgreementProps {
@@ -21,6 +28,7 @@ export const TermsAgreement: React.FC<TermsAgreementProps> = ({ onRequirementCha
   const [terms, setTerms] = React.useState<Record<string, boolean>>({
     age: false,
     service: false,
+    security: false,
     privacy: false,
     marketing: false,
   });

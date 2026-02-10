@@ -52,6 +52,7 @@ import MyPage from '@/pages/MyPage/MyPage';
 import { ConnectionDetailPage } from '@/pages/MyPage/subpages/ConnectionDetailPage';
 import { LogoutPage } from '@/pages/MyPage/subpages/LogoutPage';
 import { WithdrawPage } from '@/pages/MyPage/subpages/WithdrawPage';
+import TermsSettingsPage from '@/pages/MyPage/subpages/TermsSettingsPage';
 import { paths } from './paths';
 
 export const router = createBrowserRouter([
@@ -111,6 +112,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <MyPage /> },
           { path: 'settings', element: <SettingsPage /> },
+          { path: 'settings/terms', element: <TermsSettingsPage /> },
           { path: 'connection', element: <ConnectionPage /> },
           { path: 'mbti', element: <MbtiPage /> },
           {
