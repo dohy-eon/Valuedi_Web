@@ -3,7 +3,8 @@ import { Typography } from '@/components/typography';
 import { BaseButton } from '@/components/buttons/BaseButton';
 import BackPageIcon from '@/assets/icons/BackPage.svg';
 import { useGoalCompletePage } from '@/hooks/Goal/useGoalCompletePage';
-import GoalCompleteCard from './components/GoalCompleteCard';
+import { GoalSummaryCard } from '@/components/goal/GoalSummaryCard';
+import { formatToYYMMDD, maskAccountNumber } from '@/utils/goal/goalHelpers';
 
 const GoalCompletePage = () => {
   const { state, navigate, handleBack, handleGoHome, handleGoToGoal } = useGoalCompletePage();
@@ -61,7 +62,17 @@ const GoalCompletePage = () => {
               밸류디와 함께 목표를 달성해보아요 화이팅!
             </Typography>
           </div>
-          <GoalCompleteCard state={state} />
+          <GoalSummaryCard
+            title={state.goalName}
+            colorCode={state.colorCode}
+            iconId={state.iconId}
+            targetAmountText={`${new Intl.NumberFormat('ko-KR').format(state.targetAmount)} 원`}
+            startDateText={formatToYYMMDD(state.startDate)}
+            endDateText={formatToYYMMDD(state.endDate)}
+            remainingDaysText={`${state.remainingDays} 일`}
+            bankName={state.bankName}
+            accountText={maskAccountNumber(state.accountNumber)}
+          />
         </main>
 
         <footer className="w-full px-5 pb-8 pt-2 flex-shrink-0 flex flex-col gap-4">
