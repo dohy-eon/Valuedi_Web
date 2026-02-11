@@ -4,7 +4,6 @@ import { MobileLayout } from '@/shared/components/layout/MobileLayout';
 import BackPageGNB from '@/shared/components/gnb/BackPageGNB';
 import { Typography } from '@/shared/components';
 import { LoginButton } from '@/shared/components/buttons';
-import { cn } from '@/shared/utils/cn';
 import { logoutApi } from '@/features/auth';
 import { useAuthStore } from '@/features/auth';
 
