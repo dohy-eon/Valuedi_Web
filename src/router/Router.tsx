@@ -17,7 +17,6 @@ import GoalCreateStep from '@/pages/Goal/Create/GoalCreateStep';
 import GoalCompletePage from '@/pages/Goal/Create/GoalCompletePage';
 import SavingSimulationPage from '@/pages/Goal/Detail/SavingSimulationPage';
 import GoalAlmostDonePage from '@/pages/Goal/Edit/GoalAlmostDonePage';
-import GoalEditPage from '@/pages/Goal/Edit/GoalEditPage';
 import {
   BankConnectionStartPage,
   BankSelectPage,
@@ -80,7 +79,6 @@ export const router = createBrowserRouter([
       { path: paths.goal.savingSimulation, element: <SavingSimulationPage /> },
       { path: paths.goal.amountAchievedRoute, element: <AmountAchievedPage /> },
       { path: paths.goal.savingsSimulationRoute, element: <SavingSimulationPage /> },
-      { path: paths.goal.editRoute, element: <GoalEditPage /> },
       { path: paths.goal.create, element: <GoalCreatePage /> },
       { path: paths.goal.createStep, element: <GoalCreateStep /> },
       { path: paths.goal.almostDone, element: <GoalAlmostDonePage /> },
