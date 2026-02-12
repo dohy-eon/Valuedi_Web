@@ -5,7 +5,7 @@ import LoginButton from '@/shared/components/buttons/LoginButton';
 import KakaoIcon from '@/assets/icons/Kakao.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { getKakaoLoginUrlApi } from '@/features/auth';
+import { getKakaoLoginUrlApi, KakaoLoginUrlResult } from '@/features/auth';
 interface SocialLoginContainerProps {
   className?: string;
   onKakaoClick?: () => void;
@@ -15,12 +15,24 @@ interface SocialLoginContainerProps {
 const SocialLoginContainer: React.FC<SocialLoginContainerProps> = ({ className }) => {
   const navigate = useNavigate();
 
+  const getKakaoUrlFromResult = (result: KakaoLoginUrlResult | null): string | null => {
+    if (!result) return null;
+    if (typeof result === 'string') return result;
+    if (typeof result.url === 'string' && result.url.length > 0) return result.url;
+    return null;
+  };
+
   const kakaoLoginMutation = useMutation({
     mutationFn: getKakaoLoginUrlApi,
     onSuccess: (response) => {
-      if (response.result) {
+      // 응답이 성공이어도 URL 누락 가능성을 방어
+      const kakaoUrl = getKakaoUrlFromResult(response.result);
+      if (kakaoUrl) {
         // 카카오 로그인 URL로 리다이렉트
-        window.location.href = response.result.url;
+        window.location.href = kakaoUrl;
+      } else {
+        console.error('카카오 로그인 URL이 응답에 포함되지 않았습니다:', response);
+        alert('로그인 경로를 불러오지 못했습니다. 관리자에게 문의하세요.');
       }
     },
     onError: (error) => {

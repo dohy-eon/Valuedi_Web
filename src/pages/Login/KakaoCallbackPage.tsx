@@ -13,6 +13,7 @@ const KakaoCallbackPage = () => {
   const [searchParams] = useSearchParams();
   const { login } = useAuthStore();
   const hasProcessedRef = useRef(false); // 중복 호출 방지
+  const CALLBACK_PROCESSED_KEY = 'kakao_oauth_callback_processed';
 
   const code = searchParams.get('code');
   const state = searchParams.get('state'); // 카카오에서 전달한 state
@@ -129,8 +130,16 @@ const KakaoCallbackPage = () => {
 
     // 카카오에서 전달한 code와 state 파라미터 확인
     if (code && state) {
+      const callbackKey = `${code}:${state}`;
+
+      // React StrictMode 재마운트/중복 실행으로 같은 code를 재요청하지 않도록 방어
+      if (sessionStorage.getItem(CALLBACK_PROCESSED_KEY) === callbackKey) {
+        return;
+      }
+
       // 중복 호출 방지 플래그 설정
       hasProcessedRef.current = true;
+      sessionStorage.setItem(CALLBACK_PROCESSED_KEY, callbackKey);
 
       // 백엔드 콜백 API 호출하여 JWT 토큰 발급 받기
       kakaoCallbackMutation.mutate();

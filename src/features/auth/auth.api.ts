@@ -25,6 +25,8 @@ export interface KakaoLoginUrlResponse {
   state: string;
 }
 
+export type KakaoLoginUrlResult = KakaoLoginUrlResponse | string;
+
 export interface SignUpRequest {
   username: string;
   realName: string;
@@ -141,8 +143,8 @@ export const getAuthStatusApi = async (): Promise<ApiResponse<AuthStatusResponse
 /**
  * 카카오 로그인 URL 생성
  */
-export const getKakaoLoginUrlApi = async (): Promise<ApiResponse<KakaoLoginUrlResponse>> => {
-  return apiGet<KakaoLoginUrlResponse>('/auth/oauth/kakao/login', { skipAuth: true });
+export const getKakaoLoginUrlApi = async (): Promise<ApiResponse<KakaoLoginUrlResult>> => {
+  return apiGet<KakaoLoginUrlResult>('/auth/oauth/kakao/login', { skipAuth: true });
 };
 
 /**
