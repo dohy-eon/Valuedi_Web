@@ -274,7 +274,7 @@ export const HomePage = () => {
   return (
     <MobileLayout className="bg-neutral-10">
       {/* 데스크탑 레이아웃: 사이드바 + 메인 콘텐츠 */}
-      <div className="flex flex-row min-h-screen md:h-screen">
+      <div className="flex flex-col md:flex-row min-h-screen md:h-screen">
         {/* 데스크탑 사이드바 */}
         <SidebarNavigation activeItem="home" onItemClick={handleNavClick} />
 
