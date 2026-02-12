@@ -24,7 +24,12 @@ interface GoalCardProps {
 
 const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   const navigate = useNavigate();
+  const isPast = type === 'past';
+  /** 달성 실패한 목표는 계좌 연결이 끊어져 상세 접근 시 서버 에러 발생 → 상세 진입 비활성화 */
+  const isDisabled = isPast && goal.status === 'FAILED';
+
   const handleClick = () => {
+    if (isDisabled) return;
     navigate(paths.goal.amountAchieved(goal.id));
   };
 
@@ -32,10 +37,8 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   const bgColor = goal.colorCode ? toHexColor(goal.colorCode) : undefined;
   const iconSrc = goal.iconId != null ? GOAL_ICON_SRC[goal.iconId] : null;
 
-  const isPast = type === 'past';
-
   // 상단 제목 & 상태 배지
-  const titleText = isPast ? '목표성공입니다' : goal.title;
+  const titleText = goal.title;
   let statusLabel: string | null = null;
   let statusClass = '';
 
@@ -55,7 +58,9 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   return (
     <div
       onClick={handleClick}
-      className="w-full transition-colors bg-white shadow-sm cursor-pointer p-5 rounded-xl active:bg-gray-50"
+      className={`w-full transition-colors bg-white shadow-sm p-5 rounded-xl ${
+        isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer active:bg-gray-50'
+      }`}
     >
       <div className="flex items-center gap-3 mb-5">
         <div
@@ -83,7 +88,7 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
         </div>
       </div>
 
-      {/* 하단 내용: 현재 목표 / 지난 목표에 따라 다른 정보 표시 */}
+      {/* 하단 내용 */}
       {isPast ? (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
