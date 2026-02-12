@@ -5,7 +5,7 @@ import {
   normalizeSectorPercentages,
   getIntegerPercentagesSum100,
 } from '@/pages/Asset/tab/SectorAnalysis/utils/sectorUtils';
-import { useGetAccountDetail } from '@/hooks/Asset/useGetAccountDetail';
+import { useGetAccountDetail } from '@/shared/hooks/Asset/useGetAccountDetail';
 import {
   rematchCategoriesApi,
   getTransactionsByCategoryApi,
@@ -82,9 +82,12 @@ export const useGetAssetAnalysis = (selectedDate: Date = new Date()) => {
   useEffect(() => {
     setIsLoading(true);
     const yearMonth = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}`;
+    const fromDate = `${yearMonth}-01`;
+    const lastDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0).getDate();
+    const toDate = `${yearMonth}-${String(lastDay).padStart(2, '0')}`;
 
     const run = async () => {
-      await rematchCategoriesApi({ yearMonth }).catch(() => {});
+      await rematchCategoriesApi({ yearMonth, fromDate, toDate }).catch(() => {});
       await syncTransactionsApi({ yearMonth }).catch(() => {});
       return Promise.all([
         getTransactionsByCategoryApi(yearMonth),

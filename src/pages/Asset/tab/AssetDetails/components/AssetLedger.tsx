@@ -66,7 +66,11 @@ export const AssetLedger = () => {
   const isLoading = isSummaryLoading || isTopCategoryLoading || isDailyLoading;
 
   return (
-    <div className={cn('flex flex-col w-full h-full bg-neutral-0 mt-[20px] px-[20px] md:px-[32px] lg:px-[40px] gap-[20px]')}>
+    <div
+      className={cn(
+        'flex flex-col w-full h-full bg-neutral-0 mt-[20px] px-[20px] md:px-[32px] lg:px-[40px] gap-[20px]'
+      )}
+    >
       <div className={cn('flex flex-col gap-[20px]')}>
         <div className={cn('flex flex-col gap-[12px]')}>
           <div className={cn('flex items-center gap-[8px] py-[4px]')}>
