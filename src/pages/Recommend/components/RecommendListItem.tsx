@@ -12,11 +12,47 @@ interface Props {
 }
 
 export const RecommendListItem = ({ bankName, productName, description, onClick }: Props) => {
+  // 은행명 정규화 함수
+  const normalizeBankName = (name: string): string => {
+    return name
+      .replace(/주식회사\s*/g, '')
+      .replace(/\(주\)\s*/g, '')
+      .replace(/\s*은행\s*/g, '')
+      .replace(/\s+/g, '')
+      .trim();
+  };
+
+  // 은행명 매칭 함수
+  const matchBankName = (bankName: string, targetName: string): boolean => {
+    const normalizedBank = normalizeBankName(bankName);
+    const normalizedTarget = normalizeBankName(targetName);
+
+    // 정규화된 이름으로 매칭
+    if (
+      normalizedBank === normalizedTarget ||
+      normalizedBank.includes(normalizedTarget) ||
+      normalizedTarget.includes(normalizedBank)
+    ) {
+      return true;
+    }
+
+    // 특수 케이스: 케이뱅크 <-> K뱅크
+    if (normalizedBank.includes('케이뱅크') && normalizedTarget === 'K뱅크') {
+      return true;
+    }
+    if (normalizedBank === 'K뱅크' && normalizedTarget.includes('케이뱅크')) {
+      return true;
+    }
+
+    // 원본 이름으로도 매칭 시도
+    return bankName.includes(targetName) || targetName.includes(bankName);
+  };
+
   // 1차: 추천 배너용 은행 매핑 (색상 토큰 포함)
-  const bannerBank = BANNER.find((item) => item.name === bankName || bankName.includes(item.name));
+  const bannerBank = BANNER.find((item) => matchBankName(bankName, item.name));
 
   // 2차: 홈 화면에서 사용하는 배경 은행 아이콘 매핑 (아이콘만 사용)
-  const bgBank = BGBANKS.find((item) => item.name === bankName || bankName.includes(item.name));
+  const bgBank = BGBANKS.find((item) => matchBankName(bankName, item.name));
 
   // 아이콘은 BANNER > BGBANKS 순으로 우선 적용
   const iconSrc = bannerBank?.icon ?? bgBank?.icon;

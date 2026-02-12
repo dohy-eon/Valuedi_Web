@@ -19,7 +19,43 @@ export const RecommendDetailPage = () => {
 
   const { data: detailData, isLoading, isError } = useSavingsDetail(finPrdtCd);
 
-  const product = detailData?.product;
+  const product = detailData;
+
+  // 은행명 정규화 함수
+  const normalizeBankName = (name: string): string => {
+    return name
+      .replace(/주식회사\s*/g, '')
+      .replace(/\(주\)\s*/g, '')
+      .replace(/\s*은행\s*/g, '')
+      .replace(/\s+/g, '')
+      .trim();
+  };
+
+  // 은행명 매칭 함수
+  const matchBankName = (bankName: string, targetName: string): boolean => {
+    const normalizedBank = normalizeBankName(bankName);
+    const normalizedTarget = normalizeBankName(targetName);
+
+    // 정규화된 이름으로 매칭
+    if (
+      normalizedBank === normalizedTarget ||
+      normalizedBank.includes(normalizedTarget) ||
+      normalizedTarget.includes(normalizedBank)
+    ) {
+      return true;
+    }
+
+    // 특수 케이스: 케이뱅크 <-> K뱅크
+    if (normalizedBank.includes('케이뱅크') && normalizedTarget === 'K뱅크') {
+      return true;
+    }
+    if (normalizedBank === 'K뱅크' && normalizedTarget.includes('케이뱅크')) {
+      return true;
+    }
+
+    // 원본 이름으로도 매칭 시도
+    return bankName.includes(targetName) || targetName.includes(bankName);
+  };
 
   // 은행명으로 아이콘/색상 매핑
   const { targetBank, iconSrc } = useMemo<{
@@ -30,9 +66,9 @@ export const RecommendDetailPage = () => {
       return { targetBank: null, iconSrc: null };
     }
     // 1차: 추천 배너용 매핑 (색상 포함)
-    const bannerBank = BANNER.find((bank) => bank.name === product.korCoNm || product.korCoNm.includes(bank.name));
+    const bannerBank = BANNER.find((bank) => matchBankName(product.korCoNm, bank.name));
     // 2차: 배경 은행 아이콘 매핑 (아이콘만)
-    const bgBank = BGBANKS.find((bank) => bank.name === product.korCoNm || product.korCoNm.includes(bank.name));
+    const bgBank = BGBANKS.find((bank) => matchBankName(product.korCoNm, bank.name));
 
     const icon = bannerBank?.icon ?? bgBank?.icon;
 
@@ -84,13 +120,15 @@ export const RecommendDetailPage = () => {
     ].filter((item) => item.value); // 값이 있는 것만 필터링
   }, [product]);
 
-  // 최고 금리와 기본 금리 계산
+  // 최고 금리와 기본 금리 - API에서 직접 제공되면 사용, 없으면 options에서 계산
   const maxRate = useMemo(() => {
+    if (product?.maxRate !== undefined) return product.maxRate;
     if (!product?.options || product.options.length === 0) return 0;
     return Math.max(...product.options.map((opt) => opt.intrRate2));
   }, [product]);
 
   const basicRate = useMemo(() => {
+    if (product?.basicRate !== undefined) return product.basicRate;
     if (!product?.options || product.options.length === 0) return 0;
     // 가장 긴 기간의 기본 금리 사용 (일반적으로 가장 긴 기간이 기본)
     const sortedOptions = [...product.options].sort((a, b) => Number(b.saveTrm) - Number(a.saveTrm));
