@@ -70,19 +70,18 @@ export const SectorSummarySection = ({
           <SectorChartSkeleton />
         ) : (
           <SectorChart
-            data={(() => {
-              // others가 아닌 항목들만 상위 5개 선택
-              const nonOthersItems = sectorData.filter((item) => item.key !== 'others').slice(0, 5);
-              
-              // 모든 others 항목을 찾아서 합치기
-              const allOthersItems = sectorData.filter((item) => item.key === 'others');
-              const mergedOthers =
-                allOthersItems.length > 0
-                  ? {
-                      key: 'others',
-                      amount: allOthersItems.reduce((sum, i) => sum + i.amount, 0),
-                      percentage: allOthersItems.reduce((sum, i) => sum + i.percentage, 0),
-                      category: 'others',
+            data={[
+              // 상위 5개 카테고리
+              ...sectorData.slice(0, 5),
+              // 그 외 카테고리들을 하나로 묶어서 "그외" 그룹으로 표시
+              ...(sectorData.slice(5).reduce((sum, i) => sum + i.amount, 0) > 0
+                ? [
+                    {
+                      // Top5 이외 카테고리 묶음 → "그외" 구간
+                      key: 'others_group',
+                      amount: sectorData.slice(5).reduce((sum, i) => sum + i.amount, 0),
+                      percentage: sectorData.slice(5).reduce((sum, i) => sum + i.percentage, 0),
+                      category: 'others_group',
                       items: [],
                     }
                   : null;

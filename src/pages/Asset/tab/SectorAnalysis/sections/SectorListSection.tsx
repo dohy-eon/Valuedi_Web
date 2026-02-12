@@ -69,15 +69,16 @@ export const SectorListSection = ({ data, isLoading = false, selectedDate }: Sec
               />
             ))}
 
-            {/* 그외 N개 로직 */}
+            {/* 그외 N개 로직 (Top5 이외 카테고리 묶음) */}
             {otherCount > 0 && (
               <SectorListItem
                 data={{
-                  key: 'others',
+                  // 실제 API 기타 카테고리(others)와 구분하기 위해 별도 키 사용
+                  key: 'others_group',
                   amount: otherTotalAmount,
                   percentage: 0,
                   displayPct: othersDisplayPct,
-                  category: 'others',
+                  category: 'others_group',
                   items: [],
                 }}
                 label={`그외 ${otherCount}개`}

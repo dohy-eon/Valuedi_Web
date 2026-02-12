@@ -71,11 +71,7 @@ const AmountAchievedPage = () => {
           isPastGoal={isPastGoal}
         />
 
-        {isPastGoal && detail ? (
-          <PastGoalSummarySection detail={detail} />
-        ) : (
-          <GoalProgressGauge goalId={goalId} />
-        )}
+        {isPastGoal && detail ? <PastGoalSummarySection detail={detail} /> : <GoalProgressGauge goalId={goalId} />}
         <div className={isPastGoal ? 'px-5 pt-4' : 'px-5'}>
           <GoalSummaryCard goalId={goalId} />
         </div>

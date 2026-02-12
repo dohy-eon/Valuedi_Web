@@ -53,7 +53,9 @@ export default function GoalDetailPageHeader({
           <button
             onClick={() => goalId && navigate(paths.goal.amountAchieved(goalId))}
             className={`flex-1 py-4 text-center text-base transition-all ${
-              isAmountAchievedActive ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-medium text-gray-400'
+              isAmountAchievedActive
+                ? 'font-bold text-gray-900 border-b-2 border-gray-900'
+                : 'font-medium text-gray-400'
             }`}
           >
             달성 금액

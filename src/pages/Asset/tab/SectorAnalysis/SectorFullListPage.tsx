@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/shared/utils/cn';
 import { MobileLayout } from '@/shared/components/layout/MobileLayout';
@@ -11,12 +12,16 @@ import { Skeleton } from '@/shared/components/skeleton/Skeleton';
 export const SectorFullListPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const locationState = location.state as { selectedDate?: string; filter?: string } | null;
 
-  const selectedDate = location.state?.selectedDate ? new Date(location.state.selectedDate) : new Date();
+  // 💡 최초 진입 시에만 location.state에서 날짜를 읽어와 고정
+  const [selectedDate] = useState<Date>(() =>
+    locationState?.selectedDate ? new Date(locationState.selectedDate) : new Date()
+  );
 
   const { allSectors, isLoading } = useGetAssetAnalysis(selectedDate);
 
-  const isFilterOthers = location.state?.filter === 'others';
+  const isFilterOthers = locationState?.filter === 'others';
   const displayItems = isFilterOthers ? allSectors.slice(5) : allSectors;
   const title = isFilterOthers ? `그외 ${displayItems.length}개` : `분야별 전체내역`;
 
