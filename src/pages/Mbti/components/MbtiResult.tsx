@@ -22,9 +22,9 @@ export const MbtiResult = () => {
 
   return (
     <div className={cn('flex flex-col h-full min-h-screen bg-neutral-0 overflow-y-auto')}>
-      <div className={cn('flex-1 flex flex-col px-[20px] pb-[40px]')}>
+      <div className={cn('flex-1 flex flex-col items-center px-[20px] pb-[40px]')}>
         {isFetching || !result ? (
-          <div className={cn('flex items-center justify-center')}>
+          <div className={cn('w-full flex items-center justify-center')}>
             <div className="mt-[20px] w-[272px] h-[272px] bg-neutral-10 rounded-[8px]" />
           </div>
         ) : (
@@ -37,7 +37,7 @@ export const MbtiResult = () => {
           />
         )}
 
-        <div className={cn('flex flex-col mt-[49px]')}>
+        <div className={cn('flex flex-col items-center mt-[49px]')}>
           <button type="button" onClick={handleDetail} className={cn('cursor-pointer px-[10px] py-[8px]')}>
             <Typography style="text-body-2-14-regular" className={cn('text-neutral-50')}>
               자세히 보고싶어요
