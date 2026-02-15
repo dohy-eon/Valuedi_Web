@@ -1,9 +1,10 @@
 import { ColorToken } from '@/shared/styles/design-system';
 
 export interface AccountData {
-  id: number;
+  id: number | null;
   name: string;
   amount: number;
+  organizationCode?: string;
   bankName?: string;
   cardName?: string;
   cardNoMasked?: string;
@@ -13,8 +14,9 @@ export interface AccountData {
 export interface AccountInfo {
   bankName: string;
   accountNumber: string;
-  balance: number;
+  balance: number | null;
   bgColor: ColorToken;
+  organizationCode?: string;
 }
 
 export interface TransactionItem {

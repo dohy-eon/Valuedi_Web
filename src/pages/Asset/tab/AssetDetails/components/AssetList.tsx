@@ -11,22 +11,42 @@ import { useNavigate } from 'react-router-dom';
 import { ColorToken, getColorToken } from '@/shared/styles/design-system';
 import CheckDownIcon from '@/assets/icons/CheckDown.svg?react';
 import { useGetAssetList } from '@/shared/hooks/Asset/useGetAssetList';
+import { BANKS } from '@/features/bank/constants/banks';
+import { CARDS } from '@/features/card/constants/cards';
+import {
+  getBankIdFromOrganizationCode,
+  getCardIdFromOrganizationCode,
+} from '@/features/connection/constants/organizationCodes';
 
-const BankIcon = ({ bgColor }: { bgColor: ColorToken }) => (
+const getBankIconByOrganizationCode = (organizationCode?: string) => {
+  if (!organizationCode) return kbIcon;
+  const bankId = getBankIdFromOrganizationCode(organizationCode);
+  const icon = BANKS.find((bank) => bank.id === bankId)?.icon;
+  return icon ?? kbIcon;
+};
+
+const getCardIconByOrganizationCode = (organizationCode?: string) => {
+  if (!organizationCode) return kbIcon;
+  const cardId = getCardIdFromOrganizationCode(organizationCode);
+  const icon = CARDS.find((card) => card.id === cardId)?.icon;
+  return icon ?? kbIcon;
+};
+
+const BankIcon = ({ bgColor, iconSrc }: { bgColor: ColorToken; iconSrc: string }) => (
   <div
     className={cn('w-[32px] h-[32px] rounded-[8px] flex items-center justify-center')}
     style={{ backgroundColor: getColorToken(bgColor) }}
   >
-    <img src={kbIcon} alt="은행 아이콘" className="w-[22px] h-[22px] object-contain" />
+    <img src={iconSrc} alt="은행 아이콘" className="w-[22px] h-[22px] object-contain" />
   </div>
 );
 
-const CardIcon = ({ bgColor }: { bgColor: ColorToken }) => (
+const CardIcon = ({ bgColor, iconSrc }: { bgColor: ColorToken; iconSrc: string }) => (
   <div
     className={cn('w-[32px] h-[40px] rounded-[8px] flex items-center justify-center')}
     style={{ backgroundColor: getColorToken(bgColor) }}
   >
-    <img src={kbIcon} alt="카드 아이콘" className="w-[22px] h-[22px] object-contain" />
+    <img src={iconSrc} alt="카드 아이콘" className="w-[22px] h-[22px] object-contain" />
   </div>
 );
 
@@ -66,7 +86,7 @@ export const AssetList = () => {
           {(isBankExpanded ? bankAccounts : bankAccounts.slice(0, 4)).map((account) => (
             <div key={account.id} className={cn('flex items-center justify-between py-[8px]')}>
               <div className={cn('flex items-center gap-[8px]')}>
-                <BankIcon bgColor={account.iconBg} />
+                <BankIcon bgColor={account.iconBg} iconSrc={getBankIconByOrganizationCode(account.organizationCode)} />
                 <div className={cn('flex flex-col gap-[2px]')}>
                   <Typography style="text-body-2-14-semi-bold" className="text-neutral-90">
                     {formatCurrency(account.amount)}
@@ -108,9 +128,9 @@ export const AssetList = () => {
         </Typography>
         <div className={cn('flex flex-col gap-[8px]')}>
           {(isCardExpanded ? cardAccounts : cardAccounts.slice(0, 4)).map((card) => (
-            <div key={card.id} className={cn('flex items-center py-[8px]')}>
+            <div key={`${card.name}-${card.cardNoMasked}`} className={cn('flex items-center justify-between py-[8px]')}>
               <div className={cn('flex items-center gap-[8px]')}>
-                <CardIcon bgColor={card.iconBg} />
+                <CardIcon bgColor={card.iconBg} iconSrc={getCardIconByOrganizationCode(card.organizationCode)} />
                 <div className={cn('flex flex-col gap-[2px]')}>
                   <Typography style="text-body-2-14-semi-bold" className="text-neutral-90">
                     {card.name}
@@ -120,6 +140,11 @@ export const AssetList = () => {
                   </Typography>
                 </div>
               </div>
+              {card.id != null && (
+                <div className="w-[18px] h-[18px] flex items-center justify-center">
+                  <MoreViewButton onClick={() => navigate(`/asset/card/${card.id}`)} />
+                </div>
+              )}
             </div>
           ))}
         </div>
