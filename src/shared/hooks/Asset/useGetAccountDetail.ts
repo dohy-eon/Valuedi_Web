@@ -6,7 +6,6 @@ import {
   getAccountTransactionsApi,
   getCardTransactionsApi,
   getTransactionsApi,
-  syncTransactionsApi,
   type LedgerTransactionItem,
   type AssetTransactionsResult,
 } from '@/features/asset/asset.api';
@@ -308,7 +307,6 @@ export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string
         let cardMeta: AssetTransactionsResult | null = null;
 
         if (!assetId) {
-          await syncTransactionsApi({ yearMonth: targetYearMonth }).catch(() => {});
           const size = 50;
           let page = 0;
           let totalPages = 1;

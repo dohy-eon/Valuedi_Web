@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/shared/utils/cn';
 import { Typography } from '@/shared/components/typography';
@@ -12,7 +12,7 @@ import { getMonthlySummaryApi, getTopCategoriesApi, getDailyTransactionsApi } fr
 import { Skeleton } from '@/shared/components/skeleton/Skeleton';
 import PullToRefresh from '@/shared/components/common/PullToRefresh';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRefreshSync } from '@/features/connection/connection.hooks';
+import { useRefreshSync, useSyncStatus } from '@/features/connection/connection.hooks';
 
 export const AssetLedger = () => {
   const currentMonth = useLedgerStore((state) => state.currentMonth);
@@ -21,6 +21,7 @@ export const AssetLedger = () => {
   const queryClient = useQueryClient();
   const [refreshKey, setRefreshKey] = useState(0);
   const refreshSync = useRefreshSync();
+  const [trackSync, setTrackSync] = useState(false);
 
   // 현재 선택된 월의 yearMonth 계산
   const yearMonth = useMemo(() => {
@@ -70,13 +71,33 @@ export const AssetLedger = () => {
   const topCategoryName = topCategoryData?.result?.[0]?.categoryName ?? '';
 
   const isLoading = isSummaryLoading || isTopCategoryLoading || isDailyLoading;
+
+  // 자산 동기화 상태 조회 (필요할 때만 활성화)
+  const { data: syncStatusData } = useSyncStatus({
+    enabled: trackSync,
+    pollInterval: 3000,
+  });
+
+  // 동기화 완료(SUCCESS) 시점에만 거래/요약/달력 쿼리 무효화 및 목록 재조회
+  useEffect(() => {
+    const status = syncStatusData?.result?.syncStatus;
+    if (!status || !trackSync) return;
+
+    if (status === 'SUCCESS') {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      setRefreshKey((prev) => prev + 1);
+      setTrackSync(false);
+    } else if (status === 'FAILED') {
+      // 실패 시에도 폴링 중지
+      setTrackSync(false);
+    }
+  }, [syncStatusData, queryClient, trackSync]);
+
   const handlePullRefresh = useCallback(async () => {
-    // 전체 자산 동기화 요청 (백그라운드)
+    // 전체 자산 동기화 요청 (백그라운드) 후 상태 추적 시작
     await refreshSync.mutateAsync();
-    // 동기화 이후 거래/요약/달력 관련 쿼리 무효화
-    await queryClient.invalidateQueries({ queryKey: ['transactions'] });
-    setRefreshKey((prev) => prev + 1);
-  }, [queryClient, refreshSync]);
+    setTrackSync(true);
+  }, [refreshSync]);
 
   return (
     <div

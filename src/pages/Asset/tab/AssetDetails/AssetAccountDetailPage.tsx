@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { cn } from '@/shared/utils/cn';
 import { Typography } from '@/shared/components/typography';
 import { formatCurrency } from '@/shared/utils/formatCurrency';
@@ -17,7 +17,7 @@ import {
   getCardIdFromOrganizationCode,
 } from '@/features/connection/constants/organizationCodes';
 import PullToRefresh from '@/shared/components/common/PullToRefresh';
-import { useRefreshSync } from '@/features/connection/connection.hooks';
+import { useRefreshSync, useSyncStatus } from '@/features/connection/connection.hooks';
 
 const getBankIconByOrganizationCode = (organizationCode?: string) => {
   if (!organizationCode) return kbIcon;
@@ -57,10 +57,28 @@ export const AssetAccountDetailPage = () => {
   };
 
   const refreshSync = useRefreshSync();
+  const [trackSync, setTrackSync] = useState(false);
+
+  const { data: syncStatusData } = useSyncStatus({
+    enabled: trackSync,
+    pollInterval: 3000,
+  });
+
+  useEffect(() => {
+    const status = syncStatusData?.result?.syncStatus;
+    if (!status || !trackSync) return;
+
+    if (status === 'SUCCESS') {
+      setRefreshKey((prev) => prev + 1);
+      setTrackSync(false);
+    } else if (status === 'FAILED') {
+      setTrackSync(false);
+    }
+  }, [syncStatusData, trackSync]);
 
   const handlePullRefresh = useCallback(async () => {
     await refreshSync.mutateAsync();
-    setRefreshKey((prev) => prev + 1);
+    setTrackSync(true);
   }, [refreshSync]);
 
   return (
