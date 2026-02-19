@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/shared/utils/cn';
 import { Typography } from '@/shared/components/typography';
@@ -8,13 +8,22 @@ import { ViewToggleButton } from '@/shared/components/buttons';
 import { LedgerList } from './LedgerList';
 import LedgerCalendar from './LedgerCalendar';
 import { useLedgerActions, useLedgerStore } from '@/shared/hooks/Asset/usetLedgerStore';
-import { getMonthlySummaryApi, getTopCategoriesApi, getDailyTransactionsApi } from '@/features/asset/asset.api';
+import {
+  getMonthlySummaryApi,
+  getTopCategoriesApi,
+  getDailyTransactionsApi,
+  syncTransactionsApi,
+} from '@/features/asset/asset.api';
 import { Skeleton } from '@/shared/components/skeleton/Skeleton';
+import PullToRefresh from '@/shared/components/common/PullToRefresh';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const AssetLedger = () => {
   const currentMonth = useLedgerStore((state) => state.currentMonth);
   const viewMode = useLedgerStore((state) => state.viewMode);
   const { prevMonth, nextMonth, setViewMode } = useLedgerActions();
+  const queryClient = useQueryClient();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // 현재 선택된 월의 yearMonth 계산
   const yearMonth = useMemo(() => {
@@ -64,6 +73,11 @@ export const AssetLedger = () => {
   const topCategoryName = topCategoryData?.result?.[0]?.categoryName ?? '';
 
   const isLoading = isSummaryLoading || isTopCategoryLoading || isDailyLoading;
+  const handlePullRefresh = useCallback(async () => {
+    await syncTransactionsApi({ yearMonth });
+    await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    setRefreshKey((prev) => prev + 1);
+  }, [queryClient, yearMonth]);
 
   return (
     <div
@@ -152,7 +166,13 @@ export const AssetLedger = () => {
       </div>
 
       <div className={cn('flex-1 min-h-0 w-full overflow-y-auto')}>
-        {viewMode === 'list' ? <LedgerList /> : <LedgerCalendar />}
+        {viewMode === 'list' ? (
+          <PullToRefresh onRefresh={handlePullRefresh}>
+            <LedgerList refreshKey={refreshKey} />
+          </PullToRefresh>
+        ) : (
+          <LedgerCalendar />
+        )}
       </div>
     </div>
   );

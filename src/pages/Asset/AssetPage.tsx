@@ -28,12 +28,12 @@ export const AssetPage = () => {
   return (
     <MobileLayout className="bg-neutral-0">
       {/* 데스크탑 레이아웃: 사이드바 + 메인 콘텐츠 */}
-      <div className="flex flex-row min-h-screen md:h-screen">
+      <div className="flex flex-row min-h-screen h-[100dvh] md:h-screen">
         {/* 데스크탑 사이드바 */}
         <SidebarNavigation activeItem="asset" onItemClick={handleNavClick} />
 
         {/* 메인 콘텐츠 영역 (HomePage와 동일한 데스크탑 레이아웃 패턴) */}
-        <div className="flex-1 flex flex-col min-h-screen md:min-h-0 w-full overflow-x-hidden">
+        <div className="flex-1 flex flex-col h-full min-h-0 w-full overflow-x-hidden">
           <div className="sticky top-0 z-10 w-full">
             <HomeGNB />
           </div>

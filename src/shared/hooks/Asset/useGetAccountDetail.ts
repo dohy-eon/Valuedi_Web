@@ -122,7 +122,7 @@ const groupTransactionsByDate = (items: LedgerTransactionItem[]): TransactionGro
   return Array.from(groups.values()).sort((a, b) => b.day - a.day);
 };
 
-export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string }) => {
+export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string; refreshKey?: number }) => {
   const location = useLocation();
   const { id } = useParams<{ id?: string }>();
   const assetId = id ? Number(id) : null;
@@ -271,7 +271,7 @@ export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string
     return () => {
       isCancelled = true;
     };
-  }, [assetId, isCardDetail, params?.yearMonth, params?.date]);
+  }, [assetId, isCardDetail, params?.yearMonth, params?.date, params?.refreshKey]);
 
   return {
     accountInfo,
