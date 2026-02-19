@@ -8,15 +8,11 @@ import { ViewToggleButton } from '@/shared/components/buttons';
 import { LedgerList } from './LedgerList';
 import LedgerCalendar from './LedgerCalendar';
 import { useLedgerActions, useLedgerStore } from '@/shared/hooks/Asset/usetLedgerStore';
-import {
-  getMonthlySummaryApi,
-  getTopCategoriesApi,
-  getDailyTransactionsApi,
-  syncTransactionsApi,
-} from '@/features/asset/asset.api';
+import { getMonthlySummaryApi, getTopCategoriesApi, getDailyTransactionsApi } from '@/features/asset/asset.api';
 import { Skeleton } from '@/shared/components/skeleton/Skeleton';
 import PullToRefresh from '@/shared/components/common/PullToRefresh';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRefreshSync } from '@/features/connection/connection.hooks';
 
 export const AssetLedger = () => {
   const currentMonth = useLedgerStore((state) => state.currentMonth);
@@ -24,6 +20,7 @@ export const AssetLedger = () => {
   const { prevMonth, nextMonth, setViewMode } = useLedgerActions();
   const queryClient = useQueryClient();
   const [refreshKey, setRefreshKey] = useState(0);
+  const refreshSync = useRefreshSync();
 
   // 현재 선택된 월의 yearMonth 계산
   const yearMonth = useMemo(() => {
@@ -74,10 +71,12 @@ export const AssetLedger = () => {
 
   const isLoading = isSummaryLoading || isTopCategoryLoading || isDailyLoading;
   const handlePullRefresh = useCallback(async () => {
-    await syncTransactionsApi({ yearMonth });
+    // 전체 자산 동기화 요청 (백그라운드)
+    await refreshSync.mutateAsync();
+    // 동기화 이후 거래/요약/달력 관련 쿼리 무효화
     await queryClient.invalidateQueries({ queryKey: ['transactions'] });
     setRefreshKey((prev) => prev + 1);
-  }, [queryClient, yearMonth]);
+  }, [queryClient, refreshSync]);
 
   return (
     <div

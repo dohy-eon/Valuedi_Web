@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react';
 import { cn } from '@/shared/utils/cn';
 import { Typography } from '@/shared/components/typography';
 import { formatCurrency } from '@/shared/utils/formatCurrency';
@@ -15,6 +16,8 @@ import {
   getBankIdFromOrganizationCode,
   getCardIdFromOrganizationCode,
 } from '@/features/connection/constants/organizationCodes';
+import PullToRefresh from '@/shared/components/common/PullToRefresh';
+import { useRefreshSync } from '@/features/connection/connection.hooks';
 
 const getBankIconByOrganizationCode = (organizationCode?: string) => {
   if (!organizationCode) return kbIcon;
@@ -40,7 +43,8 @@ const BankIcon = ({ bgColor, iconSrc, alt }: { bgColor: ColorToken; iconSrc: str
 export const AssetAccountDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { accountInfo, transactionHistory, totalCount } = useGetAccountDetail();
+  const [refreshKey, setRefreshKey] = useState(0);
+  const { accountInfo, transactionHistory, totalCount } = useGetAccountDetail({ refreshKey });
   const balance = accountInfo.balance;
   const isBalanceUnavailable = balance == null;
   const isCardDetail = location.pathname.startsWith('/asset/card/');
@@ -51,6 +55,13 @@ export const AssetAccountDetailPage = () => {
   const handleBack = () => {
     navigate(-1);
   };
+
+  const refreshSync = useRefreshSync();
+
+  const handlePullRefresh = useCallback(async () => {
+    await refreshSync.mutateAsync();
+    setRefreshKey((prev) => prev + 1);
+  }, [refreshSync]);
 
   return (
     <MobileLayout className={cn('bg-neutral-0')}>
@@ -106,25 +117,29 @@ export const AssetAccountDetailPage = () => {
             총 {totalCount}건
           </Typography>
 
-          <div className={cn('flex flex-col gap-[12px]')}>
-            {transactionHistory.map((group, groupIndex) => (
-              <div key={groupIndex} className={cn('flex flex-col')}>
-                <AssetDailyHeader date={group.date} dailyTotal={group.dailyTotal} />
+          <div className={cn('flex-1 min-h-0')}>
+            <PullToRefresh onRefresh={handlePullRefresh}>
+              <div className={cn('flex flex-col gap-[12px]')}>
+                {transactionHistory.map((group, groupIndex) => (
+                  <div key={groupIndex} className={cn('flex flex-col')}>
+                    <AssetDailyHeader date={group.date} dailyTotal={group.dailyTotal} />
 
-                <div className={cn('flex flex-col gap-[8px]')}>
-                  {group.items.map((item, idx) => (
-                    <AssetItemList
-                      key={`${group.day}-${item.id}-${idx}`}
-                      title={item.title}
-                      subTitle={item.sub}
-                      amount={item.amount}
-                      type={item.type as 'income' | 'expense'}
-                      category={item.category}
-                    />
-                  ))}
-                </div>
+                    <div className={cn('flex flex-col gap-[8px]')}>
+                      {group.items.map((item, idx) => (
+                        <AssetItemList
+                          key={`${group.day}-${item.id}-${idx}`}
+                          title={item.title}
+                          subTitle={item.sub}
+                          amount={item.amount}
+                          type={item.type as 'income' | 'expense'}
+                          category={item.category}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </PullToRefresh>
           </div>
         </div>
       </div>

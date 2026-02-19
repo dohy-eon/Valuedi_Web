@@ -96,7 +96,8 @@ const getCategoryDisplayName = (item: LedgerTransactionItem): string | undefined
   if (item.category && typeof item.category === 'object') {
     const fromObject = item.category as { name?: string; category_name?: string };
     if (typeof fromObject.name === 'string' && fromObject.name.trim()) return fromObject.name;
-    if (typeof fromObject.category_name === 'string' && fromObject.category_name.trim()) return fromObject.category_name;
+    if (typeof fromObject.category_name === 'string' && fromObject.category_name.trim())
+      return fromObject.category_name;
   }
   return undefined;
 };
@@ -138,12 +139,11 @@ const groupTransactionsByDate = (items: LedgerTransactionItem[]): TransactionGro
   const groups = new Map<number, TransactionGroup>();
 
   items.forEach((item) => {
-    const rawDate =
-      (item.transactionAt ??
-        item.date ??
-        (item as { transactionDate?: string }).transactionDate ??
-        (item as { approvedAt?: string }).approvedAt ??
-        '') as string;
+    const rawDate = (item.transactionAt ??
+      item.date ??
+      (item as { transactionDate?: string }).transactionDate ??
+      (item as { approvedAt?: string }).approvedAt ??
+      '') as string;
     const day = parseTransactionDay(rawDate);
     if (!day) return;
 
