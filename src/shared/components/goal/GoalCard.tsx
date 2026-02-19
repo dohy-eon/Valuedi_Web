@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { paths } from '@/router/paths';
 import MoneyIcon from '@/assets/icons/goal/MoneyIcon.svg';
 import CalendarIcon from '@/assets/icons/goal/CalendarIcon.svg';
-import { toHexColor, type GoalStatus } from '@/features/goal';
+import { toHexColor, type GoalStatus, useGoalDetail } from '@/features/goal';
 import { GOAL_ICON_SRC } from '@/shared/components/goal/goalIconAssets';
 import ExBank from '@/assets/icons/goal/ExBank.svg';
 import { isGoalAchieved } from '@/shared/utils/goal/goalHelpers';
@@ -41,6 +41,10 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   /** 달성 실패한 목표는 계좌 연결이 끊어져 상세 접근 시 서버 에러 발생 → 상세 진입 비활성화 */
   const isDisabled = isPast && goal.status === 'FAILED';
 
+  // 상세 조회 API(/api/goals/:id)로 최신 금액 정보 보정
+  const { data: goalDetailData } = useGoalDetail(goal.id);
+  const goalDetail = goalDetailData?.result;
+
   const handleClick = () => {
     if (isDisabled) return;
     navigate(paths.goal.amountAchieved(goal.id));
@@ -49,6 +53,10 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   const hasGoalStyle = goal.colorCode != null && goal.iconId != null;
   const bgColor = goal.colorCode ? toHexColor(goal.colorCode) : undefined;
   const iconSrc = goal.iconId != null ? GOAL_ICON_SRC[goal.iconId] : null;
+
+  // 상세 응답이 있으면 그쪽 금액/잔액을 우선 사용
+  const targetAmount = goalDetail?.targetAmount ?? goal.targetAmount;
+  const collectedAmount = goalDetail?.currentBalance ?? goal.collectedAmount ?? goal.savedAmount;
 
   // 상단 제목 & 상태 배지
   const titleText = goal.title;
@@ -65,8 +73,8 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
     }
   } else {
     const achieved = isGoalAchieved({
-      targetAmount: goal.targetAmount,
-      currentBalance: goal.collectedAmount,
+      targetAmount,
+      currentBalance: collectedAmount,
       savedAmount: goal.savedAmount,
     });
     statusLabel = achieved ? '달성완료' : `${goal.progress}% 달성`;
@@ -115,7 +123,7 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
               <span className="text-xs font-medium">달성금액</span>
             </div>
             <span className="text-xs font-semibold text-[#171714]">
-              {formatWon(goal.collectedAmount ?? goal.savedAmount ?? goal.targetAmount)}
+              {formatWon(collectedAmount ?? targetAmount)}
             </span>
           </div>
         </div>
@@ -126,7 +134,7 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
               <img src={MoneyIcon} alt="money" className="w-4 h-4 opacity-40" />
               <span className="text-xs font-medium">목표 금액</span>
             </div>
-            <span className="text-xs font-semibold text-[#171714]">{formatWon(goal.targetAmount)}</span>
+            <span className="text-xs font-semibold text-[#171714]">{formatWon(targetAmount)}</span>
           </div>
 
           <div className="flex items-center justify-between">

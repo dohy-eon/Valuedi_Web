@@ -84,6 +84,7 @@ export const router = createBrowserRouter([
       { path: paths.goal.create, element: <GoalCreatePage /> },
       { path: paths.goal.createStep, element: <GoalCreateStep /> },
       { path: paths.goal.almostDone, element: <GoalAlmostDonePage /> },
+      { path: paths.goal.editRoute, element: <GoalAlmostDonePage /> },
       { path: paths.goal.createComplete, element: <GoalCompletePage /> },
       {
         element: <PublicRoute />, // 인증된 사용자는 아래 경로 접근 불가
