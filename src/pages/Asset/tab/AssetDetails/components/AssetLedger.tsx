@@ -171,7 +171,7 @@ export const AssetLedger = () => {
             <LedgerList refreshKey={refreshKey} />
           </PullToRefresh>
         ) : (
-          <LedgerCalendar />
+          <LedgerCalendar dailySummaries={dailyData?.result ?? []} refreshKey={refreshKey} />
         )}
       </div>
     </div>

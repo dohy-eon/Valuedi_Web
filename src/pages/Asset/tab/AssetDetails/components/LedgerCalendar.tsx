@@ -6,10 +6,16 @@ import { useGetAccountDetail } from '@/shared/hooks/Asset/useGetAccountDetail';
 import { TransactionGroup } from '@/features/asset/constants/account';
 import { DailyTransactionSheet } from './DailyTransactionSheet';
 import { useLedgerStore } from '@/shared/hooks/Asset/usetLedgerStore';
+import type { DailyTransactionSummary } from '@/features/asset/asset.api';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
-export const LedgerCalendar = () => {
+interface LedgerCalendarProps {
+  dailySummaries?: DailyTransactionSummary[];
+  refreshKey?: number;
+}
+
+export const LedgerCalendar = ({ dailySummaries = [], refreshKey = 0 }: LedgerCalendarProps) => {
   const currentMonth = useLedgerStore((state) => state.currentMonth);
 
   const currentYear = new Date().getFullYear();
@@ -31,20 +37,56 @@ export const LedgerCalendar = () => {
     return `${year}-${String(currentMonth).padStart(2, '0')}`;
   }, [currentMonth]);
 
-  const { transactionHistory } = useGetAccountDetail({ yearMonth });
+  const { transactionHistory } = useGetAccountDetail({ yearMonth, refreshKey });
 
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
 
-  // 데이터를 미리 날짜별로 정리정돈 해주는 코드
+  const summaryMapByDay = useMemo(() => {
+    const map: Record<number, DailyTransactionSummary> = {};
+    dailySummaries.forEach((summary) => {
+      if (!summary?.date) return;
+      const [, , day] = summary.date.split('-');
+      const numericDay = Number(day);
+      if (!Number.isFinite(numericDay) || numericDay < 1 || numericDay > 31) return;
+      map[numericDay] = summary;
+    });
+    return map;
+  }, [dailySummaries]);
+
+  // by-day 요약 데이터 + 상세 거래내역 데이터를 날짜 기준으로 병합
   const calendarData = useMemo(() => {
     const dataMap: Record<number, TransactionGroup> = {};
+
+    Object.entries(summaryMapByDay).forEach(([dayKey, summary]) => {
+      const day = Number(dayKey);
+      dataMap[day] = {
+        date: `${day}일`,
+        day,
+        dailyTotal: (summary.totalIncome ?? 0) - (summary.totalExpense ?? 0),
+        totalIncome: summary.totalIncome ?? 0,
+        totalExpense: summary.totalExpense ?? 0,
+        items: [],
+      };
+    });
+
     transactionHistory.forEach((group) => {
       if (group.day) {
-        dataMap[group.day] = group;
+        const existing = dataMap[group.day];
+        if (!existing) {
+          dataMap[group.day] = group;
+          return;
+        }
+
+        dataMap[group.day] = {
+          ...group,
+          totalIncome: existing.totalIncome || group.totalIncome,
+          totalExpense: existing.totalExpense || group.totalExpense,
+          dailyTotal: existing.totalIncome || existing.totalExpense ? existing.dailyTotal : group.dailyTotal,
+        };
       }
     });
     return dataMap;
-  }, [transactionHistory]);
+  }, [summaryMapByDay, transactionHistory]);
 
   const daysArray = [...Array(startDayIndex).fill(null), ...Array.from({ length: totalDays }, (_, i) => i + 1)];
 
@@ -67,14 +109,15 @@ export const LedgerCalendar = () => {
           if (!date) return <div key={`empty-${index}`} />;
 
           const data = calendarData[date];
+          const hasDetailItems = Boolean(data?.items?.length);
 
           return (
             <div
               key={date}
               onClick={() => {
-                if (data) setSelectedDate(date);
+                if (hasDetailItems) setSelectedDate(date);
               }}
-              className={cn('flex flex-col items-center h-[70px] py-[4px]', data && 'cursor-pointer')}
+              className={cn('flex flex-col items-center h-[70px] py-[4px]', hasDetailItems && 'cursor-pointer')}
             >
               <div className={cn('flex gap-[4px] py-[8px]')}>
                 <Typography style="text-body-2-14-medium" className={cn(data ? 'text-neutral-90' : 'text-neutral-50')}>

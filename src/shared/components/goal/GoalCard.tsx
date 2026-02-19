@@ -24,6 +24,17 @@ interface GoalCardProps {
   type?: 'current' | 'past';
 }
 
+const toSafeNumber = (value: unknown): number => {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string') {
+    const parsed = Number(value.replace(/,/g, '').trim());
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+  return 0;
+};
+
+const formatWon = (value: unknown): string => `${toSafeNumber(value).toLocaleString()}원`;
+
 const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
   const navigate = useNavigate();
   const isPast = type === 'past';
@@ -104,7 +115,7 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
               <span className="text-xs font-medium">달성금액</span>
             </div>
             <span className="text-xs font-semibold text-[#171714]">
-              {(goal.collectedAmount ?? goal.savedAmount ?? goal.targetAmount).toLocaleString()}원
+              {formatWon(goal.collectedAmount ?? goal.savedAmount ?? goal.targetAmount)}
             </span>
           </div>
         </div>
@@ -115,7 +126,7 @@ const GoalCard = ({ goal, type = 'current' }: GoalCardProps) => {
               <img src={MoneyIcon} alt="money" className="w-4 h-4 opacity-40" />
               <span className="text-xs font-medium">목표 금액</span>
             </div>
-            <span className="text-xs font-semibold text-[#171714]">{goal.targetAmount.toLocaleString()}원</span>
+            <span className="text-xs font-semibold text-[#171714]">{formatWon(goal.targetAmount)}</span>
           </div>
 
           <div className="flex items-center justify-between">

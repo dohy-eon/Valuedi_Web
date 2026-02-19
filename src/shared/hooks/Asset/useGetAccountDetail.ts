@@ -5,6 +5,8 @@ import { useAccounts, useCards } from '@/features/asset';
 import {
   getAccountTransactionsApi,
   getCardTransactionsApi,
+  getTransactionsApi,
+  syncTransactionsApi,
   type LedgerTransactionItem,
   type AssetTransactionsResult,
 } from '@/features/asset/asset.api';
@@ -65,18 +67,60 @@ const getCardColorByOrgCode = (orgCode?: string | null): ColorToken => {
   }
 };
 
+const parseTransactionDay = (rawDate: unknown): number | null => {
+  if (typeof rawDate !== 'string' || !rawDate.trim()) return null;
+
+  const normalized = rawDate.replace(/[./]/g, '-').trim();
+  const ymdMatch = normalized.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (ymdMatch) {
+    const day = Number(ymdMatch[3]);
+    return Number.isFinite(day) && day >= 1 && day <= 31 ? day : null;
+  }
+
+  const compactMatch = normalized.match(/(\d{4})(\d{2})(\d{2})/);
+  if (compactMatch) {
+    const day = Number(compactMatch[3]);
+    return Number.isFinite(day) && day >= 1 && day <= 31 ? day : null;
+  }
+
+  const dateObj = new Date(normalized);
+  if (Number.isNaN(dateObj.getTime())) return null;
+  const day = dateObj.getDate();
+  return Number.isFinite(day) ? day : null;
+};
+
+const getCategoryDisplayName = (item: LedgerTransactionItem): string | undefined => {
+  if (typeof item.categoryName === 'string' && item.categoryName.trim()) return item.categoryName;
+  if (typeof item.category_name === 'string' && item.category_name.trim()) return item.category_name;
+  if (item.category && typeof item.category === 'object') {
+    const fromObject = item.category as { name?: string; category_name?: string };
+    if (typeof fromObject.name === 'string' && fromObject.name.trim()) return fromObject.name;
+    if (typeof fromObject.category_name === 'string' && fromObject.category_name.trim()) return fromObject.category_name;
+  }
+  return undefined;
+};
+
+const isIncomeTransaction = (item: LedgerTransactionItem): boolean => {
+  const txType = (item.transactionType ?? item.type ?? '').toString().trim().toUpperCase();
+  if (txType === 'INCOME' || txType === 'DEPOSIT') return true;
+  if (txType === 'EXPENSE' || txType === 'WITHDRAW' || txType === 'PAYMENT') return false;
+  return /입금|수입/.test(txType);
+};
+
 // 거래 목록을 날짜별 그룹(TransactionGroup)으로 변환
 const groupTransactionsByDate = (items: LedgerTransactionItem[]): TransactionGroup[] => {
   const groups = new Map<number, TransactionGroup>();
 
   items.forEach((item) => {
-    const rawDate = (item.transactionAt ?? item.date ?? '') as string;
-    if (!rawDate) return;
+    const rawDate =
+      (item.transactionAt ??
+        item.date ??
+        (item as { transactionDate?: string }).transactionDate ??
+        (item as { approvedAt?: string }).approvedAt ??
+        '') as string;
+    const day = parseTransactionDay(rawDate);
+    if (!day) return;
 
-    const dateObj = new Date(rawDate);
-    if (Number.isNaN(dateObj.getTime())) return;
-
-    const day = dateObj.getDate();
     let group = groups.get(day);
     if (!group) {
       group = {
@@ -91,11 +135,10 @@ const groupTransactionsByDate = (items: LedgerTransactionItem[]): TransactionGro
     }
 
     const rawAmount = Number(item.amount ?? 0);
-    const txType = (item.transactionType ?? item.type ?? '').toString().toUpperCase();
-    const isIncome = txType === 'INCOME';
+    const isIncome = isIncomeTransaction(item);
     const amount = isIncome ? Math.abs(rawAmount) : -Math.abs(rawAmount);
 
-    const categoryName = item.categoryName as string | undefined;
+    const categoryName = getCategoryDisplayName(item);
     const memo = item.memo as string | undefined;
     const sub = categoryName && memo ? `${categoryName} | ${memo}` : categoryName ? categoryName : memo ? memo : '기타';
 
@@ -120,6 +163,33 @@ const groupTransactionsByDate = (items: LedgerTransactionItem[]): TransactionGro
   });
 
   return Array.from(groups.values()).sort((a, b) => b.day - a.day);
+};
+
+const extractTransactionList = (
+  payload:
+    | AssetTransactionsResult
+    | {
+        content?: LedgerTransactionItem[];
+        transactions?: LedgerTransactionItem[];
+        items?: LedgerTransactionItem[];
+        transactionList?: LedgerTransactionItem[];
+      }
+    | unknown
+): LedgerTransactionItem[] => {
+  if (Array.isArray(payload)) return payload as LedgerTransactionItem[];
+  if (!payload || typeof payload !== 'object') return [];
+
+  const result = payload as {
+    content?: LedgerTransactionItem[];
+    transactions?: LedgerTransactionItem[];
+    items?: LedgerTransactionItem[];
+    transactionList?: LedgerTransactionItem[];
+  };
+  if (Array.isArray(result.content)) return result.content;
+  if (Array.isArray(result.transactions)) return result.transactions;
+  if (Array.isArray(result.items)) return result.items;
+  if (Array.isArray(result.transactionList)) return result.transactionList;
+  return [];
 };
 
 export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string; refreshKey?: number }) => {
@@ -180,14 +250,6 @@ export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string
 
   // 계좌/카드 상세내역 API로 조회
   useEffect(() => {
-    if (!assetId) {
-      setAccountTxMeta(null);
-      setCardTxMeta(null);
-      setTransactionHistory([]);
-      setTotalCount(0);
-      return;
-    }
-
     let isCancelled = false;
 
     const fetchTransactions = async () => {
@@ -200,7 +262,33 @@ export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string
         let accountMeta: AssetTransactionsResult | null = null;
         let cardMeta: AssetTransactionsResult | null = null;
 
-        if (isCardDetail && assetId) {
+        if (!assetId) {
+          await syncTransactionsApi({ yearMonth: targetYearMonth }).catch(() => {});
+          const size = 50;
+          let page = 0;
+          let totalPages = 1;
+
+          while (page < totalPages) {
+            const txRes = await getTransactionsApi({
+              yearMonth: targetYearMonth,
+              date: params?.date,
+              page,
+              size,
+              sort: 'LATEST',
+            });
+
+            const result = txRes?.result;
+            if (!result) break;
+
+            const pageContent = extractTransactionList(result);
+            content = content.concat(pageContent);
+
+            totalPages = result.totalPages ?? 1;
+            page += 1;
+          }
+
+          count = content.length;
+        } else if (isCardDetail && assetId) {
           const size = 50;
           let page = 0;
           let totalPages = 1;
@@ -217,7 +305,7 @@ export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string
             if (!result) break;
             if (!cardMeta) cardMeta = result;
 
-            const pageContent = Array.isArray(result.content) ? result.content : [];
+            const pageContent = extractTransactionList(result);
             content = content.concat(pageContent);
 
             totalPages = result.totalPages ?? 1;
@@ -242,7 +330,7 @@ export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string
             if (!result) break;
             if (!accountMeta) accountMeta = result;
 
-            const pageContent = Array.isArray(result.content) ? result.content : [];
+            const pageContent = extractTransactionList(result);
             content = content.concat(pageContent);
 
             totalPages = result.totalPages ?? 1;
