@@ -10,6 +10,7 @@ import {
   type LedgerTransactionItem,
   type AssetTransactionsResult,
 } from '@/features/asset/asset.api';
+import { inferCategoryFromTitle, normalizeCategoryCode } from '@/features/asset/constants/category';
 import { getBankDisplayName } from '@/features/connection/constants/organizationCodes';
 import type { ColorToken } from '@/shared/styles/design-system';
 
@@ -100,6 +101,31 @@ const getCategoryDisplayName = (item: LedgerTransactionItem): string | undefined
   return undefined;
 };
 
+const getCategoryKey = (item: LedgerTransactionItem): string => {
+  const rawCategory = item.category && typeof item.category === 'object' ? item.category : undefined;
+  const categoryObj = rawCategory as
+    | {
+        code?: string;
+        category_code?: string;
+        name?: string;
+        category_name?: string;
+        id?: number;
+        category_id?: number;
+      }
+    | undefined;
+
+  const code = item.categoryCode ?? item.category_code ?? categoryObj?.code ?? categoryObj?.category_code;
+  const name = getCategoryDisplayName(item) ?? categoryObj?.name ?? categoryObj?.category_name;
+  const id = item.categoryId ?? item.category_id ?? categoryObj?.id ?? categoryObj?.category_id;
+
+  let normalized = normalizeCategoryCode(code, name, id);
+  if (normalized === 'others') {
+    const inferred = inferCategoryFromTitle(item.title);
+    if (inferred) normalized = inferred;
+  }
+  return normalized || 'default';
+};
+
 const isIncomeTransaction = (item: LedgerTransactionItem): boolean => {
   const txType = (item.transactionType ?? item.type ?? '').toString().trim().toUpperCase();
   if (txType === 'INCOME' || txType === 'DEPOSIT') return true;
@@ -150,7 +176,7 @@ const groupTransactionsByDate = (items: LedgerTransactionItem[]): TransactionGro
       sub,
       amount,
       type: isIncome ? 'income' : 'expense',
-      category: 'default', // 상세 카테고리 색상/아이콘은 기본값 사용
+      category: getCategoryKey(item),
     });
 
     if (isIncome) {
@@ -190,6 +216,25 @@ const extractTransactionList = (
   if (Array.isArray(result.items)) return result.items;
   if (Array.isArray(result.transactionList)) return result.transactionList;
   return [];
+};
+
+const dedupeTransactionsById = (items: LedgerTransactionItem[]): LedgerTransactionItem[] => {
+  const seen = new Set<number>();
+  const deduped: LedgerTransactionItem[] = [];
+
+  for (const item of items) {
+    const id = item.id ?? item.transactionId;
+    // ID가 없으면 중복 판단이 어려워 그대로 유지
+    if (id == null) {
+      deduped.push(item);
+      continue;
+    }
+    if (seen.has(id)) continue;
+    seen.add(id);
+    deduped.push(item);
+  }
+
+  return deduped;
 };
 
 export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string; refreshKey?: number }) => {
@@ -341,10 +386,11 @@ export const useGetAccountDetail = (params?: { yearMonth?: string; date?: string
         }
 
         if (isCancelled) return;
+        const uniqueContent = dedupeTransactionsById(content);
         setAccountTxMeta(accountMeta);
         setCardTxMeta(cardMeta);
-        setTransactionHistory(groupTransactionsByDate(content));
-        setTotalCount(count);
+        setTransactionHistory(groupTransactionsByDate(uniqueContent));
+        setTotalCount(accountMeta?.totalElements ?? cardMeta?.totalElements ?? uniqueContent.length ?? count);
       } catch {
         if (isCancelled) return;
         setAccountTxMeta(null);
