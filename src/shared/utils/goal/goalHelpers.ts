@@ -52,6 +52,7 @@ export function toInputDate(apiDate: string | undefined): string {
 export function formatToYYMMDD(isoDate: string): string {
   if (!isoDate) return '-';
   const d = new Date(isoDate);
+  if (Number.isNaN(d.getTime())) return '--.--.--';
   const y = String(d.getFullYear()).slice(-2);
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');

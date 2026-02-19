@@ -14,6 +14,12 @@ export interface SelectedAccount {
 
 export type GoalFormField = 'goalName' | 'startDate' | 'endDate' | 'goalAmount';
 
+const isValidInputDate = (value: string): boolean => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const d = new Date(value);
+  return !Number.isNaN(d.getTime());
+};
+
 export function useGoalForm() {
   const navigate = useNavigate();
   const createGoalMutation = useCreateGoal();
@@ -88,6 +94,11 @@ export function useGoalForm() {
 
   const handleNext = useCallback(async () => {
     if (currentStep < 5) {
+      if (currentStep === 2 && !isValidInputDate(startDate)) return;
+      if (currentStep === 3) {
+        if (!isValidInputDate(endDate)) return;
+        if (isValidInputDate(startDate) && new Date(endDate).getTime() < new Date(startDate).getTime()) return;
+      }
       setCurrentStep((prev) => (prev + 1) as GoalStep);
       setHasInputStarted(false);
       return;
@@ -128,9 +139,14 @@ export function useGoalForm() {
   const shouldShowPrimaryButton = useMemo(() => {
     if (currentStep === 5) return false;
     if (currentStep === 6) return selectedAccount !== null && goalAmount.length > 0;
+    if (currentStep === 2) return isValidInputDate(startDate);
+    if (currentStep === 3) {
+      if (!isValidInputDate(endDate)) return false;
+      if (isValidInputDate(startDate) && new Date(endDate).getTime() < new Date(startDate).getTime()) return false;
+      return true;
+    }
 
-    const currentValue =
-      currentStep === 1 ? goalName : currentStep === 2 ? startDate : currentStep === 3 ? endDate : goalAmount;
+    const currentValue = currentStep === 1 ? goalName : goalAmount;
 
     return hasInputStarted && currentValue.length > 0;
   }, [currentStep, endDate, goalAmount, goalName, hasInputStarted, selectedAccount, startDate]);

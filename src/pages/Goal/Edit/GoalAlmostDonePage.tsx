@@ -71,11 +71,11 @@ const GoalAlmostDonePage = () => {
       return;
     }
 
-    // 남은 일자 계산
-    const remainingDays = Math.max(
-      0,
-      Math.ceil((new Date(formatDate(endDate)).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
-    );
+    // 남은 일자 계산 (비정상 날짜는 0일 처리)
+    const endDateTime = new Date(formatDate(endDate)).getTime();
+    const remainingDays = Number.isNaN(endDateTime)
+      ? 0
+      : Math.max(0, Math.ceil((endDateTime - new Date().getTime()) / (1000 * 60 * 60 * 24)));
 
     // API 요청 없이 완성 페이지로 이동
     setIsIconPickerOpen(false);
@@ -123,12 +123,11 @@ const GoalAlmostDonePage = () => {
               targetAmount={parseAmountToNumber(goalFormData.goalAmount)}
               startDate={goalFormData.startDate}
               endDate={goalFormData.endDate}
-              remainingDays={Math.max(
-                0,
-                Math.ceil(
-                  (new Date(formatDate(goalFormData.endDate)).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
-                )
-              )}
+              remainingDays={(() => {
+                const endDateTime = new Date(formatDate(goalFormData.endDate)).getTime();
+                if (Number.isNaN(endDateTime)) return 0;
+                return Math.max(0, Math.ceil((endDateTime - new Date().getTime()) / (1000 * 60 * 60 * 24)));
+              })()}
               bankName={goalFormData.selectedAccount?.bankName ?? ''}
               accountNumber={goalFormData.selectedAccount?.accountNumber ?? ''}
             />
